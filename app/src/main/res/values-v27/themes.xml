@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.PCSimulatorSaveEditor" parent="Theme.AppCompat.Light">
-
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

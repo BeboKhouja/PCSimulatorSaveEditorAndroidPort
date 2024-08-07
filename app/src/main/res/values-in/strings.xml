@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Editor save PC Simulator</string>
+    <string name="open_file">Buka File</string>
+    <string name="save_file">Ganti File</string>
+    <string name="copy">Salin</string>
+    <string name="help">Pengetahuan</string>
+    <string name="decrypt">Dekripsi/Enkripsi</string>
+    <string name="hint">Save file kamu</string>
+    <string name="term">Terminologi</string>
+    <string name="about">Tentang</string>
+    <string name="savefile">Save File PC Simulator</string>
+    <string name="websites">Situs PC Simulator</string>
+</resources>

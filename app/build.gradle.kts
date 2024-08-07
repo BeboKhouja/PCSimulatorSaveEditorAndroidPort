@@ -4,6 +4,13 @@ plugins {
 }
 
 android {
+    androidResources {
+        generateLocaleConfig = true
+    }
+    signingConfigs {
+        create("release") {
+        }
+    }
     namespace = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
     compileSdk = 34
 
@@ -12,7 +19,7 @@ android {
         minSdk = 21
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -59,11 +66,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(files("libs\\PC Simulator Save Editor Library.jar"))
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(files("libs/PC Simulator Save Editor Library.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

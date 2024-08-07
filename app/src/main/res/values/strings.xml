@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">PC Simulator Save Editor</string>
+    <string name="open_file">Open File</string>
+    <string name="save_file">Save File</string>
+    <string name="copy">Copy</string>
+    <string name="help">Help</string>
+    <string name="decrypt">Decrypt/Encrypt</string>
+    <string name="hint">Your save file</string>
+    <string name="term">Terminology</string>
+    <string name="about">About</string>
+    <string name="savefile">PC Simulator Save Files</string>
+    <string name="websites">PC Simulator Websites</string>
 </resources>

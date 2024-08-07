@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML lang="en">
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg HTML Help Workshop 4.1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<Title>Yiming.AntiCheat</Title>
+<link rel="stylesheet" href="ClassUL.css">
+<style>
+/* Tooltip container */
+.referenceTooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.referenceTooltip .refTooltipText {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.referenceTooltip:hover .refTooltipText {
+  visibility: visible;
+}
+</style>
+<noscript>If you see this, your browser may not support JavaScript, or you disabled JavaScript on the page settings.</noscript>
+</HEAD>
+<BODY>
+<h1><img src='../assets/Namespace.png' alt='Namespace' style='height:4%;'\> Yiming.AntiCheat Documentation</h1>
+<div class="referenceTooltip">Reference-only
+	<span class="refTooltipText">This namespace was created after 1.7.0, so this is reference-only (not including source)</span>
+</div><br>
+
+An unknown namespace, presumably for the anti-cheat in the next update.
+
+<ul id="CheatingDetectorUL">
+	<li> <span class="caret"></span><h2><img src='..\assets\Class.png' alt='Class' style='height:3%;'\> CheatingDetector</h2>
+	A class made to detect cheats.
+	<ul class="nested">
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\> OnCheatDetected</h3>
+		<code>public static void OnCheatDetected() { }</code><br><br>
+		A method which executes a code when a cheat is detected.</li>
+		<li><span class="caret"></span><h3><img src='..\assets\Event.png' alt='Event' style='height:3%;'\> CheatDetected</h3>
+		<pre>
+public static event Action CheatDetected
+{
+	[Token(Token = "0x6000827")]
+	[Address(RVA = "0x895DD8", Offset = "0x895DD8", VA = "0x895DD8")]
+	[CompilerGenerated]
+	add
+	{
+	}
+	[Token(Token = "0x6000828")]
+	[Address(RVA = "0x895E90", Offset = "0x895E90", VA = "0x895E90")]
+	[CompilerGenerated]
+	remove
+	{
+	}
+}
+		</pre><br><br>
+		An event which notifies clients of this event when a cheat is detected.
+		<ul class="nested">
+			<li><h4><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>add</h4></li>
+			<li><h4><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>remove</h4></li>
+		</ul>
+	</li>
+	</ul>
+	</li>
+	<li><span class="caret"></span><h2><img src='..\assets\Struct.png' alt='Struct' style='height:3%;'\>FloatShadow</h2>
+	<ul class="nested">
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>FloatShadow(float)</h3>
+		<pre>
+public FloatShadow(float value)
+{
+}
+		</pre></li>
+		<li><h3><img src='..\assets\Operator.png' alt='Operator' style='height:3%;'\>op_Implict(float)</h3>
+		<pre>
+public static implicit operator FloatShadow(float x)
+{
+	return default(FloatShadow);
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Operator.png' alt='Operator' style='height:3%;'\>op_Implict(FloatShadow)</h3>
+		<pre>
+public static implicit operator float(FloatShadow x)
+{
+	return 0f;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString()</h3>
+		<pre>
+public override string ToString()
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(string)</h3>
+		<pre>
+public string ToString(string format)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(IFormatProvider)</h3>
+		<pre>
+public string ToString(IFormatProvider formatProvider)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(string, IFormatProvider)</h3>
+		<pre>
+public string ToString(string format, IFormatProvider formatProvider)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><span class="caret"></span><h3><img src='..\assets\MemberPrivate.png' alt='Private Member' style='height:3%;'\>Value</h3>
+		<pre>
+private float Value
+{
+	[Token(Token = "0x600082A")]
+	[Address(RVA = "0x895FAC", Offset = "0x895FAC", VA = "0x895FAC")]
+	get
+	{
+		return 0f;
+	}
+	[Token(Token = "0x600082B")]
+	[Address(RVA = "0x895FE8", Offset = "0x895FE8", VA = "0x895FE8")]
+	set
+	{
+	}
+}
+		</pre>
+		<ul class="nested">
+			<li><h4><img src='..\assets\MethodPrivate.png' alt='Private Method' style='height:3%;'\>get_Value()</h4>
+			<pre>
+private float get_Value()
+{
+	return 0f;
+}
+			</pre></li>
+			<li><h4><img src='..\assets\MethodPrivate.png' alt='Private Method' style='height:3%;'\>set_Value(float)</h4>
+			<pre>
+private void set_Value(float value)
+{
+}
+			</pre></li>
+		</ul>
+		</li>
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>origi</h3>
+	<pre>
+private int origi;
+	</pre></li>
+
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>salt</h3>
+	<pre>
+private int salt;
+	</pre></li>
+
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>shadow</h3>
+	<pre>
+private int shadow;
+	</pre></li>
+		
+	</ul>
+	</li>
+<li><span class="caret"></span><h2><img src='..\assets\Struct.png' alt='Struct' style='height:3%;'\>IntShadow</h2>
+	<ul class="nested">
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>IntShadow(int)</h3>
+		<pre>
+public FloatShadow(float value)
+{
+}
+		</pre></li>
+		<li><h3><img src='..\assets\Operator.png' alt='Operator' style='height:3%;'\>op_Implict(int)</h3>
+		<pre>
+public static implicit operator IntShadow(int x)
+{
+	return default(IntShadow);
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Operator.png' alt='Operator' style='height:3%;'\>op_Implict(IntShadow)</h3>
+		<pre>
+public static implicit operator int(IntShadow x)
+{
+	return 0;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString()</h3>
+		<pre>
+public override string ToString()
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(string)</h3>
+		<pre>
+public string ToString(string format)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(IFormatProvider)</h3>
+		<pre>
+public string ToString(IFormatProvider formatProvider)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><h3><img src='..\assets\Method.png' alt='Method' style='height:3%;'\>ToString(string, IFormatProvider)</h3>
+		<pre>
+public string ToString(string format, IFormatProvider formatProvider)
+{
+	return null;
+}
+		</pre></li>
+
+		<li><span class="caret"></span><h3><img src='..\assets\MemberPrivate.png' alt='Private Member' style='height:3%;'\>Value</h3>
+		<pre>
+private int Value
+{
+	[Token(Token = "0x600082A")]
+	[Address(RVA = "0x895FAC", Offset = "0x895FAC", VA = "0x895FAC")]
+	get
+	{
+		return 0;
+	}
+	[Token(Token = "0x600082B")]
+	[Address(RVA = "0x895FE8", Offset = "0x895FE8", VA = "0x895FE8")]
+	set
+	{
+	}
+}
+		</pre>
+		<ul class="nested">
+			<li><h4><img src='..\assets\MethodPrivate.png' alt='Private Method' style='height:3%;'\>get_Value()</h4>
+			<pre>
+private Int get_Value()
+{
+	return 0;
+}
+			</pre></li>
+			<li><h4><img src='..\assets\MethodPrivate.png' alt='Private Method' style='height:3%;'\>set_Value(int)</h4>
+			<pre>
+private void set_Value(int value)
+{
+}
+			</pre></li>
+		</ul>
+		</li>
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>origi</h3>
+	<pre>
+private int origi;
+	</pre></li>
+
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>salt</h3>
+	<pre>
+private int salt;
+	</pre></li>
+
+	<li><h3><img src='..\assets\FieldPrivate.png' alt='Private Field' style='height:3%;'\>shadow</h3>
+	<pre>
+private int shadow;
+	</pre></li>
+		
+	</ul>
+	</li>
+</ul>
+</ul>
+
+<script src="ClassUL.js"></script>
+
+
+</BODY>
+</HTML>
