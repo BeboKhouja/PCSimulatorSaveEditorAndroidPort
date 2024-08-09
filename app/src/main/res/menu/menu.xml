@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/decrypt_after_opening"
+        android:title="@string/decrypt_after_open"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/encrypt_after_saving"
+        android:title="@string/encrypt_after_opening"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/changelog"
+        android:title="Changelog" />
+    <item
+        android:id="@+id/about"
+        android:title="@string/about" />
+</menu>

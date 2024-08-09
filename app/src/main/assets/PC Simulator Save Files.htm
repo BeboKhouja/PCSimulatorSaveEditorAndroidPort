@@ -122,5 +122,35 @@ The <code>id</code> property is the id of the object as explained in object glob
 <code>{"dat":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAABGUlEQVRIDe1WyxKEIAyTHf//l91AMZan7Sh7Wg9OCzRJW0DDcRzbyudD8BAC7ReNTAB0pLKCIxIIOowVHFeJXiyLhtrFaYuji/ZkI2QCQpBJRjiuRbns2FtXgHdxbrI3zL5+eZMvAlSfDbALvF2ZCQCNZuB5nSMTALrWgptDLo/2XS+d+fUN0WGahd/P/WSb3st4sOLaRQ9AZqF/gll10py/ROWXVQ4m3q0h3M5tSvT2YA5y8WRAdGCdtggfgMdhcwYnYoFlyMOcAbA0HF0QC3dXwbblT2ahy+WQlUYZbs6gDKOXtk/8Y9NG4fquT9ZhoJfENPwZVNC6B2wGdTh2ESUhuOLgVM9wZiDoWmCyR8cYjOZz0FNnGfsCDzJXey42hpUAAAAASUVORK5CYII=","glue":false}</code><br>
 The <code>dat</code> property is the image in Base64.
 
+<h1>Some fun stuff</h1><br>
+
+<h2>Crash the game when you load a save</h2><br>
+It is too big to include it here, so ill include it in a Google Drive link:<br>
+<a href="https://drive.google.com/file/d/1-8KdDEjUxQuYPPDUDaOdxAXmpaEIPIG0/view?usp=sharing">Google Drive Link</a><br>
+But how you do it is to spam a lot of objects. This causes the Unity engine to crash from the physics it needs to process.
+
+<h2>Crash the game when you try to view the info of a save</h2><br>
+This is the most destructive out of the 2 crash methods, if someone tries to delete their save file then the game crashes due to the amount of text that it needs to process.<br>
+However, this method spends a lot of size, so its suspicious.<br>
+<a href="https://drive.google.com/file/d/1-DScIKThU-GU0zQhCzT_dBhcdJTXPM9f/view?usp=sharing">Drive link</a><br>
+This method also creates lag when you go into the Load Save menu.<br>
+However, you can remove it using 3 methods.<br> 
+First, you can reinstall the app. <br>
+Second, you can go clear the app data<br>
+Third, navigate to /Android/data/com.Yiming.PC/files/saves/ and delete the one that has the most size
+
+<h2>Combine the 2 crash methods</h2><br>
+Why not combine the 2 to create the most destructive save?
+Whenever loaded, BOOM! Your game crashes.<br>
+If you try to delete the file, BOOM! Your game crashes again.<br>
+<a href="https://drive.google.com/file/d/1-ESfsVTgyultcIP3DK6LXI9J4ldlq9ZD/view?usp=sharing">Drive</a>
+
+<h2>Exceed the 9,999,999 coin limit</h2><br>
+Simply modify the coin value as explained at the start of the page to anything above 9,999,999 (max <code>2,147,483,647</code> and min <code>-2,147,483,647</code>).
+
+<h2>Change the AC temperature to below the minimum or above the max</h2><br>
+Again, very easy. Just change the temperature to whatever you want. (min <code>-2,147,483,647</code> and max <code>2,147,483,647</code>)<br>
+Very useful to get to the top of the leaderboard.
+
 </BODY>
 </HTML>

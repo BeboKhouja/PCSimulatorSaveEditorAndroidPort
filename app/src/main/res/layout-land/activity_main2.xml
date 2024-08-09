@@ -7,62 +7,68 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity2">
 
-    <Button
-        android:id="@+id/decryptencrypt"
-        android:layout_width="364dp"
-        android:layout_height="65dp"
-        android:text="@string/decrypt"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="479dp"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/help"
-        app:layout_constraintTop_toBottomOf="@+id/save" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/decryptencrypt"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="@string/decrypt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/save" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="166dp"
+            android:layout_height="64dp"
+            android:text="@string/save_file"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clipboard" />
+
+        <Button
+            android:id="@+id/clipboard"
+            android:layout_width="166dp"
+            android:layout_height="64dp"
+            android:text="@string/copy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/open"
+            android:layout_width="166dp"
+            android:layout_height="64dp"
+            android:text="@string/open_file"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/help"
+            android:layout_width="166dp"
+            android:layout_height="64dp"
+            android:text="@string/help"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/open" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
         android:id="@+id/inputText"
-        android:layout_width="516dp"
-        android:layout_height="422dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:ems="10"
+        android:gravity="start|top"
         android:hint="@string/hint"
-        android:inputType="text"
-        android:singleLine="false"
+        android:inputType="textMultiLine"
+        android:minWidth="300dp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/help"
-        android:layout_width="166dp"
-        android:layout_height="64dp"
-        android:text="@string/help"
-        app:layout_constraintStart_toEndOf="@+id/inputText"
-        app:layout_constraintTop_toBottomOf="@+id/open" />
-
-    <Button
-        android:id="@+id/open"
-        android:layout_width="166dp"
-        android:layout_height="64dp"
-        android:text="@string/open_file"
-        android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@+id/inputText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/save"
-        android:layout_width="166dp"
-        android:layout_height="64dp"
-        android:text="@string/save_file"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/help"
-        app:layout_constraintTop_toBottomOf="@+id/clipboard" />
-
-    <Button
-        android:id="@+id/clipboard"
-        android:layout_width="166dp"
-        android:layout_height="64dp"
-        android:text="@string/copy"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/open"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

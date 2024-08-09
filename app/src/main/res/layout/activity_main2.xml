@@ -15,20 +15,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/open"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputText"
-        app:layout_constraintVertical_bias="0.409" />
-
-    <EditText
-        android:id="@+id/inputText"
-        android:layout_width="373dp"
-        android:layout_height="178dp"
-        android:ems="10"
-        android:hint="@string/hint"
-        android:inputType="text"
-        android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/inputText" />
 
     <Button
         android:id="@+id/help"
@@ -63,4 +50,16 @@
         android:text="@string/copy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputText" />
+
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="match_parent"
+        android:layout_height="166dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/hint"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,26 @@
     tools:context=".HelpActivity">
 
     <Button
+        android:id="@+id/sourceyiminganticheat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Yiming.AntiCheat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sourceintro" />
+
+    <Button
+        android:id="@+id/sourceintro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/sourceintro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/websites" />
+
+    <Button
         android:id="@+id/websites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -35,10 +55,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/abouta" />
+        app:layout_constraintTop_toBottomOf="@+id/about" />
 
     <Button
-        android:id="@+id/abouta"
+        android:id="@+id/about"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/about"

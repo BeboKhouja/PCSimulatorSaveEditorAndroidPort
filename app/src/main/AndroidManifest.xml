@@ -7,16 +7,20 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/pc_simulator_save_editor"
-        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/pc_simulator_save_editor_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
+        android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".BrowserActivity"
+            android:name=".ChangeLogActivity"
             android:theme="@style/Theme.PCSimulatorSaveEditor.NoActionBar"
             android:exported="false" />
+        <activity
+            android:name=".BrowserActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PCSimulatorSaveEditor.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -30,8 +34,8 @@
 
         <activity
             android:name=".HelpActivity"
-            android:theme="@style/Theme.PCSimulatorSaveEditor.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.PCSimulatorSaveEditor.NoActionBar" />
         <activity
             android:name=".MainActivity2"
             android:exported="true"

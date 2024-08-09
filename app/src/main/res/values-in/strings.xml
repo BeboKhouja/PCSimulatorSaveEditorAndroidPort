@@ -11,4 +11,7 @@
     <string name="about">Tentang</string>
     <string name="savefile">Save File PC Simulator</string>
     <string name="websites">Situs PC Simulator</string>
+    <string name="sourceintro">Introduksi source PC Simulator</string>
+    <string name="decrypt_after_open">Dekripsi setelah buka file</string>
+    <string name="encrypt_after_opening">Enkripsi setelah ganti file</string>
 </resources>

@@ -1,22 +1,12 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
-import java.util.Arrays
-import java.util.Scanner
 
 
 public class HelpActivity : AppCompatActivity() {
@@ -31,9 +21,11 @@ public class HelpActivity : AppCompatActivity() {
         }
 
         val savefiles = findViewById<Button>(R.id.savefiles)
-        val about = findViewById<Button>(R.id.abouta)
+        val about = findViewById<Button>(R.id.about)
         val term = findViewById<Button>(R.id.term)
         val websites = findViewById<Button>(R.id.websites)
+        val sourceintro = findViewById<Button>(R.id.sourceintro)
+        val yiminganticheat = findViewById<Button>(R.id.sourceyiminganticheat)
 
         savefiles.setOnClickListener {
             startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/PC Simulator Save Files.htm") })
@@ -49,6 +41,14 @@ public class HelpActivity : AppCompatActivity() {
 
         websites.setOnClickListener {
             startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/PC Simulator Websites.htm") })
+        }
+
+        sourceintro.setOnClickListener {
+            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/Source/PC Simulator source code introduction.htm") })
+        }
+
+        yiminganticheat.setOnClickListener {
+            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/Source/Yiming.AntiCheat.htm") })
         }
 
     }

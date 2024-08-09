@@ -1,6 +1,7 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentResolver
@@ -8,8 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,6 +31,39 @@ class MainActivity2 : AppCompatActivity() {
 
     private val openFile = 0
     private val saveFile = 1
+    private var decrypt_after_opening = true
+    private var encrypt_after_saving = true
+    val version = "1.2.4"
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.decrypt_after_opening) {
+            decrypt_after_opening = decrypt_after_opening.not()
+        } else if (item.itemId == R.id.encrypt_after_saving) {
+            encrypt_after_saving = encrypt_after_saving.not()
+        } else if (item.itemId == R.id.changelog) {
+            startActivity(Intent(applicationContext, ChangeLogActivity::class.java))
+        } else if (item.itemId == R.id.about) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setMessage("""
+                    |Created by Mokka Chocolata.
+                    |Free, and open source.
+                    |""".trimMargin())
+                .setTitle("PC Simulator Save Editor Android Port (version $version)")
+                .setPositiveButton("OK", null)
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +109,9 @@ class MainActivity2 : AppCompatActivity() {
 
         save.setOnClickListener{
             if (input.text.toString() != "") {
-                input.setText(functions.Decrypt(input.text.toString()))
+                if (encrypt_after_saving) {
+                    input.setText(functions.Decrypt(input.text.toString()))
+                }
                 startActivityForResult(saveIntent, saveFile)
             }
         }
@@ -107,7 +147,11 @@ class MainActivity2 : AppCompatActivity() {
                 functions.input = readTextFromUri(uri)
                 thread.start()
                 thread.join()
-                input.setText(functions.Output)
+                if (decrypt_after_opening) {
+                    input.setText(functions.Output)
+                } else {
+                    input.setText(functions.Decrypt(functions.Output))
+                }
             }
         } else if (requestCode == saveFile && resultCode == Activity.RESULT_OK) {
             data?.data?.also {uri ->
