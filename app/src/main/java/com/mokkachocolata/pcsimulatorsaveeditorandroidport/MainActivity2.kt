@@ -25,6 +25,7 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlin.properties.Delegates
 
 
 class MainActivity2 : AppCompatActivity() {
@@ -33,7 +34,7 @@ class MainActivity2 : AppCompatActivity() {
     private val saveFile = 1
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.2.4"
+    val version = "1.2.5"
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.decrypt_after_opening) {
@@ -78,7 +79,8 @@ class MainActivity2 : AppCompatActivity() {
         val decrypt = findViewById<Button>(R.id.decryptencrypt)
         val input = findViewById<EditText>(R.id.inputText)
         val functions = MainFunctions()
-        decrypt.setOnClickListener {
+        decrypt.setOnClickListener { _ ->
+            System.gc()
             if (input.text.toString() != "") {
                 input.setText(functions.Decrypt(input.text.toString()))
             }
@@ -86,7 +88,8 @@ class MainActivity2 : AppCompatActivity() {
 
         val help = findViewById<Button>(R.id.help)
 
-        help.setOnClickListener{
+        help.setOnClickListener {_ ->
+            System.gc()
             startActivity(Intent(applicationContext, HelpActivity::class.java))
 
         }
@@ -103,11 +106,13 @@ class MainActivity2 : AppCompatActivity() {
         }
 
 
-        open.setOnClickListener{
+        open.setOnClickListener {_ ->
+            System.gc()
             startActivityForResult(chooseFile, openFile)
         }
 
-        save.setOnClickListener{
+        save.setOnClickListener {_ ->
+            System.gc()
             if (input.text.toString() != "") {
                 if (encrypt_after_saving) {
                     input.setText(functions.Decrypt(input.text.toString()))
@@ -116,9 +121,10 @@ class MainActivity2 : AppCompatActivity() {
             }
         }
 
-        copy.setOnClickListener{
+        copy.setOnClickListener{_ ->
+            System.gc()
             if (input.text.toString() != "") {
-                val clipboard : ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("PC Simulator Save", input.text.toString())
                 clipboard.setPrimaryClip(clip)
             }
@@ -126,47 +132,37 @@ class MainActivity2 : AppCompatActivity() {
 
     }
 
-    private fun readTextFromUri(uri: Uri): String {
-        val uriThread = ReadTextFromUriThread()
-        uriThread.resolver = contentResolver
-        uriThread.uri = uri
-        val actualThread = Thread(uriThread)
-        actualThread.start()
-        actualThread.join()
-        return uriThread.output
-    }
 
     @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val functions = MainFunctions()
         val input = findViewById<EditText>(R.id.inputText)
+        val writeorread = WriteOrReadThread()
+
         if (requestCode == openFile && resultCode == Activity.RESULT_OK) {
-            data?.data?.also {uri ->
-                val thread = Thread(functions)
-                functions.input = readTextFromUri(uri)
-                thread.start()
-                thread.join()
-                if (decrypt_after_opening) {
-                    input.setText(functions.Output)
-                } else {
-                    input.setText(functions.Decrypt(functions.Output))
-                }
+            val writeOrReadThread = Thread(writeorread)
+           writeorread.resolver = contentResolver
+            if (data != null) {
+                writeorread.data = data
             }
+           writeorread.input = input
+           writeorread.decrypt_after_opening = decrypt_after_opening
+           writeorread.encrypt_after_saving = encrypt_after_saving
+           writeorread.WriteOrRead = false
+            writeOrReadThread.start()
+            writeOrReadThread.join()
         } else if (requestCode == saveFile && resultCode == Activity.RESULT_OK) {
-            data?.data?.also {uri ->
-                try {
-                    contentResolver.openFileDescriptor(uri, "w")?.use { it ->
-                        FileOutputStream(it.fileDescriptor).use {
-                            it.write(input.text.toString().toByteArray())
-                        }
-                    }
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+            val writeOrReadThread = Thread(writeorread)
+            writeorread.resolver = contentResolver
+            if (data != null) {
+                writeorread.data = data
             }
+            writeorread.input = input
+            writeorread.decrypt_after_opening = decrypt_after_opening
+            writeorread.encrypt_after_saving = encrypt_after_saving
+            writeorread.WriteOrRead = true
+            writeOrReadThread.start()
+            writeOrReadThread.join()
         }
     }
 }
@@ -179,7 +175,9 @@ class ReadTextFromUriThread : Runnable {
 
     override fun run() {
         val stringBuilder = StringBuilder()
-        resolver.openInputStream(uri)?.use { inputStream ->
+        val inputStream = resolver.openInputStream(uri)
+
+        inputStream?.use { inputStream ->
             BufferedReader(InputStreamReader(inputStream)).use { reader ->
                 var line: String? = reader.readLine()
                 while (line != null) {
@@ -188,7 +186,64 @@ class ReadTextFromUriThread : Runnable {
                 }
             }
         }
+        inputStream?.close()
         output = stringBuilder.toString()
+        stringBuilder.clear()
     }
+
+}
+
+class WriteOrReadThread(): Runnable{
+    var WriteOrRead by Delegates.notNull<Boolean>()
+    lateinit var input : EditText
+    lateinit var data : Intent
+    lateinit var resolver : ContentResolver
+    var functions = MainFunctions()
+    var decrypt_after_opening by Delegates.notNull<Boolean>()
+    var encrypt_after_saving by Delegates.notNull<Boolean>()
+
+    private fun readTextFromUri(uri: Uri): String {
+        val uriThread = ReadTextFromUriThread()
+        uriThread.resolver = resolver
+        uriThread.uri = uri
+        val actualThread = Thread(uriThread)
+        actualThread.start()
+        actualThread.join()
+        return uriThread.output
+    }
+
+    override fun run() {
+        if (!WriteOrRead) {
+            data?.data?.also {uri ->
+                val thread = Thread(functions)
+                functions.input = readTextFromUri(uri)
+                thread.start()
+                thread.join()
+                if (decrypt_after_opening) {
+                    input.setText(functions.Output)
+                } else {
+                    input.setText(functions.Decrypt(functions.Output))
+                }
+            }
+        } else {
+            data?.data?.also {uri ->
+                try {
+                    resolver.openFileDescriptor(uri, "w")?.use { it ->
+                        val outputstream = FileOutputStream(it.fileDescriptor)
+
+                        outputstream.use {
+                            it.write(input.text.toString().toByteArray())
+                        }
+                        outputstream.close()
+                    }
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
 
 }

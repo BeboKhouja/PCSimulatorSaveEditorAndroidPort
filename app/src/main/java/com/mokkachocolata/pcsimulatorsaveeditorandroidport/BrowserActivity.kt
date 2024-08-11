@@ -14,6 +14,11 @@ import java.io.File
 import java.util.Scanner
 
 class BrowserActivity : AppCompatActivity() {
+    lateinit var browser: WebView
+    override fun onDestroy(){
+        super.onDestroy()
+        browser.destroy()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,15 +29,12 @@ class BrowserActivity : AppCompatActivity() {
             insets
         }
 
-        val browser = findViewById<WebView>(R.id.view)
+        browser = findViewById(R.id.view)
 
         val settings = browser.settings
         settings.javaScriptEnabled = true
 
-
-
         intent.getStringExtra("str")?.let { browser.loadUrl(it) }
-        intent.getStringExtra("str")?.let { Log.d("App", it) }
-        browser.url?.let { Log.d("App", it) }
+
     }
 }

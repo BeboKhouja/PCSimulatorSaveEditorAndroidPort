@@ -14,9 +14,8 @@ class ChangeLogActivity : AppCompatActivity() {
             A version of the PC Simulator Save Editor ported to Android.
             
             Changes:
-            - Changed UI layout compatibility.
-            - Added a menu bar.
-            - Added a changelog.
+            - App now optimized for multi core phones.
+            - Memory leaks patched.
         """.trimIndent()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

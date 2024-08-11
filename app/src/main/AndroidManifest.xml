@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         android:usesCleartextTraffic="true"
+        android:largeHeap="true"
         tools:targetApi="33">
         <activity
             android:name=".ChangeLogActivity"
