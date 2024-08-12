@@ -13,5 +13,5 @@
     <string name="sourceintro">Source code introduction</string>
     <string name="decrypt_after_open">Decrypt after opening file</string>
     <string name="encrypt_after_opening">Encrypt after saving file</string>
-    <string name="version">1.2.4</string>
+    <string name="decryptToTxt">Decrypt/Encrypt to TXT</string>
 </resources>

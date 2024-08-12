@@ -14,8 +14,8 @@ class ChangeLogActivity : AppCompatActivity() {
             A version of the PC Simulator Save Editor ported to Android.
             
             Changes:
-            - App now optimized for multi core phones.
-            - Memory leaks patched.
+            - Using a new method to decrypt code, memory usage was cut by half.
+            - Added a Save to TXT button so that up to 100MB (for 8GB RAM systems) of file can be decrypted quickly.
         """.trimIndent()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

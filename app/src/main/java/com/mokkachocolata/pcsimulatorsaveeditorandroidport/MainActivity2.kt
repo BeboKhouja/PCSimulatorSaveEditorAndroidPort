@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,25 +17,39 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 
 class MainActivity2 : AppCompatActivity() {
 
+    lateinit var text : String
     private val openFile = 0
+    var done = false
     private val saveFile = 1
+    val openFileAndSaveToTxt = 2
+    val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.2.5"
+    val version = "1.2.6"
+    lateinit var input : EditText
+    lateinit var save : Button
+    lateinit var saveIntent: Intent
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.decrypt_after_opening) {
@@ -59,6 +74,12 @@ class MainActivity2 : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        input.text.clear()
+        System.gc()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
@@ -76,8 +97,10 @@ class MainActivity2 : AppCompatActivity() {
             insets
         }
 
+        input = findViewById(R.id.inputText)
+
         val decrypt = findViewById<Button>(R.id.decryptencrypt)
-        val input = findViewById<EditText>(R.id.inputText)
+
         val functions = MainFunctions()
         decrypt.setOnClickListener { _ ->
             System.gc()
@@ -95,12 +118,12 @@ class MainActivity2 : AppCompatActivity() {
         }
 
         val open = findViewById<Button>(R.id.open)
-        val save = findViewById<Button>(R.id.save)
+        save = findViewById(R.id.save)
         val copy = findViewById<Button>(R.id.clipboard)
         val chooseFile = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             type = "*/*"
         }
-        val saveIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+        saveIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             type = "*/*"
             addCategory(Intent.CATEGORY_OPENABLE)
         }
@@ -121,6 +144,13 @@ class MainActivity2 : AppCompatActivity() {
             }
         }
 
+        val decryptToTxt = findViewById<Button>(R.id.decryptToTxt)
+
+        decryptToTxt.setOnClickListener { _ ->
+            System.gc()
+            startActivityForResult(chooseFile, openFileAndSaveToTxt)
+        }
+
         copy.setOnClickListener{_ ->
             System.gc()
             if (input.text.toString() != "") {
@@ -138,9 +168,23 @@ class MainActivity2 : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         val input = findViewById<EditText>(R.id.inputText)
         val writeorread = WriteOrReadThread()
+        val afterread = AfterReadThread()
 
-        if (requestCode == openFile && resultCode == Activity.RESULT_OK) {
+        if (requestCode == saveToTxtInClass && resultCode == Activity.RESULT_OK) {
+            Log.i("App","Reached here")
+            val afterReadThread = Thread(afterread)
+            afterread.resolver = contentResolver
+            if (data != null) {
+                afterread.afterData = data
+            }
+            Log.d("App", text)
+            afterread.text = text
+            afterReadThread.start()
+            afterReadThread.join()
+
+        } else if (requestCode == openFile && resultCode == Activity.RESULT_OK) {
             val writeOrReadThread = Thread(writeorread)
+            writeorread.clazz = this
            writeorread.resolver = contentResolver
             if (data != null) {
                 writeorread.data = data
@@ -151,6 +195,7 @@ class MainActivity2 : AppCompatActivity() {
            writeorread.WriteOrRead = false
             writeOrReadThread.start()
             writeOrReadThread.join()
+            System.gc()
         } else if (requestCode == saveFile && resultCode == Activity.RESULT_OK) {
             val writeOrReadThread = Thread(writeorread)
             writeorread.resolver = contentResolver
@@ -162,7 +207,23 @@ class MainActivity2 : AppCompatActivity() {
             writeorread.encrypt_after_saving = encrypt_after_saving
             writeorread.WriteOrRead = true
             writeOrReadThread.start()
+            System.gc()
+        } else if (requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK) {
+            val writeOrReadThread = Thread(writeorread)
+            writeorread.clazz = this
+            writeorread.resolver = contentResolver
+            if (data != null) {
+                writeorread.data = data
+            }
+            writeorread.input = input
+            writeorread.decrypt_after_opening = decrypt_after_opening
+            writeorread.encrypt_after_saving = encrypt_after_saving
+            writeorread.WriteOrRead = true
+            writeorread.saveToTxt = true
+            writeorread.doClazz = afterread
+            writeOrReadThread.start()
             writeOrReadThread.join()
+            System.gc()
         }
     }
 }
@@ -174,6 +235,7 @@ class ReadTextFromUriThread : Runnable {
     lateinit var resolver : ContentResolver
 
     override fun run() {
+        System.gc()
         val stringBuilder = StringBuilder()
         val inputStream = resolver.openInputStream(uri)
 
@@ -189,6 +251,7 @@ class ReadTextFromUriThread : Runnable {
         inputStream?.close()
         output = stringBuilder.toString()
         stringBuilder.clear()
+        System.gc()
     }
 
 }
@@ -198,9 +261,12 @@ class WriteOrReadThread(): Runnable{
     lateinit var input : EditText
     lateinit var data : Intent
     lateinit var resolver : ContentResolver
+    var saveToTxt by Delegates.notNull<Boolean>()
     var functions = MainFunctions()
     var decrypt_after_opening by Delegates.notNull<Boolean>()
     var encrypt_after_saving by Delegates.notNull<Boolean>()
+    lateinit var clazz : MainActivity2
+    lateinit var doClazz : AfterReadThread
 
     private fun readTextFromUri(uri: Uri): String {
         val uriThread = ReadTextFromUriThread()
@@ -219,31 +285,53 @@ class WriteOrReadThread(): Runnable{
                 functions.input = readTextFromUri(uri)
                 thread.start()
                 thread.join()
-                if (decrypt_after_opening) {
-                    input.setText(functions.Output)
-                } else {
-                    input.setText(functions.Decrypt(functions.Output))
-                }
             }
-        } else {
+        } else if (saveToTxt) {
             data?.data?.also {uri ->
-                try {
-                    resolver.openFileDescriptor(uri, "w")?.use { it ->
-                        val outputstream = FileOutputStream(it.fileDescriptor)
+                val thread = Thread(functions)
+                functions.input = readTextFromUri(uri)
+                thread.start()
+                thread.join()
+                Log.d("App", functions.Output)
+                clazz.text = functions.Output
+                clazz.startActivityForResult(clazz.saveIntent, clazz.saveToTxtInClass)
+            }
+        } }
+    }
 
-                        outputstream.use {
-                            it.write(input.text.toString().toByteArray())
-                        }
-                        outputstream.close()
+class AfterReadThread() : Runnable{
+    lateinit var afterData : Intent
+    lateinit var resolver : ContentResolver
+    lateinit var text: String
+    var functions = MainFunctions()
+
+    private fun readTextFromUri(uri: Uri): String {
+        val uriThread = ReadTextFromUriThread()
+        uriThread.resolver = resolver
+        uriThread.uri = uri
+        val actualThread = Thread(uriThread)
+        actualThread.start()
+        actualThread.join()
+        return uriThread.output
+    }
+
+    override fun run() {
+        afterData?.data?.also {uri ->
+            try {
+                resolver.openFileDescriptor(uri, "w")?.use { it ->
+                    val outputstream = FileOutputStream(it.fileDescriptor)
+
+                    outputstream.use {
+                        it.write(text.toByteArray())
                     }
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                    outputstream.close()
                 }
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
     }
-
 
 }

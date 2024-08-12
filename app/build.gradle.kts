@@ -9,6 +9,7 @@ android {
     }
     signingConfigs {
         create("release") {
+
         }
     }
     namespace = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
@@ -18,8 +19,8 @@ android {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.2.4"
+        versionCode = 3
+        versionName = "1.2.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -70,7 +71,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(files("libs/PC Simulator Save Editor Library.jar"))
+    implementation(files("libs\\PC Simulator Save Editor Library.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
