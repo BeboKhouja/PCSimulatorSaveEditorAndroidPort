@@ -2,6 +2,8 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +11,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 
-public class HelpActivity : AppCompatActivity() {
+class HelpActivity : AppCompatActivity(), View.OnClickListener {
+    data class HelpButton(val button: Button, val index: Int)
+
+    lateinit var helpButtons : List<HelpButton>
+    override fun onClick(view: View) {
+        Log.d("App", "clicked")
+        for (button in helpButtons) {
+            if (view == button.button) {
+                val intent = Intent(this, BrowserActivity::class.java)
+                intent.putExtra("index", button.index)
+                startActivity(intent)
+                break
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,36 +36,20 @@ public class HelpActivity : AppCompatActivity() {
             insets
         }
 
-        val savefiles = findViewById<Button>(R.id.savefiles)
-        val about = findViewById<Button>(R.id.about)
-        val term = findViewById<Button>(R.id.term)
-        val websites = findViewById<Button>(R.id.websites)
-        val sourceintro = findViewById<Button>(R.id.sourceintro)
-        val yiminganticheat = findViewById<Button>(R.id.sourceyiminganticheat)
+        helpButtons = listOf(
+            HelpButton(findViewById(R.id.about), 0),
+            HelpButton(findViewById(R.id.term), 1),
+            HelpButton(findViewById(R.id.savefiles), 2),
+            HelpButton(findViewById(R.id.websites), 3),
+            HelpButton(findViewById(R.id.sourceintro), 4),
+            HelpButton(findViewById(R.id.sourceyiminganticheat), 5),
+            HelpButton(findViewById(R.id.howtouse), 6)
+        )
 
-        savefiles.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/PC Simulator Save Files.htm") })
+        for (button in helpButtons) {
+            button.button.setOnClickListener(this)
         }
 
-        about.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/About.htm") })
-        }
-
-        term.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/Terminologies.htm") })
-        }
-
-        websites.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/PC Simulator Websites.htm") })
-        }
-
-        sourceintro.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/Source/PC Simulator source code introduction.htm") })
-        }
-
-        yiminganticheat.setOnClickListener {
-            startActivity(Intent(applicationContext, BrowserActivity::class.java).apply { putExtra("str", "file:///android_asset/Source/Yiming.AntiCheat.htm") })
-        }
 
     }
 }

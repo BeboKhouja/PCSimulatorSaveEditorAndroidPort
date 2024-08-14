@@ -14,4 +14,6 @@
     <string name="decrypt_after_open">Decrypt after opening file</string>
     <string name="encrypt_after_opening">Encrypt after saving file</string>
     <string name="decryptToTxt">Decrypt/Encrypt to TXT</string>
+    <string name="howtouse">How to use the App</string>
+    <string name="save_file_help">PC Simulator Save File</string>
 </resources>

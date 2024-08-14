@@ -19,8 +19,8 @@ android {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
         minSdk = 21
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.2.6"
+        versionCode = 4
+        versionName = "1.2.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

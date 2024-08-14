@@ -46,7 +46,7 @@ class MainActivity2 : AppCompatActivity() {
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.2.6"
+    val version = "1.2.7"
     lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
@@ -70,6 +70,9 @@ class MainActivity2 : AppCompatActivity() {
 
             val dialog: AlertDialog = builder.create()
             dialog.show()
+        } else if (item.itemId == R.id.help) {
+            System.gc()
+            startActivity(Intent(applicationContext, HelpActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -107,14 +110,6 @@ class MainActivity2 : AppCompatActivity() {
             if (input.text.toString() != "") {
                 input.setText(functions.Decrypt(input.text.toString()))
             }
-        }
-
-        val help = findViewById<Button>(R.id.help)
-
-        help.setOnClickListener {_ ->
-            System.gc()
-            startActivity(Intent(applicationContext, HelpActivity::class.java))
-
         }
 
         val open = findViewById<Button>(R.id.open)

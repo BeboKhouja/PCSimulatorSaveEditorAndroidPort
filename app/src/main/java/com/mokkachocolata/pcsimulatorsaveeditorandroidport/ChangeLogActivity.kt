@@ -14,8 +14,11 @@ class ChangeLogActivity : AppCompatActivity() {
             A version of the PC Simulator Save Editor ported to Android.
             
             Changes:
-            - Using a new method to decrypt code, memory usage was cut by half.
-            - Added a Save to TXT button so that up to 100MB (for 8GB RAM systems) of file can be decrypted quickly.
+            - Added a search bar into the help activity (though this does not do anything.)
+            - Added the back and forward buttons to the browser activity.
+            - Added the title of the page in the browser activity.
+            - Moved the help button to the action bar.
+            - A translation error is fixed.
         """.trimIndent()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

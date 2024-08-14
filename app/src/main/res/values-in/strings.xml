@@ -15,4 +15,6 @@
     <string name="decrypt_after_open">Dekripsi setelah buka file</string>
     <string name="encrypt_after_opening">Enkripsi setelah ganti file</string>
     <string name="decryptToTxt">Dekripsi/Enkripsi ke TXT</string>
+    <string name="howtouse">Cara gunakan Applikasi</string>
+    <string name="save_file_help">File PC Simulator</string>
 </resources>
