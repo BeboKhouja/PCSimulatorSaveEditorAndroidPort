@@ -14,11 +14,9 @@ class ChangeLogActivity : AppCompatActivity() {
             A version of the PC Simulator Save Editor ported to Android.
             
             Changes:
-            - Added a search bar into the help activity (though this does not do anything.)
-            - Added the back and forward buttons to the browser activity.
-            - Added the title of the page in the browser activity.
-            - Moved the help button to the action bar.
-            - A translation error is fixed.
+            - Theme now changed to Material 3. (though the AppCompat theme is used for API levels 30 and below)
+            - Slight UI change for API level 31 and later.
+            - Search bar moved to action bar in the Help activity.
         """.trimIndent()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

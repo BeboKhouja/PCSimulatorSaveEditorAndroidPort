@@ -3,6 +3,9 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +16,21 @@ import androidx.core.view.WindowInsetsCompat
 
 class HelpActivity : AppCompatActivity(), View.OnClickListener {
     data class HelpButton(val button: Button, val index: Int)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_help, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     lateinit var helpButtons : List<HelpButton>
     override fun onClick(view: View) {
@@ -35,6 +53,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         helpButtons = listOf(
             HelpButton(findViewById(R.id.about), 0),

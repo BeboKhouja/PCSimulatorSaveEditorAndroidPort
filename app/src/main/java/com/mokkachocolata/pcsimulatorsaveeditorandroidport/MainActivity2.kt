@@ -2,6 +2,7 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentResolver
@@ -19,8 +20,20 @@ import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.color.DynamicColors
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +64,7 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     lateinit var saveIntent: Intent
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.decrypt_after_opening) {
             decrypt_after_opening = decrypt_after_opening.not()
@@ -61,12 +75,13 @@ class MainActivity2 : AppCompatActivity() {
         } else if (item.itemId == R.id.about) {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
+                .setIcon(R.drawable.baseline_info_outline_24)
                 .setMessage("""
                     |Created by Mokka Chocolata.
                     |Free, and open source.
                     |""".trimMargin())
                 .setTitle("PC Simulator Save Editor Android Port (version $version)")
-                .setPositiveButton("OK", null)
+                .setPositiveButton("Ok", null)
 
             val dialog: AlertDialog = builder.create()
             dialog.show()
@@ -94,6 +109,7 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main2)
+        DynamicColors.applyToActivitiesIfAvailable(application)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

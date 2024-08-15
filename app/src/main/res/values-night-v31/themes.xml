@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.PCSimulatorSaveEditor" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:dialogTheme">@style/Theme.Material3.DayNight.Dialog</item>
+    </style>
+
+    <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:dialogTheme">@style/Theme.Material3.DayNight.Dialog</item>
+    </style>
+</resources>

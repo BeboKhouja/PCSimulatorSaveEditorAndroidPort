@@ -7,81 +7,62 @@
     android:layout_height="match_parent"
     tools:context=".HelpActivity">
 
-    <Button
-        android:id="@+id/sourceyiminganticheat"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Yiming.AntiCheat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sourceintro" />
-
-    <Button
-        android:id="@+id/sourceintro"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/sourceintro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/websites" />
-
-    <Button
-        android:id="@+id/websites"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/websites"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/savefiles" />
-
-    <Button
-        android:id="@+id/savefiles"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/save_file_help"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/term" />
-
-    <Button
-        android:id="@+id/term"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/term"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about" />
-
-    <Button
-        android:id="@+id/about"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/about"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
-
-    <Button
-        android:id="@+id/howtouse"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/howtouse"
+        android:layout_height="700dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sourceyiminganticheat" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/sourceyiminganticheat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yiming.AntiCheat" />
+
+            <Button
+                android:id="@+id/sourceintro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sourceintro" />
+
+            <Button
+                android:id="@+id/websites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/websites" />
+
+            <Button
+                android:id="@+id/savefiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_file_help" />
+
+            <Button
+                android:id="@+id/term"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/term" />
+
+            <Button
+                android:id="@+id/about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about" />
+
+            <Button
+                android:id="@+id/howtouse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/howtouse" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

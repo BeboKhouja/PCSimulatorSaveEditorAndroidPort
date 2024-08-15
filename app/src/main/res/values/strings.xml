@@ -16,4 +16,5 @@
     <string name="decryptToTxt">Decrypt/Encrypt to TXT</string>
     <string name="howtouse">How to use the App</string>
     <string name="save_file_help">PC Simulator Save File</string>
+    <string name="title_activity_dialog">DialogActivity</string>
 </resources>

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.PCSimulatorSaveEditor" parent="Theme.AppCompat.Light">
+    <style name="Theme.PCSimulatorSaveEditor" parent="Theme.AppCompat.Light" />
 
-    </style>
+    <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-
-    </style>
+    <style name="Theme.AppCompat.Light" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

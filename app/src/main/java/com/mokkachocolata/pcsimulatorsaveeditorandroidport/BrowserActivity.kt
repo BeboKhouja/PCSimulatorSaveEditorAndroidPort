@@ -2,6 +2,7 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,13 @@ class BrowserActivity : AppCompatActivity() {
         super.onDestroy()
         browser.destroy()
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,7 +33,7 @@ class BrowserActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         browser = findViewById(R.id.view)
 
         val maxIndex = 6
