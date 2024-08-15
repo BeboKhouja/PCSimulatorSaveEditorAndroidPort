@@ -9,6 +9,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,10 +61,15 @@ class MainActivity2 : AppCompatActivity() {
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.2.7"
+    val version = "1.3.1"
     lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
+    val ChangelogText = """
+            - Now uses Material Dialog Boxes on API level 31 and above. (API levels 30 and below use the normal Dialog.)
+            - Fixed the wrong version in the changelog and about.
+            - Now the changelog no longer uses a seperate activity, but uses a dialog box instead.
+        """.trimIndent()
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,20 +78,54 @@ class MainActivity2 : AppCompatActivity() {
         } else if (item.itemId == R.id.encrypt_after_saving) {
             encrypt_after_saving = encrypt_after_saving.not()
         } else if (item.itemId == R.id.changelog) {
-            startActivity(Intent(applicationContext, ChangeLogActivity::class.java))
+            if (Build.VERSION.SDK_INT >= 31) {
+                val builder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
+                builder
+                    .setIcon(R.drawable.baseline_info_outline_24)
+                    .setMessage(ChangelogText)
+                    .setTitle("Changelog (version $version)")
+                    .setPositiveButton("Ok", null)
+                    .show()
+            } else {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                builder
+                    .setIcon(R.drawable.baseline_info_outline_24)
+                    .setMessage(ChangelogText)
+                    .setTitle("Changelog (version $version)")
+                    .setPositiveButton("Ok", null)
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
         } else if (item.itemId == R.id.about) {
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage("""
+            if (Build.VERSION.SDK_INT >= 31) {
+                val builder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
+                builder
+                    .setIcon(R.drawable.baseline_info_outline_24)
+                    .setMessage(
+                        """
+                    |Created by Mokka Chocolata.
+                    |Free, and open source.
+                    |""".trimMargin()
+                    )
+                    .setTitle("PC Simulator Save Editor Android Port (version $version)")
+                    .setPositiveButton("Ok", null)
+                    .show()
+            } else {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                builder
+                    .setIcon(R.drawable.baseline_info_outline_24)
+                    .setMessage("""
                     |Created by Mokka Chocolata.
                     |Free, and open source.
                     |""".trimMargin())
-                .setTitle("PC Simulator Save Editor Android Port (version $version)")
-                .setPositiveButton("Ok", null)
+                    .setTitle("PC Simulator Save Editor Android Port (version $version)")
+                    .setPositiveButton("Ok", null)
 
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
         } else if (item.itemId == R.id.help) {
             System.gc()
             startActivity(Intent(applicationContext, HelpActivity::class.java))
