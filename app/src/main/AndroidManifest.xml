@@ -15,15 +15,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".DialogActivity"
-            android:exported="false"
-            android:label="@string/title_activity_dialog"
-            android:theme="@style/Theme.AppCompat.Light" />
-        <activity
-            android:name=".ChangeLogActivity"
-            android:exported="false"
-            android:theme="@style/Theme.PCSimulatorSaveEditor.NoActionBar" />
-        <activity
             android:name=".BrowserActivity"
             android:exported="false"
             android:label="@string/help"

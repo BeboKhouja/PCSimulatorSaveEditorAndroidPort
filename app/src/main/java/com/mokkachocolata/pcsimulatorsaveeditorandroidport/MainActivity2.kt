@@ -66,9 +66,8 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     lateinit var saveIntent: Intent
     val ChangelogText = """
-            - Now uses Material Dialog Boxes on API level 31 and above. (API levels 30 and below use the normal Dialog.)
-            - Fixed the wrong version in the changelog and about.
-            - Now the changelog no longer uses a seperate activity, but uses a dialog box instead.
+            - Fixed a crash when the app is switched or launched in light mode. (apparently the problem is caused by a conflicting theme.)
+            - Corrected the info button in light mode.
         """.trimIndent()
 
 
