@@ -61,7 +61,7 @@ class MainActivity2 : AppCompatActivity() {
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.3.1"
+    val version = "1.3.2"
     lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
