@@ -13,7 +13,7 @@ android {
         }
     }
     namespace = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"

@@ -20,6 +20,10 @@ public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Ada
     override fun onBindViewHolder(holder: HelpRecyclerAdapter.ViewHolder, position: Int) {
         val ItemsViewModel = data[position]
         holder.webpreview.loadUrl(ItemsViewModel.url)
+        val settings = holder.webpreview.settings
+        settings.javaScriptEnabled = true
+        settings.loadWithOverviewMode = true
+        settings.useWideViewPort = true
         holder.textpreview.text = ItemsViewModel.name
 
     }

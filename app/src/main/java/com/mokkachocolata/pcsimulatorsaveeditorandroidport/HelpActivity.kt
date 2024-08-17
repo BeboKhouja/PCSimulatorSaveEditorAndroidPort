@@ -45,12 +45,20 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)
+        var layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
 
         val data = ArrayList<Url>()
 
-        data.add(Url("About", 0, "file://android_asset/About.htm"))
+        data.add(Url(resources.getString(R.string.about), 0, "file:///android_asset/About.htm"))
+        data.add(Url(resources.getString(R.string.term), 1, "file:///android_asset/Terminologies.htm"))
+        data.add(Url(resources.getString(R.string.save_file_help), 2, "file:///android_asset/PC Simulator Save Files.htm"))
+        data.add(Url(resources.getString(R.string.websites), 3, "file:///android_asset/PC Simulator Websites.htm"))
+        data.add(Url(resources.getString(R.string.sourceintro), 4, "file:///android_asset/Source/PC Simulator source code introduction.htm"))
+        data.add(Url("Yiming.AntiCheat", 5, "file:///android_asset/Source/Yiming.AntiCheat.htm"))
+        data.add(Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm"))
         val adapter = HelpRecyclerAdapter(data)
 
         recyclerView.adapter = adapter
