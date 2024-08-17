@@ -60,23 +60,19 @@ class ReadTextFromUriThread : Runnable {
 
 class MainActivity2 : AppCompatActivity() {
 
+    private lateinit var globalVars : GlobalVars
     lateinit var text : String
     private val openFile = 0
-    var done = false
     private val saveFile = 1
     val openFileAndSaveToTxt = 2
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.3.3"
+    private lateinit var version : String
     lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
-    val ChangelogText = """
-            - Now you can simply click on a file and it will open it in this app.
-            - Patched a problem where the edittext is not set when you click the open file button.
-            - Filtered file extensions now.
-        """.trimIndent()
+    private lateinit var ChangelogText : String
 
 
 
@@ -156,6 +152,9 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        globalVars = GlobalVars(resources)
+        ChangelogText = globalVars.ChangelogText
+        version = globalVars.version
         enableEdgeToEdge()
         setContentView(R.layout.activity_main2)
         DynamicColors.applyToActivitiesIfAvailable(application)

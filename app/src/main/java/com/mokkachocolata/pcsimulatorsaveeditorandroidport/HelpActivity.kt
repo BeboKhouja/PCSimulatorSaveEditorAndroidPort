@@ -1,30 +1,72 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
+import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import java.util.Locale
 
 
 class HelpActivity : AppCompatActivity(), View.OnClickListener {
+    private lateinit var adapter: HelpRecyclerAdapter
+    private lateinit var urlList: ArrayList<Url>
+    private lateinit var globalVars : GlobalVars
+    private fun filter(text: String) {
+        // creating a new array list to filter our data.
+        val filteredlist = ArrayList<Url>()
+        val emptylist = ArrayList<Url>()
+
+        // running a for loop to compare elements.
+        for (item in urlList) {
+            // checking if the entered string matched with any item of our recycler view.
+            if (item.name.lowercase(Locale.ROOT).contains(text.lowercase(Locale.getDefault()))) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(item)
+            }
+        }
+        if (!filteredlist.isEmpty()) {
+            // at last we are passing that filtered
+            // list to our adapter class.
+            adapter.filterList(filteredlist)
+        } else {
+            // This is an empty list when nothing is found.
+            adapter.filterList(emptylist)
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_help, menu)
 
+        val searchItem = menu?.findItem(R.id.app_bar_search)
+        val searchView = searchItem?.actionView as SearchView
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    filter(newText)
+                }
+                return false
+            }
+
+        })
+
         return super.onCreateOptionsMenu(menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -35,6 +77,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        globalVars = GlobalVars(resources)
         enableEdgeToEdge()
         setContentView(R.layout.activity_help)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -43,6 +86,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
             insets
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        this.urlList = globalVars.urlArrayArray
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)
         var layoutManager = LinearLayoutManager(this)
@@ -52,14 +96,12 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
 
         val data = ArrayList<Url>()
 
-        data.add(Url(resources.getString(R.string.about), 0, "file:///android_asset/About.htm"))
-        data.add(Url(resources.getString(R.string.term), 1, "file:///android_asset/Terminologies.htm"))
-        data.add(Url(resources.getString(R.string.save_file_help), 2, "file:///android_asset/PC Simulator Save Files.htm"))
-        data.add(Url(resources.getString(R.string.websites), 3, "file:///android_asset/PC Simulator Websites.htm"))
-        data.add(Url(resources.getString(R.string.sourceintro), 4, "file:///android_asset/Source/PC Simulator source code introduction.htm"))
-        data.add(Url("Yiming.AntiCheat", 5, "file:///android_asset/Source/Yiming.AntiCheat.htm"))
-        data.add(Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm"))
+
+        for (item in urlList) {
+            data.add(item)
+        }
         val adapter = HelpRecyclerAdapter(data)
+        this.adapter = adapter
 
         recyclerView.adapter = adapter
 

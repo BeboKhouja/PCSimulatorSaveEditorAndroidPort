@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class BrowserActivity : AppCompatActivity() {
     lateinit var browser: WebView
+    private lateinit var globalVars : GlobalVars
     override fun onDestroy(){
         super.onDestroy()
         browser.destroy()
@@ -33,10 +34,11 @@ class BrowserActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        globalVars = GlobalVars(resources)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         browser = findViewById(R.id.view)
 
-        val maxIndex = 6
+        val maxIndex = globalVars.urlArrayArray.size - 1
         var currentIndex = intent.getIntExtra("index",0)
 
         val settings = browser.settings
@@ -44,15 +46,7 @@ class BrowserActivity : AppCompatActivity() {
 
         data class Url(val name: String, val index: Int, val url: String)
 
-        val urlArray = listOf(
-            Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
-            Url(resources.getString(R.string.term), 1, "file:///android_asset/Terminologies.htm"),
-            Url(resources.getString(R.string.save_file_help), 2, "file:///android_asset/PC Simulator Save Files.htm"),
-            Url(resources.getString(R.string.websites), 3, "file:///android_asset/PC Simulator Websites.htm"),
-            Url(resources.getString(R.string.sourceintro), 4, "file:///android_asset/Source/PC Simulator source code introduction.htm"),
-            Url("Yiming.AntiCheat", 5, "file:///android_asset/Source/Yiming.AntiCheat.htm"),
-            Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm")
-        )
+        val urlArray = globalVars.urlArray
 
         val forwardFAB = findViewById<FloatingActionButton>(R.id.nextFAB)
         val backFAB = findViewById<FloatingActionButton>(R.id.back)
