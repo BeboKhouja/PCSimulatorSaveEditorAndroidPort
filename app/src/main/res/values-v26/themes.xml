@@ -2,12 +2,10 @@
 <resources>
 
     <style name="Theme.PCSimulatorSaveEditor" parent="Theme.MaterialComponents.Light">
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:dialogTheme">@style/Theme.MaterialComponents.Light.Dialog</item>
     </style>
 
     <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:dialogTheme">@style/Theme.MaterialComponents.Light.Dialog</item>
     </style>
 </resources>

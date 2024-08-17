@@ -18,9 +18,9 @@ android {
     defaultConfig {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 7
-        versionName = "1.3.2"
+        targetSdk = 35
+        versionCode = 8
+        versionName = "1.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(files("libs\\PC Simulator Save Editor Library.jar"))
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.cardview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -7,62 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".HelpActivity">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="700dp"
-        android:layout_marginTop="48dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/Button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/sourceyiminganticheat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Yiming.AntiCheat" />
-
-            <Button
-                android:id="@+id/sourceintro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sourceintro" />
-
-            <Button
-                android:id="@+id/websites"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/websites" />
-
-            <Button
-                android:id="@+id/savefiles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/save_file_help" />
-
-            <Button
-                android:id="@+id/term"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/term" />
-
-            <Button
-                android:id="@+id/about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about" />
-
-            <Button
-                android:id="@+id/howtouse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/howtouse" />
-        </LinearLayout>
-    </ScrollView>
-
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentResolver
@@ -17,39 +16,47 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
+class ReadTextFromUriThread : Runnable {
+
+    lateinit var uri : Uri
+    var output = ""
+    lateinit var resolver : ContentResolver
+
+    override fun run() {
+        System.gc()
+        val stringBuilder = StringBuilder()
+        val inputStream = resolver.openInputStream(uri)
+
+        inputStream?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        inputStream?.close()
+        output = stringBuilder.toString()
+        stringBuilder.clear()
+        System.gc()
+    }
+
+}
 
 class MainActivity2 : AppCompatActivity() {
 
@@ -61,14 +68,16 @@ class MainActivity2 : AppCompatActivity() {
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
-    val version = "1.3.2"
+    val version = "1.3.3"
     lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
     val ChangelogText = """
-            - Fixed a crash when the app is switched or launched in light mode. (apparently the problem is caused by a conflicting theme.)
-            - Corrected the info button in light mode.
+            - Now you can simply click on a file and it will open it in this app.
+            - Patched a problem where the edittext is not set when you click the open file button.
+            - Filtered file extensions now.
         """.trimIndent()
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -157,10 +166,11 @@ class MainActivity2 : AppCompatActivity() {
         }
 
         input = findViewById(R.id.inputText)
-
         val decrypt = findViewById<Button>(R.id.decryptencrypt)
 
         val functions = MainFunctions()
+
+
         decrypt.setOnClickListener { _ ->
             System.gc()
             if (input.text.toString() != "") {
@@ -172,10 +182,10 @@ class MainActivity2 : AppCompatActivity() {
         save = findViewById(R.id.save)
         val copy = findViewById<Button>(R.id.clipboard)
         val chooseFile = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            type = "*/*"
+            type = "application/octet-stream"
         }
         saveIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            type = "*/*"
+            type = "application/octet-stream"
             addCategory(Intent.CATEGORY_OPENABLE)
         }
 
@@ -208,6 +218,31 @@ class MainActivity2 : AppCompatActivity() {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("PC Simulator Save", input.text.toString())
                 clipboard.setPrimaryClip(clip)
+            }
+        }
+
+        val appLinkIntent: Intent = intent
+        val appLinkAction: String? = appLinkIntent.action
+        val appLinkData: Uri? = appLinkIntent.data
+        if (appLinkAction != null) {
+            Log.d("App", appLinkAction)
+        }
+        Log.d("App", appLinkData.toString())
+        if (Intent.ACTION_VIEW == appLinkAction) {
+            appLinkData?.lastPathSegment?.also { file ->
+                Log.d("App", "reached")
+                val uriThread = ReadTextFromUriThread()
+                val uri = Thread(uriThread)
+                uriThread.uri = appLinkData
+                uriThread.resolver = contentResolver
+                uri.start()
+                uri.join()
+                System.gc()
+                if (decrypt_after_opening) {
+                    input.setText(functions.Decrypt(uriThread.output))
+                } else {
+                    input.setText(uriThread.output)
+                }
             }
         }
 
@@ -279,33 +314,6 @@ class MainActivity2 : AppCompatActivity() {
     }
 }
 
-class ReadTextFromUriThread : Runnable {
-
-    lateinit var uri : Uri
-    var output = ""
-    lateinit var resolver : ContentResolver
-
-    override fun run() {
-        System.gc()
-        val stringBuilder = StringBuilder()
-        val inputStream = resolver.openInputStream(uri)
-
-        inputStream?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    stringBuilder.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        inputStream?.close()
-        output = stringBuilder.toString()
-        stringBuilder.clear()
-        System.gc()
-    }
-
-}
 
 class WriteOrReadThread(): Runnable{
     var WriteOrRead by Delegates.notNull<Boolean>()
@@ -336,6 +344,11 @@ class WriteOrReadThread(): Runnable{
                 functions.input = readTextFromUri(uri)
                 thread.start()
                 thread.join()
+                if (decrypt_after_opening) {
+                    input.setText(functions.Output)
+                } else {
+                    input.setText(readTextFromUri(uri))
+                }
             }
         } else if (saveToTxt) {
             data?.data?.also {uri ->

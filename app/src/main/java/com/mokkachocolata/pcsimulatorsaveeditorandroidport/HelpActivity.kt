@@ -12,10 +12,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 
 
 class HelpActivity : AppCompatActivity(), View.OnClickListener {
-    data class HelpButton(val button: Button, val index: Int)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -31,19 +33,6 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    lateinit var helpButtons : List<HelpButton>
-    override fun onClick(view: View) {
-        Log.d("App", "clicked")
-        for (button in helpButtons) {
-            if (view == button.button) {
-                val intent = Intent(this, BrowserActivity::class.java)
-                intent.putExtra("index", button.index)
-                startActivity(intent)
-                break
-            }
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -55,20 +44,21 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        helpButtons = listOf(
-            HelpButton(findViewById(R.id.about), 0),
-            HelpButton(findViewById(R.id.term), 1),
-            HelpButton(findViewById(R.id.savefiles), 2),
-            HelpButton(findViewById(R.id.websites), 3),
-            HelpButton(findViewById(R.id.sourceintro), 4),
-            HelpButton(findViewById(R.id.sourceyiminganticheat), 5),
-            HelpButton(findViewById(R.id.howtouse), 6)
-        )
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler)
 
-        for (button in helpButtons) {
-            button.button.setOnClickListener(this)
-        }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val data = ArrayList<Url>()
+
+        data.add(Url("About", 0, "file://android_asset/About.htm"))
+        val adapter = HelpRecyclerAdapter(data)
+
+        recyclerView.adapter = adapter
 
 
+    }
+
+    override fun onClick(view: View?) {
+        
     }
 }
