@@ -4,16 +4,10 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    public val version = "1.3.3"
+    public val version = "1.3.4"
     public val ChangelogText = """
-            - Now you can simply click on a file and it will open it in this app.
-            - Patched a problem where the edittext is not set when you click the open file button.
-            - Filtered file extensions now.
-            - New grid based help menu.
-            - A preview was added to the grids.
-            - You can now search in the help menu.
-            - Animated splash screen added.
-            - Now a Discord server is added.
+            - Patched a problem where trying to save a file causes a crash.
+            - Now the app icon's color can be customized with Color Palettes in Material You.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
