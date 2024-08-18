@@ -18,6 +18,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.color.DynamicColors
@@ -133,6 +134,8 @@ class MainActivity2 : AppCompatActivity() {
         } else if (item.itemId == R.id.help) {
             System.gc()
             startActivity(Intent(applicationContext, HelpActivity::class.java))
+        } else if (item.itemId == R.id.discord) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -152,6 +155,9 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 31){
+            installSplashScreen()
+        }
         globalVars = GlobalVars(resources)
         ChangelogText = globalVars.ChangelogText
         version = globalVars.version

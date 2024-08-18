@@ -9,4 +9,9 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:dialogTheme">@style/Theme.Material3.DayNight.Dialog</item>
     </style>
+
+    <style name="Theme.PCSimulatorSaveEditor.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_anim</item>
+        <item name="postSplashScreenTheme">@style/Theme.PCSimulatorSaveEditor</item>
+    </style>
 </resources>

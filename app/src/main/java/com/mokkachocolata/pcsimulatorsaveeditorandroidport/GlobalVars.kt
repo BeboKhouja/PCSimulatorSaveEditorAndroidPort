@@ -12,6 +12,8 @@ class GlobalVars(resources: Resources){
             - New grid based help menu.
             - A preview was added to the grids.
             - You can now search in the help menu.
+            - Animated splash screen added.
+            - Now a Discord server is added.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

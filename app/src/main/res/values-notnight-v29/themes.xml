@@ -10,4 +10,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:dialogTheme">@style/Theme.MaterialComponents.Light.Dialog</item>
     </style>
+
+    <!-- Redirect to the theme above to prevent crashes -->
+    <style name="Theme.PCSimulatorSaveEditor.Splash" parent="Theme.PCSimulatorSaveEditor"/>
 </resources>
