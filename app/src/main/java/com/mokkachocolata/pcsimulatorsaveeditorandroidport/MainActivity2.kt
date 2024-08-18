@@ -297,6 +297,7 @@ class MainActivity2 : AppCompatActivity() {
             writeorread.decrypt_after_opening = decrypt_after_opening
             writeorread.encrypt_after_saving = encrypt_after_saving
             writeorread.WriteOrRead = true
+            writeorread.saveToTxt = false
             writeOrReadThread.start()
             System.gc()
         } else if (requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK) {
