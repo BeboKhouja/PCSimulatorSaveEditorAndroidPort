@@ -1,6 +1,7 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
     lateinit var datanew : List<Url>
+    lateinit var thisholder : ViewHolder
     init {
         datanew = data
     }
@@ -20,12 +22,19 @@ public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Ada
         viewType: Int
     ): HelpRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_help, parent, false)
-        return ViewHolder(view)
+        val holder = ViewHolder(view)
+        thisholder = holder
+        return holder
     }
 
     fun filterList(filteredList: ArrayList<Url>) {
         datanew = filteredList
         notifyDataSetChanged()
+    }
+
+    fun destroyWebview() {
+        thisholder.webpreview.destroy()
+        Log.d("App", "Destroyed")
     }
 
     override fun onBindViewHolder(holder: HelpRecyclerAdapter.ViewHolder, position: Int) {

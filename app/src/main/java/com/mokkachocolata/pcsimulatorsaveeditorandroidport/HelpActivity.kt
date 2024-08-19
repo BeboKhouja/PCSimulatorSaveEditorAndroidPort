@@ -43,6 +43,11 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.destroyWebview()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_help, menu)
