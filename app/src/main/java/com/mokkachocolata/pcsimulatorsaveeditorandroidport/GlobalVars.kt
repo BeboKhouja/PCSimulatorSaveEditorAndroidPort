@@ -4,10 +4,9 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    public val version = "1.3.4"
+    public val version = "1.3.5"
     public val ChangelogText = """
-            - Patched a problem where trying to save a file causes a crash.
-            - Now the app icon's color can be customized with Color Palettes in Material You.
+            - Changed the documentation.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
