@@ -11,18 +11,23 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.DragAndDropPermissions
+import android.view.DragEvent.ACTION_DROP
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import java.io.BufferedReader
 import java.io.FileNotFoundException
@@ -74,6 +79,7 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
+
 
 
 
@@ -174,6 +180,50 @@ class MainActivity2 : AppCompatActivity() {
         val decrypt = findViewById<Button>(R.id.decryptencrypt)
 
         val functions = MainFunctions()
+
+        fun readTextFromUri(uri: Uri): String {
+            val uriThread = ReadTextFromUriThread()
+            uriThread.resolver = contentResolver
+            uriThread.uri = uri
+            val actualThread = Thread(uriThread)
+            actualThread.start()
+            actualThread.join()
+            return uriThread.output
+        }
+
+        if (Build.VERSION.SDK_INT > 24) {
+            input.setOnDragListener{view, event ->
+                when (event.action) {
+                    ACTION_DROP -> {
+                        // The app sometimes crashes whenever the dragged content goes into the app. This is not our fault, it's Android's fault.
+
+                        val fileItem: ClipData.Item = event.clipData.getItemAt(0)
+                        val uri : Uri? = fileItem.uri
+                        // The complicated way to check if a Uri is a file or not
+                        val scheme = uri?.let { contentResolver.getType(it) } != "vnd.android.document/directory" || contentResolver.getType(uri) == null
+                        val dropPermissions = requestDragAndDropPermissions(event)
+                        uri?.let {
+                            if (scheme) {
+                                (view as EditText).setText(readTextFromUri(it))
+                                dropPermissions.release()
+                            } else {
+                                val snack = Snackbar.make(findViewById(R.id.main), "Not a file, won't decrypt.", Snackbar.LENGTH_SHORT)
+                                snack.show()
+                            }
+                        } ?: run {
+                            return@setOnDragListener false
+                        }
+
+                        return@setOnDragListener true
+
+                    }
+
+                    else -> {
+                        return@setOnDragListener false
+                    }
+                }
+            }
+        }
 
 
         decrypt.setOnClickListener { _ ->
