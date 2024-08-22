@@ -37,6 +37,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
+import java.lang.Long.parseLong
 import kotlin.properties.Delegates
 
 class ReadTextFromUriThread : Runnable {
@@ -236,7 +237,7 @@ class MainActivity2 : AppCompatActivity() {
                 val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                 itemArray.put(obj.toJson())
                 val lines = text.lines()
-                input.setText(lines[lines.size - 1] + "\n" + jsonObject.toString())
+                input.setText(lines[0] + "\n" + jsonObject.toString())
             }
         } else if (item.itemId == R.id.saveoptions) {
             val optionList = arrayOf(
@@ -254,9 +255,10 @@ class MainActivity2 : AppCompatActivity() {
             )
             val text = input.text.toString()
             lateinit var jsonObject : JSONObject
-            val init = text.lines()[0].isNotEmpty()
-            if (text.lines()[0].isNotEmpty()) {
-                jsonObject = JSONObject(text.lines()[0])
+            val lines = text.lines()
+            val init = lines[0].isNotEmpty()
+            if (init) {
+                jsonObject = JSONObject(lines[0])
             }
             dialog("Save Options", null, null, null, optionList) {_, i ->
                 when (i) {
@@ -265,8 +267,8 @@ class MainActivity2 : AppCompatActivity() {
                         edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
                         dialog("AC Temperature", "Set the temperature of the AC. Max 2147483647 and min -2147483648" ,{_, i ->
                             if (init) {
-                                jsonObject.put("temperature", parseInt(edittext.text.toString()))
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                jsonObject.put("temperature", parseLong(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -277,7 +279,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("AC Power", "Power on or off the AC." ,{_, i ->
                             if (init) {
                                 jsonObject.put("ac", checkbox.isChecked)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, checkbox)
                     }
@@ -286,7 +288,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Version", "Set the version of the save." ,{_, i ->
                             if (init) {
                                 jsonObject.put("version", edittext.text)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -295,8 +297,8 @@ class MainActivity2 : AppCompatActivity() {
                         edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
                         dialog("Money", "Set the money of the save. Max 2147483647 and min -2147483647" ,{_, i ->
                             if (init) {
-                                jsonObject.put("coin", parseInt(edittext.text.toString()))
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                jsonObject.put("coin", parseLong(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -307,7 +309,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Room", "Set the current room.\n0: Medium\n1: Large\n2: Double Storey\n3: Factory." ,{_, i ->
                             if (init) {
                                 jsonObject.put("room", parseInt(edittext.text.toString()))
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -318,7 +320,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Gravity", "Switch on or off gravity." ,{_, i ->
                             if (init) {
                                 jsonObject.put("gravity", checkbox.isChecked)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, checkbox)
                     }
@@ -329,7 +331,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Hardcore", "Switch on or off hardcore mode." ,{_, i ->
                             if (init) {
                                 jsonObject.put("hardcore", checkbox.isChecked)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, checkbox)
                     }
@@ -339,8 +341,8 @@ class MainActivity2 : AppCompatActivity() {
                         edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
                         dialog("Playtime", "Set the current playtime." ,{_, i ->
                             if (init) {
-                                jsonObject.put("playtime", parseInt(edittext.text.toString()))
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                jsonObject.put("playtime", parseLong(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -351,7 +353,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Light", "Switch on or off the lamp." ,{_, i ->
                             if (init) {
                                 jsonObject.put("light", checkbox.isChecked)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, checkbox)
                     }
@@ -360,7 +362,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Sign", "Set the signer of the save." ,{_, i ->
                             if (init) {
                                 jsonObject.put("sign", edittext.text)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
@@ -369,7 +371,7 @@ class MainActivity2 : AppCompatActivity() {
                         dialog("Save name", "Set the name of the save." ,{_, i ->
                             if (init) {
                                 jsonObject.put("roomName", edittext.text)
-                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                                input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
                     }
