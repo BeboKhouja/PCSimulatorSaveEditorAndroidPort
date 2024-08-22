@@ -6,21 +6,19 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
+import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.DragAndDropPermissions
 import android.view.DragEvent.ACTION_DROP
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -35,6 +33,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import kotlin.properties.Delegates
+import org.json.*
 
 class ReadTextFromUriThread : Runnable {
 
@@ -70,16 +69,87 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var text : String
     private val openFile = 0
     private val saveFile = 1
-    val openFileAndSaveToTxt = 2
+    private val openFileAndSaveToTxt = 2
     val saveToTxtInClass = 3
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
     private lateinit var version : String
-    lateinit var input : EditText
+    private lateinit var input : EditText
     lateinit var save : Button
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
 
+    fun dialog(title: String, message: String, okListener: OnClickListener?, cancelListener: OnClickListener?) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                .setMessage(message)
+                .setTitle(title)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        } else {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                .setMessage(message)
+                .setTitle(title)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+
+            builder.show()
+        }
+    }
+
+    fun dialog(title: String,
+               message: String?,
+               okListener: OnClickListener?,
+               cancelListener: OnClickListener?,
+               adapter : Array<String>,
+               adapterOnClickListener: OnClickListener
+    ) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                .setMessage(message)
+                .setTitle(title)
+                .setItems(adapter, adapterOnClickListener)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        } else {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                if (message != null) {
+                    builder.setMessage(message)
+                }
+                builder
+                    .setTitle(title)
+                    .setItems(adapter, adapterOnClickListener)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        }
+    }
 
 
 
@@ -89,59 +159,39 @@ class MainActivity2 : AppCompatActivity() {
         } else if (item.itemId == R.id.encrypt_after_saving) {
             encrypt_after_saving = encrypt_after_saving.not()
         } else if (item.itemId == R.id.changelog) {
-            if (Build.VERSION.SDK_INT >= 31) {
-                val builder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
-                builder
-                    .setIcon(R.drawable.baseline_info_outline_24)
-                    .setMessage(ChangelogText)
-                    .setTitle("Changelog (version $version)")
-                    .setPositiveButton("Ok", null)
-                    .show()
-            } else {
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                builder
-                    .setIcon(R.drawable.baseline_info_outline_24)
-                    .setMessage(ChangelogText)
-                    .setTitle("Changelog (version $version)")
-                    .setPositiveButton("Ok", null)
-
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
-            }
+            dialog("Changelog (version $version)", globalVars.ChangelogText, null, null)
         } else if (item.itemId == R.id.about) {
-            if (Build.VERSION.SDK_INT >= 31) {
-                val builder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
-                builder
-                    .setIcon(R.drawable.baseline_info_outline_24)
-                    .setMessage(
-                        """
+            dialog("PC Simulator Save Editor Android Port (version $version)", """
                     |Created by Mokka Chocolata.
                     |Free, and open source.
-                    |""".trimMargin()
-                    )
-                    .setTitle("PC Simulator Save Editor Android Port (version $version)")
-                    .setPositiveButton("Ok", null)
-                    .show()
-            } else {
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                builder
-                    .setIcon(R.drawable.baseline_info_outline_24)
-                    .setMessage("""
-                    |Created by Mokka Chocolata.
-                    |Free, and open source.
-                    |""".trimMargin())
-                    .setTitle("PC Simulator Save Editor Android Port (version $version)")
-                    .setPositiveButton("Ok", null)
-
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
-            }
-
+                    |""".trimMargin(), null, null
+            )
         } else if (item.itemId == R.id.help) {
             System.gc()
             startActivity(Intent(applicationContext, HelpActivity::class.java))
         } else if (item.itemId == R.id.discord) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
+        } else if (item.itemId == R.id.insert) {
+            val itemList = arrayOf(
+                "RTX4080Ti",
+                "Pillow",
+                "Cube",
+                "Projector",
+            )
+            dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
+                val text = input.text.toString()
+                val jsonObject = JSONObject(text.lines()[1])
+                Log.d("App", jsonObject.toString())
+                val itemArray = jsonObject.getJSONArray("itemData")
+                val position = Position(
+                    (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                    (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                    (jsonObject.get("playerData") as JSONObject).getDouble("z")
+                )
+                val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                itemArray.put(obj.toJson())
+                input.setText(text.lines()[0] + "\n" + jsonObject.toString())
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -284,8 +334,7 @@ class MainActivity2 : AppCompatActivity() {
         }
         Log.d("App", appLinkData.toString())
         if (Intent.ACTION_VIEW == appLinkAction) {
-            appLinkData?.lastPathSegment?.also { file ->
-                Log.d("App", "reached")
+            appLinkData?.lastPathSegment?.also { _ ->
                 val uriThread = ReadTextFromUriThread()
                 val uri = Thread(uriThread)
                 uriThread.uri = appLinkData
@@ -338,17 +387,13 @@ class MainActivity2 : AppCompatActivity() {
             writeOrReadThread.join()
             System.gc()
         } else if (requestCode == saveFile && resultCode == Activity.RESULT_OK) {
-            val writeOrReadThread = Thread(writeorread)
-            writeorread.resolver = contentResolver
+            val afterReadThread = Thread(afterread)
+            afterread.resolver = contentResolver
             if (data != null) {
-                writeorread.data = data
+                afterread.afterData = data
             }
-            writeorread.input = input
-            writeorread.decrypt_after_opening = decrypt_after_opening
-            writeorread.encrypt_after_saving = encrypt_after_saving
-            writeorread.WriteOrRead = true
-            writeorread.saveToTxt = false
-            writeOrReadThread.start()
+            afterread.text = input.text.toString()
+            afterReadThread.start()
             System.gc()
         } else if (requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK) {
             val writeOrReadThread = Thread(writeorread)
@@ -371,13 +416,13 @@ class MainActivity2 : AppCompatActivity() {
 }
 
 
-class WriteOrReadThread(): Runnable{
+class WriteOrReadThread : Runnable{
     var WriteOrRead by Delegates.notNull<Boolean>()
     lateinit var input : EditText
     lateinit var data : Intent
     lateinit var resolver : ContentResolver
     var saveToTxt by Delegates.notNull<Boolean>()
-    var functions = MainFunctions()
+    private var functions = MainFunctions()
     var decrypt_after_opening by Delegates.notNull<Boolean>()
     var encrypt_after_saving by Delegates.notNull<Boolean>()
     lateinit var clazz : MainActivity2
@@ -419,21 +464,10 @@ class WriteOrReadThread(): Runnable{
         } }
     }
 
-class AfterReadThread() : Runnable{
+class AfterReadThread : Runnable{
     lateinit var afterData : Intent
     lateinit var resolver : ContentResolver
     lateinit var text: String
-    var functions = MainFunctions()
-
-    private fun readTextFromUri(uri: Uri): String {
-        val uriThread = ReadTextFromUriThread()
-        uriThread.resolver = resolver
-        uriThread.uri = uri
-        val actualThread = Thread(uriThread)
-        actualThread.start()
-        actualThread.join()
-        return uriThread.output
-    }
 
     override fun run() {
         afterData?.data?.also {uri ->

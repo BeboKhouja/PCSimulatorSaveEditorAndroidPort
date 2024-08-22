@@ -24,4 +24,7 @@
     <item
         android:id="@+id/discord"
         android:title="Discord" />
+    <item
+        android:id="@+id/insert"
+        android:title="@string/insert" />
 </menu>
