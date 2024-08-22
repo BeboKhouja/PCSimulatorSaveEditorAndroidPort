@@ -236,7 +236,7 @@ class MainActivity2 : AppCompatActivity() {
                 val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                 itemArray.put(obj.toJson())
                 val lines = text.lines()
-                input.setText(lines[lines.size] + "\n" + jsonObject.toString())
+                input.setText(lines[lines.size - 1] + "\n" + jsonObject.toString())
             }
         } else if (item.itemId == R.id.saveoptions) {
             val optionList = arrayOf(
