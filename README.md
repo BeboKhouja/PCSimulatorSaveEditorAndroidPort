@@ -3,6 +3,7 @@
 This is basically PC Simulator Save Editor, but ported to Android to eliminate the need of PojavLauncher.
 
 # Advantages over PCSim Save Editor
+- Backwards compatible down to Android 5.0, 1 version below PC Simulator's minimum version.
 - No sketchy links. The app is hosted on GitHub and it's safe to use.
 - The app takes advantage of Java's performance and efficiency to help decrypt scripts faster and with less memory footprint.
 - The app does not collect any data from you. We care seriously about privacy.
