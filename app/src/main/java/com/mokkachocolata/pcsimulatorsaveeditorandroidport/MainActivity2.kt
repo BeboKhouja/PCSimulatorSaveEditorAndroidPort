@@ -11,13 +11,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.DragEvent.ACTION_DROP
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -27,13 +30,14 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Integer.parseInt
 import kotlin.properties.Delegates
-import org.json.*
 
 class ReadTextFromUriThread : Runnable {
 
@@ -151,6 +155,47 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    fun dialog(title: String,
+               message: String?,
+               okListener: OnClickListener?,
+               cancelListener: OnClickListener?,
+               view : View
+    ) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                .setMessage(message)
+                .setTitle(title)
+                .setView(view)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        } else {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+            if (message != null) {
+                builder.setMessage(message)
+            }
+            builder
+                .setTitle(title)
+                .setView(view)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        }
+    }
+
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -190,7 +235,145 @@ class MainActivity2 : AppCompatActivity() {
                 )
                 val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                 itemArray.put(obj.toJson())
-                input.setText(text.lines()[0] + "\n" + jsonObject.toString())
+                val lines = text.lines()
+                input.setText(lines[lines.size] + "\n" + jsonObject.toString())
+            }
+        } else if (item.itemId == R.id.saveoptions) {
+            val optionList = arrayOf(
+                "AC Temperature",
+                "AC Power",
+                "Version",
+                "Money",
+                "Room",
+                "Gravity",
+                "Hardcore",
+                "Playtime",
+                "Light",
+                "Sign",
+                "Save name"
+            )
+            val text = input.text.toString()
+            lateinit var jsonObject : JSONObject
+            val init = text.lines()[0].isNotEmpty()
+            if (text.lines()[0].isNotEmpty()) {
+                jsonObject = JSONObject(text.lines()[0])
+            }
+            dialog("Save Options", null, null, null, optionList) {_, i ->
+                when (i) {
+                    0 -> {
+                        val edittext = EditText(this)
+                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+                        dialog("AC Temperature", "Set the temperature of the AC. Max 2147483647 and min -2147483648" ,{_, i ->
+                            if (init) {
+                                jsonObject.put("temperature", parseInt(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+
+                    1 -> {
+                        val checkbox = Switch(this)
+                        checkbox.text = "Power"
+                        dialog("AC Power", "Power on or off the AC." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("ac", checkbox.isChecked)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, checkbox)
+                    }
+                    2 -> {
+                        val edittext = EditText(this)
+                        dialog("Version", "Set the version of the save." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("version", edittext.text)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+                    3 -> {
+                        val edittext = EditText(this)
+                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+                        dialog("Money", "Set the money of the save. Max 2147483647 and min -2147483647" ,{_, i ->
+                            if (init) {
+                                jsonObject.put("coin", parseInt(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+
+                    4 -> {
+                        val edittext = EditText(this)
+                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+                        dialog("Room", "Set the current room.\n0: Medium\n1: Large\n2: Double Storey\n3: Factory." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("room", parseInt(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+
+                    5 -> {
+                        val checkbox = Switch(this)
+                        checkbox.text = "Gravity"
+                        dialog("Gravity", "Switch on or off gravity." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("gravity", checkbox.isChecked)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, checkbox)
+                    }
+
+                    6 -> {
+                        val checkbox = Switch(this)
+                        checkbox.text = "Hardcore"
+                        dialog("Hardcore", "Switch on or off hardcore mode." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("hardcore", checkbox.isChecked)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, checkbox)
+                    }
+
+                    7 -> {
+                        val edittext = EditText(this)
+                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+                        dialog("Playtime", "Set the current playtime." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("playtime", parseInt(edittext.text.toString()))
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+
+                    8 -> {
+                        val checkbox = Switch(this)
+                        checkbox.text = "Light"
+                        dialog("Light", "Switch on or off the lamp." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("light", checkbox.isChecked)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, checkbox)
+                    }
+                    9 -> {
+                        val edittext = EditText(this)
+                        dialog("Sign", "Set the signer of the save." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("sign", edittext.text)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+                    10 -> {
+                        val edittext = EditText(this)
+                        dialog("Save name", "Set the name of the save." ,{_, i ->
+                            if (init) {
+                                jsonObject.put("roomName", edittext.text)
+                                input.setText(jsonObject.toString() + "\n" + text.lines()[1])
+                            }
+                        } , {_, _ ->}, edittext)
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

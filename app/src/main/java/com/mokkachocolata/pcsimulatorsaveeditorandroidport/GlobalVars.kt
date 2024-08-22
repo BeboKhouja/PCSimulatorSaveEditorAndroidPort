@@ -4,11 +4,9 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    public val version = "1.3.6"
+    public val version = "1.3.7"
     public val ChangelogText = """
-            - Drag n drop support now added. Simply drag a file into the input and it will decrypt it for you.
-            - Insert object now added. Simply load up your file, go into the three dot menu, and click Insert object and select what you want to insert.
-            - Patched a problem where saving wont save it.
+            - Save options now added.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
