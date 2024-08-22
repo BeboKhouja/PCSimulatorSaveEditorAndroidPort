@@ -7,11 +7,15 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface.OnClickListener
+import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
+import android.util.Base64
 import android.util.Log
 import android.view.DragEvent.ACTION_DROP
 import android.view.Menu
@@ -22,6 +26,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -32,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -83,6 +90,56 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
+    private lateinit var resolver : ContentResolver
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
+        if (uri != null) {
+            val itemList = arrayOf(
+                "RTX4080Ti",
+                "Pillow",
+                "Cube",
+                "Projector",
+                "Banner",
+            )
+            val text = input.text.toString()
+            val jsonObject = JSONObject(text.lines()[1])
+            val itemArray = jsonObject.getJSONArray("itemData")
+            val position = Position(
+                (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                (jsonObject.get("playerData") as JSONObject).getDouble("z")
+            )
+            val bm = BitmapFactory.decodeStream(resolver.openInputStream(uri))
+            val baos = ByteArrayOutputStream()
+            Thread {
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            }.apply {
+                start()
+                join()
+            }
+            val b = baos.toByteArray()
+            lateinit var obj : BannerObjectJson
+            Thread {
+                obj = BannerObjectJson(itemList[4], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), Base64.encodeToString(b, Base64.DEFAULT))
+            }.apply {
+                start()
+                join()
+            }
+            itemArray.put(obj.toJson())
+            val lines = text.lines()
+            input.setText(lines[0] + "\n" + jsonObject.toString())
+        }
+    }
+
+    private fun readTextFromUri(uri: Uri): String {
+        val uriThread = ReadTextFromUriThread()
+        uriThread.resolver = resolver
+        uriThread.uri = uri
+        val actualThread = Thread(uriThread)
+        actualThread.start()
+        actualThread.join()
+        return uriThread.output
+    }
 
     fun dialog(title: String, message: String, okListener: OnClickListener?, cancelListener: OnClickListener?) {
         if (Build.VERSION.SDK_INT >= 31) {
@@ -156,6 +213,49 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    fun dialogMultiChoice(title: String,
+               message: String?,
+               okListener: OnClickListener?,
+               cancelListener: OnClickListener?,
+               adapter : Array<String>,
+               adapterOnClickListener: OnMultiChoiceClickListener
+    ): BooleanArray {
+        var items = BooleanArray(adapter.size)
+        if (Build.VERSION.SDK_INT >= 31) {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+                .setMessage(message)
+                .setTitle(title)
+                .setMultiChoiceItems(adapter, items, adapterOnClickListener)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        } else {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setIcon(R.drawable.baseline_info_outline_24)
+            if (message != null) {
+                builder.setMessage(message)
+            }
+            builder
+                .setTitle(title)
+                .setMultiChoiceItems(adapter, items, adapterOnClickListener)
+            if (okListener != null) {
+                builder.setPositiveButton("Ok", okListener)
+            }
+            if (cancelListener != null) {
+                builder.setNegativeButton("Cancel", cancelListener)
+            }
+            builder.show()
+        }
+        return items
+    }
+
     fun dialog(title: String,
                message: String?,
                okListener: OnClickListener?,
@@ -223,21 +323,49 @@ class MainActivity2 : AppCompatActivity() {
                 "Pillow",
                 "Cube",
                 "Projector",
+                "Banner",
+
             )
             dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
-                val text = input.text.toString()
-                val jsonObject = JSONObject(text.lines()[1])
-                Log.d("App", jsonObject.toString())
-                val itemArray = jsonObject.getJSONArray("itemData")
-                val position = Position(
-                    (jsonObject.get("playerData") as JSONObject).getDouble("x"),
-                    (jsonObject.get("playerData") as JSONObject).getDouble("y"),
-                    (jsonObject.get("playerData") as JSONObject).getDouble("z")
-                )
-                val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                itemArray.put(obj.toJson())
-                val lines = text.lines()
-                input.setText(lines[0] + "\n" + jsonObject.toString())
+                fun doit() {
+                    val text = input.text.toString()
+                    val jsonObject = JSONObject(text.lines()[1])
+                    val itemArray = jsonObject.getJSONArray("itemData")
+                    val position = Position(
+                        (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                        (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                        (jsonObject.get("playerData") as JSONObject).getDouble("z")
+                    )
+                    val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                    itemArray.put(obj.toJson())
+                    val lines = text.lines()
+                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                }
+                fun doitBanner() {
+
+                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
+                }
+                when (i) {
+                    0 -> {
+                        doit()
+                    }
+
+                    1 -> {
+                        doit()
+                    }
+
+                    2 -> {
+                        doit()
+                    }
+
+                    3 -> {
+                        doit()
+                    }
+                    4 -> {
+                        doitBanner()
+                    }
+                }
             }
         } else if (item.itemId == R.id.saveoptions) {
             val optionList = arrayOf(
@@ -403,6 +531,7 @@ class MainActivity2 : AppCompatActivity() {
         ChangelogText = globalVars.ChangelogText
         version = globalVars.version
         enableEdgeToEdge()
+        resolver = contentResolver
         setContentView(R.layout.activity_main2)
         DynamicColors.applyToActivitiesIfAvailable(application)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
