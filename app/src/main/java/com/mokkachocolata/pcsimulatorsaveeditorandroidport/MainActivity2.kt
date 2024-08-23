@@ -92,16 +92,30 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
+    var fileList = arrayOf(
+        "App Manager",
+        "Daily Market",
+        "Personalization",
+        "EZ Mining",
+        "Benchmark",
+        "File Manager",
+        "Disk Management",
+        "System Info",
+        "Frequency Settings",
+        "Paint",
+        "RGB Controller",
+        "Terminal",
+        "Text Editor",
+        "Video Player",
+        "Animator",
+        "My Devices",
+        "Browser",
+        "Boot File",
+        "Virus"
+    )
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
         if (uri != null) {
-            val itemList = arrayOf(
-                "RTX4080Ti",
-                "Pillow",
-                "Cube",
-                "Projector",
-                "Banner",
-            )
             val text = input.text.toString()
             val jsonObject = JSONObject(text.lines()[1])
             val itemArray = jsonObject.getJSONArray("itemData")
@@ -121,7 +135,7 @@ class MainActivity2 : AppCompatActivity() {
             val b = baos.toByteArray()
             lateinit var obj : BannerObjectJson
             Thread {
-                obj = BannerObjectJson(itemList[4], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), Base64.encodeToString(b, Base64.DEFAULT))
+                obj = BannerObjectJson("BannerStand", (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), Base64.encodeToString(b, Base64.DEFAULT))
             }.apply {
                 start()
                 join()
@@ -325,19 +339,28 @@ class MainActivity2 : AppCompatActivity() {
                 "Cube",
                 "Projector",
                 "Banner",
-                "Flash Drive"
+                "Flash Drive",
+                "SSD",
+                "M.2 NVMe SSD",
+                "HDD",
+                "Daily Market (bypass bitcoin requirement)",
             )
             dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
-                fun doit() {
+                fun getPos() : Position {
                     val text = input.text.toString()
                     val jsonObject = JSONObject(text.lines()[1])
-                    val itemArray = jsonObject.getJSONArray("itemData")
                     val position = Position(
                         (jsonObject.get("playerData") as JSONObject).getDouble("x"),
                         (jsonObject.get("playerData") as JSONObject).getDouble("y"),
                         (jsonObject.get("playerData") as JSONObject).getDouble("z")
                     )
-                    val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                    return position
+                }
+                fun doit() {
+                    val text = input.text.toString()
+                    val jsonObject = JSONObject(text.lines()[1])
+                    val itemArray = jsonObject.getJSONArray("itemData")
+                    val obj = ObjectJson(itemList[i], (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
                     itemArray.put(obj.toJson())
                     val lines = text.lines()
                     input.setText(lines[0] + "\n" + jsonObject.toString())
@@ -378,27 +401,6 @@ class MainActivity2 : AppCompatActivity() {
                         )
                         val lines = text.lines()
                         var driveName = "Flash Drive"
-                        var fileList = arrayOf(
-                            "App Manager",
-                            "Daily Market",
-                            "Personalization",
-                            "EZ Mining",
-                            "Benchmark",
-                            "File Manager",
-                            "Disk Management",
-                            "System Info",
-                            "Frequency Settings",
-                            "Paint",
-                            "RGB Controller",
-                            "Terminal",
-                            "Text Editor",
-                            "Video Player",
-                            "Animator",
-                            "My Devices",
-                            "Browser",
-                            "Boot File",
-                            "Virus"
-                        )
                         val boolArray = BooleanArray(fileList.size)
 
                         val selectedItems = mutableListOf(*fileList)
@@ -505,6 +507,566 @@ class MainActivity2 : AppCompatActivity() {
                                 }, boolArray)
                             }, {_,_->}, edittext)
                         }, {_,_->}, edittext)
+                    }
+
+                    6 -> {val text = input.text.toString()
+                        val jsonObject = JSONObject(text.lines()[1])
+                        val itemArray = jsonObject.getJSONArray("itemData")
+                        val position = Position(
+                            (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                            (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                            (jsonObject.get("playerData") as JSONObject).getDouble("z")
+                        )
+                        val lines = text.lines()
+                        var driveName: String
+
+                        val boolArray = BooleanArray(fileList.size)
+
+                        val selectedItems = mutableListOf(*fileList)
+                        var password: String
+                        var size = "256GB"
+                        val edittext = EditText(this)
+                        dialog("SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", {_, i ->
+                            driveName = edittext.text.toString()
+                            val edittext = EditText(this)
+                            edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                            dialog("Password", "Set the password of this drive.", {_, i ->
+                                password = edittext.text.toString()
+                                val edittext = EditText(this)
+                                // Null the message out because the items wont appear
+                                dialog("SSD Size", null, null,  null, arrayOf(
+                                    "128GB",
+                                    "256GB",
+                                    "512GB",
+                                    "1TB",
+                                    "2TB",
+                                )) {_, i ->
+                                    when (i) {
+
+                                        0 -> {
+                                            size = "128GB"
+                                        }
+
+                                        1 -> {
+                                            size = "256GB"
+                                        }
+
+                                        2 -> {
+                                            size = "512GB"
+                                        }
+
+                                        3 -> {
+                                            size = "1TB"
+                                        }
+
+                                        4 -> {
+                                            size = "2TB"
+                                        }
+                                    }
+
+                                    dialogMultiChoice("Files", null, {_, _ ->
+                                        val array = JSONArray()
+                                        var drive: SSDObjectJson
+                                        for (i in boolArray.indices) {
+                                            if (boolArray[i]) {
+                                                when(i) {
+                                                    0 -> {
+                                                        val file = FileObjectJson("App Downloader.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    1 -> {
+                                                        val file = FileObjectJson("Daily Market.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    2 -> {
+                                                        val file = FileObjectJson("Personalization.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    3 -> {
+                                                        val file = FileObjectJson("EZ Mining.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    4 -> {
+                                                        val file = FileObjectJson("Benchmark.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    5 -> {
+                                                        val file = FileObjectJson("File Manager.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    6 -> {
+                                                        val file = FileObjectJson("Disk Management.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    7 -> {
+                                                        val file = FileObjectJson("System Info.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    8 -> {
+                                                        val file = FileObjectJson("Frequency Settings.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    9 -> {
+                                                        val file = FileObjectJson("Paint.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    10 -> {
+                                                        val file = FileObjectJson("RGB Controller.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    11 -> {
+                                                        val file = FileObjectJson("Terminal.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    12 -> {
+                                                        val file = FileObjectJson("Text Editor.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    13 -> {
+                                                        val file = FileObjectJson("Video Player.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    14 -> {
+                                                        val file = FileObjectJson("Animator.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    15 -> {
+                                                        val file = FileObjectJson("My Devices.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    16 -> {
+                                                        val file = FileObjectJson("Browser.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    17 -> {
+                                                        val file = FileObjectJson("System/boot.bin", "pcos", true, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    18 -> {
+                                                        val file = FileObjectJson("Launcher.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        drive = SSDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                        itemArray.put(drive.toJson())
+                                        input.setText(lines[0] + "\n" + jsonObject.toString())
+                                    }, null, fileList, {_, which, isChecked ->
+                                        boolArray[which] = isChecked
+                                        val currentItem = selectedItems[which]
+                                    }, boolArray)
+                                }
+                            }, {_,_->}, edittext)
+                        }, {_,_->}, edittext)}
+
+                    7 -> {val text = input.text.toString()
+                        val jsonObject = JSONObject(text.lines()[1])
+                        val itemArray = jsonObject.getJSONArray("itemData")
+                        val lines = text.lines()
+                        var driveName: String
+                        val boolArray = BooleanArray(fileList.size)
+
+                        val selectedItems = mutableListOf(*fileList)
+                        var password: String
+                        var size = "256GB"
+                        val edittext = EditText(this)
+                        dialog("M.2 NVMe SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", {_, i ->
+                            driveName = edittext.text.toString()
+                            val edittext = EditText(this)
+                            edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                            dialog("Password", "Set the password of this drive.", {_, i ->
+                                password = edittext.text.toString()
+                                val edittext = EditText(this)
+                                // Null the message out because the items wont appear
+                                dialog("M.2 NVMe SSD Size", null, null,  null, arrayOf(
+                                    "128GB",
+                                    "256GB",
+                                    "512GB",
+                                    "1TB",
+                                )) {_, i ->
+                                    when (i) {
+
+                                        0 -> {
+                                            size = "128GB"
+                                        }
+
+                                        1 -> {
+                                            size = "256GB"
+                                        }
+
+                                        2 -> {
+                                            size = "512GB"
+                                        }
+
+                                        3 -> {
+                                            size = "1TB"
+                                        }
+                                    }
+
+                                    dialogMultiChoice("Files", null, {_, _ ->
+                                        val array = JSONArray()
+                                        var drive: M2ObjectJson
+                                        for (i in boolArray.indices) {
+                                            if (boolArray[i]) {
+                                                when(i) {
+                                                    0 -> {
+                                                        val file = FileObjectJson("App Downloader.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    1 -> {
+                                                        val file = FileObjectJson("Daily Market.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    2 -> {
+                                                        val file = FileObjectJson("Personalization.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    3 -> {
+                                                        val file = FileObjectJson("EZ Mining.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    4 -> {
+                                                        val file = FileObjectJson("Benchmark.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    5 -> {
+                                                        val file = FileObjectJson("File Manager.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    6 -> {
+                                                        val file = FileObjectJson("Disk Management.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    7 -> {
+                                                        val file = FileObjectJson("System Info.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    8 -> {
+                                                        val file = FileObjectJson("Frequency Settings.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    9 -> {
+                                                        val file = FileObjectJson("Paint.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    10 -> {
+                                                        val file = FileObjectJson("RGB Controller.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    11 -> {
+                                                        val file = FileObjectJson("Terminal.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    12 -> {
+                                                        val file = FileObjectJson("Text Editor.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    13 -> {
+                                                        val file = FileObjectJson("Video Player.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    14 -> {
+                                                        val file = FileObjectJson("Animator.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    15 -> {
+                                                        val file = FileObjectJson("My Devices.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    16 -> {
+                                                        val file = FileObjectJson("Browser.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    17 -> {
+                                                        val file = FileObjectJson("System/boot.bin", "pcos", true, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    18 -> {
+                                                        val file = FileObjectJson("Launcher.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        drive = M2ObjectJson(size, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                        itemArray.put(drive.toJson())
+                                        input.setText(lines[0] + "\n" + jsonObject.toString())
+                                    }, null, fileList, {_, which, isChecked ->
+                                        boolArray[which] = isChecked
+                                        val currentItem = selectedItems[which]
+                                    }, boolArray)
+                                }
+                            }, {_,_->}, edittext)
+                        }, {_,_->}, edittext)}
+
+                    8 -> {val text = input.text.toString()
+                        val jsonObject = JSONObject(text.lines()[1])
+                        val itemArray = jsonObject.getJSONArray("itemData")
+                        val lines = text.lines()
+                        var driveName: String
+                        val boolArray = BooleanArray(fileList.size)
+
+                        val selectedItems = mutableListOf(*fileList)
+                        var password: String
+                        var size = "256GB"
+                        val edittext = EditText(this)
+                        dialog("HDD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", {_, i ->
+                            driveName = edittext.text.toString()
+                            val edittext = EditText(this)
+                            edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                            dialog("Password", "Set the password of this drive.", {_, i ->
+                                password = edittext.text.toString()
+                                val edittext = EditText(this)
+                                // Null the message out because the items wont appear
+                                dialog("HDD Size", null, null,  null, arrayOf(
+                                    "500GB",
+                                    "1TB",
+                                    "2TB",
+                                    "5TB",
+                                )) {_, i ->
+                                    when (i) {
+
+                                        0 -> {
+                                            size = "500GB"
+                                        }
+
+                                        1 -> {
+                                            size = "1TB"
+                                        }
+
+                                        2 -> {
+                                            size = "2TB"
+                                        }
+
+                                        3 -> {
+                                            size = "5TB"
+                                        }
+                                    }
+
+                                    dialogMultiChoice("Files", null, {_, _ ->
+                                        val array = JSONArray()
+                                        var drive: HDDObjectJson
+                                        for (i in boolArray.indices) {
+                                            if (boolArray[i]) {
+                                                when(i) {
+                                                    0 -> {
+                                                        val file = FileObjectJson("App Downloader.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    1 -> {
+                                                        val file = FileObjectJson("Daily Market.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    2 -> {
+                                                        val file = FileObjectJson("Personalization.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    3 -> {
+                                                        val file = FileObjectJson("EZ Mining.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    4 -> {
+                                                        val file = FileObjectJson("Benchmark.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    5 -> {
+                                                        val file = FileObjectJson("File Manager.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    6 -> {
+                                                        val file = FileObjectJson("Disk Management.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    7 -> {
+                                                        val file = FileObjectJson("System Info.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    8 -> {
+                                                        val file = FileObjectJson("Frequency Settings.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    9 -> {
+                                                        val file = FileObjectJson("Paint.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    10 -> {
+                                                        val file = FileObjectJson("RGB Controller.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    11 -> {
+                                                        val file = FileObjectJson("Terminal.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    12 -> {
+                                                        val file = FileObjectJson("Text Editor.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    13 -> {
+                                                        val file = FileObjectJson("Video Player.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    14 -> {
+                                                        val file = FileObjectJson("Animator.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    15 -> {
+                                                        val file = FileObjectJson("My Devices.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    16 -> {
+                                                        val file = FileObjectJson("Browser.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    17 -> {
+                                                        val file = FileObjectJson("System/boot.bin", "pcos", true, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                    18 -> {
+                                                        val file = FileObjectJson("Launcher.exe", "", false, 0, 0)
+                                                        array.put(file.toJson())
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        drive = HDDObjectJson(size, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                        itemArray.put(drive.toJson())
+                                        input.setText(lines[0] + "\n" + jsonObject.toString())
+                                    }, null, fileList, {_, which, isChecked ->
+                                        boolArray[which] = isChecked
+                                        val currentItem = selectedItems[which]
+                                    }, boolArray)
+                                }
+                            }, {_,_->}, edittext)
+                        }, {_,_->}, edittext)}
+
+                    9 -> {
+                        val text = input.text.toString()
+                        val jsonObject = JSONObject(text.lines()[1])
+                        val itemArray = jsonObject.getJSONArray("itemData")
+                        var obj: ObjectJson
+                        val lines = text.lines()
+                        val daily = arrayOf(
+                            "Apson A3",
+                            "Bitcoin",
+                            "Box Removal Bomb",
+                            "Cooler",
+                            "Chair",
+                            "Crate",
+                            "Gaming Chair (Blue)",
+                            "Gaming Chair (Purple)",
+                            "Gaming Chair (Red)",
+                            "Gaming Chair (White)",
+                            "Generator",
+                            "Bomb",
+                            "Hammer",
+                            "Headphone",
+                            "Headphone Stand",
+                            "Holographic Projector",
+                            "Keyboard",
+                            "Laptop",
+                            "Led Display (Clock)",
+                            "Led Display (PC)",
+                            "Led Display (Rain)",
+                            "Light Panel (Hexagon)",
+                            "Light Panel (Triangle)",
+                            "Mechanical Keyboard",
+                            "Mechanical Keyboard (Red)",
+                            "Mechanical Keyboard (White)",
+                            "Mouse",
+                            "Coffee",
+                            "Chair (Office Chair)",
+                            "Paper",
+                            "Picture Frame (Wall)",
+                            "Picture Frame",
+                            "Picture Frame (Standing)",
+                            "Printer Ink (C)",
+                            "Printer Ink (K)",
+                            "Printer Ink (M)",
+                            "Printer Ink (Y)",
+                            "Used SSD",
+                            "Wooden Table",
+                            "Modern Table",
+                            "Chair (Toilet)",
+                            "VR Glasses",
+                            "Wall Mount",
+                            "Wall Shelf (Wall)",
+                            "Wall Shelf (RGB, Square)",
+                            "Camera",
+                            "Insert all"
+                        )
+                        // Items referred internally in the code
+                        val dailyInternal = arrayOf(
+                            "Apson_A3",
+                            "Bitcoin",
+                            "BoxRemovalBomb",
+                            "Carrot",
+                            "Chair",
+                            "Crate",
+                            "GamingChair",
+                            "GamingChair_1",
+                            "GamingChair_2",
+                            "GamingChair_3",
+                            "Generator",
+                            "Gift", // Looks like a gift but its actually a bomb
+                            "Hammer",
+                            "Headphone",
+                            "HeadphoneStand",
+                            "HolographicProjector",
+                            "Keyboard",
+                            "Laptop",
+                            "LedDisplay_Clock",
+                            "LedDisplay_PC",
+                            "LedDisplay_Rain",
+                            "LightPanel_Hexagon",
+                            "LightPanel_Triangle",
+                            "MechanicalKeyboard",
+                            "MechanicalKeyboard_Red",
+                            "MechanicalKeyboard_White",
+                            "Mouse",
+                            "Mug",
+                            "OfficeChair",
+                            "Paper",
+                            "PictureFrame_2",
+                            "PictureFrame",
+                            "PictureFrameStand",
+                            "PrinterInk_C",
+                            "PrinterInk_K",
+                            "PrinterInk_M",
+                            "PrinterInk_Y",
+                            "SSD 128GB", // Used SSD
+                            "Table",
+                            "Table_1",
+                            "ToiletBowl", // Basically a chair but in a toilet
+                            "VR_Glasses",
+                            "WallMount",
+                            "WallShelf",
+                            "WallShelf_1",
+                            "Webcam" // End of product list
+
+                        )
+                        dialog("Daily Market", null, null, null, daily) {_, i ->
+                            if (i != (daily.size - 1)) {
+                                if (i == 37) {
+                                    val random = (0..2147483647).random()
+                                    itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
+                                } else {
+                                    obj = ObjectJson(dailyInternal[i], (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
+                                    itemArray.put(obj.toJson())
+                                }
+                            } else {
+                                for (i in dailyInternal) {
+                                    if (i == "SSD 128GB") {
+                                        val random = (0..2147483647).random()
+                                        itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
+                                    } else {
+                                        obj = ObjectJson(i, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
+                                        itemArray.put(obj.toJson())
+                                    }
+                                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                                }
+                            }
+                        }
                     }
                 }
             }
