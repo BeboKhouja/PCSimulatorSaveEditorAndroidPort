@@ -8,6 +8,8 @@ class GlobalVars(resources: Resources){
     public val ChangelogText = """
             - Save options now added.
             - Now you can add banners, storage drives.
+            - You can now buy everything from the daily market without bitcoin.
+            - Updated the documentation.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
