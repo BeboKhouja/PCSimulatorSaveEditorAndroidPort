@@ -332,6 +332,48 @@ class MainActivity2 : AppCompatActivity() {
             startActivity(Intent(applicationContext, HelpActivity::class.java))
         } else if (item.itemId == R.id.discord) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
+        } else if (item.itemId == R.id.dump) {
+            val text = input.text.toString()
+            val jsonObject = JSONObject(text.lines()[1])
+            val itemArray = jsonObject.getJSONArray("itemData")
+            var pwd = ""
+            for (i in 0 until itemArray.length()) {
+                val storage = itemArray.getJSONObject(i)
+                val spawnId = storage.getString("spawnId")
+                if (spawnId.contains("SSD") or spawnId.contains("HDD") or spawnId.contains("SSD_M.2")) {
+                    val data = storage.getJSONObject("data")
+                    if (data.has("storageData")) {
+                        val storageData = data.getJSONObject("storageData")
+                        val password = storageData.getString("userPassword")
+                        if (password.isNotEmpty()) {
+                            pwd += "$password : $spawnId\n"
+                        }
+                    } else {
+                        // Assume we use a different way to do this
+                        val password = data.getString("password")
+                        if (password.isNotEmpty()) {
+                            pwd += "$password : $spawnId\n"
+                        }
+                    }
+                } else if (spawnId == "FlashDrive") {
+                    // Flash Drive uses a different structure
+                    val data = storage.getJSONObject("data")
+                    if (data.has("storageData")) {
+                        val storageData = data.getJSONObject("storageData")
+                        val password = storageData.getString("userPassword")
+                        if (password.isNotEmpty()) {
+                            pwd += "$password : $spawnId\n"
+                        }
+                    } else {
+                        // Assume we use a different way to do this
+                        val password = data.getString("password")
+                        if (password.isNotEmpty()) {
+                            pwd += "$password : $spawnId\n"
+                        }
+                    }
+                }
+            }
+            dialog("Result", pwd, {_,_->}, null)
         } else if (item.itemId == R.id.insert) {
             val itemList = arrayOf(
                 "RTX4080Ti",

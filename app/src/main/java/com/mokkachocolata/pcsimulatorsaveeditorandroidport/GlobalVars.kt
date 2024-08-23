@@ -4,12 +4,9 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    public val version = "1.3.7"
+    public val version = "1.3.8"
     public val ChangelogText = """
-            - Save options now added.
-            - Now you can add banners, storage drives.
-            - You can now buy everything from the daily market without bitcoin.
-            - Updated the documentation.
+            - Password dumper added.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

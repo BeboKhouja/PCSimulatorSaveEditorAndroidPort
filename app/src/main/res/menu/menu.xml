@@ -30,4 +30,7 @@
     <item
         android:id="@+id/saveoptions"
         android:title="Save options" />
+    <item
+        android:id="@+id/dump"
+        android:title="Password dumper" />
 </menu>
