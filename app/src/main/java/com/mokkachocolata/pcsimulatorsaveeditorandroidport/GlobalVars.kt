@@ -4,13 +4,14 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    public val version = "1.3.8"
-    public val ChangelogText = """
+    val version = "1.3.8"
+    val ChangelogText = """
             - Password dumper added.
             - Code cleaned up.
             - Now Material You switches are applied on API level 31.
+            - Now you can clear any cardboard boxes.
         """.trimIndent()
-    public val urlArray = listOf(
+    val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
         Url(resources.getString(R.string.term), 1, "file:///android_asset/Terminologies.htm"),
         Url(resources.getString(R.string.save_file_help), 2, "file:///android_asset/PC Simulator Save Files.htm"),
@@ -20,7 +21,7 @@ class GlobalVars(resources: Resources){
         Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm"),
         Url("Illegal items", 7, "file:///android_asset/Illegal items.htm"),
     )
-    public val urlArrayArray = ArrayList<Url>()
+    val urlArrayArray = ArrayList<Url>()
     init {
         urlArray.toCollection(urlArrayArray)
     }

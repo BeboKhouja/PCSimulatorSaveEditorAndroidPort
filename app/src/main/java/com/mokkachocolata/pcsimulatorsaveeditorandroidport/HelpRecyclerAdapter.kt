@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
+class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
     lateinit var datanew : List<Url>
     lateinit var thisholder : ViewHolder
     init {
@@ -20,7 +20,7 @@ public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Ada
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HelpRecyclerAdapter.ViewHolder {
+    ): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_help, parent, false)
         val holder = ViewHolder(view)
         thisholder = holder
@@ -37,7 +37,7 @@ public class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Ada
         Log.d("App", "Destroyed")
     }
 
-    override fun onBindViewHolder(holder: HelpRecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val ItemsViewModel = datanew[position]
         holder.webpreview.loadUrl(ItemsViewModel.url)
         val settings = holder.webpreview.settings

@@ -55,7 +55,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         val searchItem = menu?.findItem(R.id.app_bar_search)
         val searchView = searchItem?.actionView as SearchView
 
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }

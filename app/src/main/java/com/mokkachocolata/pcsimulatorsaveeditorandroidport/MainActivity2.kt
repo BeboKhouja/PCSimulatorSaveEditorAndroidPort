@@ -334,6 +334,28 @@ class MainActivity2 : AppCompatActivity() {
             R.id.discord -> {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
             }
+            R.id.clear -> {
+                // Clear all cardboard boxes
+                val text = input.text.toString()
+                val lines = text.lines()
+                val jsonObject = JSONObject(lines[1])
+                val itemArray = jsonObject.getJSONArray("itemData")
+                for (i in 0 until itemArray.length()) {
+                    if (i < itemArray.length()) {
+                        if (itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "LongCardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox 2") {
+                            itemArray.remove(i)
+                        }
+                    }
+                }
+                for (i in 0 until itemArray.length()) {
+                    if (i < itemArray.length()) {
+                        if (itemArray.getJSONObject(i).getString("spawnId").contains("Part_") || itemArray.getJSONObject(i).getString("spawnId") == "Part") {
+                            itemArray.remove(i)
+                        }
+                    }
+                }
+                input.setText(lines[0] + "\n" + jsonObject.toString())
+            }
             R.id.dump -> {
                 val text = input.text.toString()
                 val jsonObject = JSONObject(text.lines()[1])
@@ -348,7 +370,7 @@ class MainActivity2 : AppCompatActivity() {
                             val storageData = data.getJSONObject("storageData")
                             val password = storageData.getString("userPassword")
                             if (password.isNotEmpty()) {
-                                pwd += "$password : $spawnId\n"
+                                pwd += "$password : $spawnId \n"
                             }
                         } else {
                             // Assume we use a different way to do this
