@@ -7,6 +7,8 @@ class GlobalVars(resources: Resources){
     public val version = "1.3.8"
     public val ChangelogText = """
             - Password dumper added.
+            - Code cleaned up.
+            - Now Material You switches are applied on API level 31.
         """.trimIndent()
     public val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
