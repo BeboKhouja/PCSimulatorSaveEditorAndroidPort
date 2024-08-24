@@ -1,0 +1,12 @@
+on:
+  push:
+     branches: 'master'
+
+jobs:
+    build:
+         runs-on: 'ubuntu-latest'
+         steps:
+             - uses: vgaidarji/android-github-actions-build@v1.0.1
+          
+         
+           
