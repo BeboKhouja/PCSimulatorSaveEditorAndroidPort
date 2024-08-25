@@ -1,33 +1,47 @@
-# PC Simulator Save Editor Android Port
+<h1 align="center">PC Simulator Save Editor</h1>
+<img src="https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/master/app/src/main/pc_simulator_save_editor-playstore.png" width="200" height="200" alt="PC Simulator Save Editor Logo" align="left">
 
 [![Dev Builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml/badge.svg)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/BeboKhouja/PCSimulatorSaveEditorAndroidPort)](https://github.com/PojavLauncherTeam/PojavLauncher/actions)
+[![Discord](https://img.shields.io/discord/1274384588092866685.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.com/invite/GXRECJjhVr)
 
-This is basically PC Simulator Save Editor, but ported to Android to eliminate the need of PojavLauncher.
-
-Developer builds available on the Actions tab.
-
-# Advantages over PCSim Save Editor
-- Backwards compatible down to Android 5.0, 1 version below PC Simulator's minimum version.
-- No sketchy links. The app is hosted on GitHub and it's safe to use.
-- The app takes advantage of Java's performance and efficiency to help decrypt scripts faster and with less memory footprint.
-- The app does not collect any data from you. We care seriously about privacy.
-- No ads. The app is completely free and open source.
-- Save file larger than 30 MB can be opened in this app quickly whereas PCSim Save Editor would crash.
-- Extensive documentation.
-- Available on PC.
+- From PCSim Save Editor's source here comes PC Simulator Save Editor Android!
+- PC Simulator Save Editor is a save editor that allows you to edit PC Simulator saves!
+- It can open huge files (up to 200MB on 8GB RAM) unlike PCSim Save Editor!
 
 # Contributing
-When you contribute to this repository, include the prefixes in your commits:
+We welcome any contributions! For example, you can change the code, the documentation, and also help translate the app!
 
-- `feat: ` if you added a feature
-- `bugfix: ` if you fixed a bug
-- `minor: ` if you added unnoticeable changes (those that only change the backend)
+# Installing
+You can get PC Simulator Save Editor via two methods:
 
-Open a pull request once you push a commit.
-When a commit is made, an action automatically runs which compiles the app.
+1. You can get it from the [stable releases](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/releases), or [automatic builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions)
 
-## Guidelines
-Do not commit:
-- Anything that requires a permission (not even any permission in the All Permissions menu)
-- Anything that is deemed inappropriate.
-- Anything that breaks a major feature. (do not break/remove: Decrypt/Encrypt, Open File, Save File, Copy, Decrypt/Encrypt to TXT, Help, three dot menu.)
+2. You can [build](#building) from source code.
+
+## Building
+
+### PC Simulator Save Editor Library
+Library is [here](https://github.com/BeboKhouja/PC-Simulator-Save-Editor).
+
+### The App
+
+* Build the app
+
+```
+./gradlew app:assembleDebug
+```
+
+# Current status
+- [ ] Service to decrypt/encrypt very huge files
+- [ ] Convert PC Simulator 1.6.0 and below save files to newer versions
+
+# Known issues
+- Frequent crashes when opening huge files.
+- Doing a lot of automated actions (Insert object, Cleanup, Save Options) could cause the save to be broken (Additional text after reading JSON)
+
+# License
+PC Simulator Save Editor Android is licensed under [GPLv3.0](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/master/LICENSE).
+
+# Credits & Licenses (if available)
+The [Stack Overflow](https://stackoverflow.com) community for resolving a lot of bugs.
