@@ -1,5 +1,7 @@
 # PC Simulator Save Editor Android Port
 
+[![Production Builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml/badge.svg)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml)
+
 This is basically PC Simulator Save Editor, but ported to Android to eliminate the need of PojavLauncher.
 
 Developer builds available on the Actions tab.

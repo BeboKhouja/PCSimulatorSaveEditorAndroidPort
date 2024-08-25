@@ -4,12 +4,9 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    val version = "1.3.8"
+    val version = "1.3.9"
     val ChangelogText = """
-            - Password dumper added.
-            - Code cleaned up.
-            - Now Material You switches are applied on API level 31.
-            - Now you can clear any cardboard boxes.
+            
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
