@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">โปรแกรมแก้ไขบันทึกโปรแกรมจำลองพีซี</string>
+    <string name="open_file">เปิดไฟล์</string>
+    <string name="save_file">บันทึกไหล์</string>
+    <string name="copy">คัดลอก</string>
+    <string name="help">ช่วยเหลือ</string>
+    <string name="decrypt">ถอดรหัส/เข้ารหัส</string>
+    <string name="hint">บันทึกไฟล์ของคุณ</string>
+    <string name="term">ศัพท์</string>
+    <string name="about">เกี่ยวกับ</string>
+    <string name="savefile">เครื่องจำลองพีซีบันทึกไฟล์</string>
+    <string name="websites">"เว็บไซต์เครื่องจำลองพีซี "</string>
+    <string name="decrypt_after_open">ถอดรหัสหลังจากการเปิด</string>
+    <string name="encrypt_after_opening">เข้ารหัสหลังจากการเปิด</string>
+    <string name="decryptToTxt">ถอดรหัส/เข้ารหัสเป็นไฟล์ข้อความ</string>
+    <string name="howtouse">วิธีใช้โปรแกรม</string>
+    <string name="save_file_help">เครื่องจำลองพีซีบันทึกไฟล์</string>
+    <string name="insert">ใส่สิ่งของ</string>
+    <string name="dumper">ดัมพ์รหัสผ่าน</string>
+    <string name="clean">ทำความสะอาด</string>
+    <string name="options">บันทึกตัวเลือก</string>
+    <string name="illegalitems">ของที่ผิดกฎเกม</string>
+    <string name="Changelog">การเปลี่ยนแปลง</string>
+    <string name="howtoedit">วิธีแก้ไขไฟล์บันทึก PC Simulator</string>
+</resources>

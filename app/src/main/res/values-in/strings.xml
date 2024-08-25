@@ -18,4 +18,9 @@
     <string name="howtouse">Cara gunakan Applikasi</string>
     <string name="save_file_help">File PC Simulator</string>
     <string name="insert">Masukan objek</string>
+    <string name="dumper">Lihat password</string>
+    <string name="clean">Bersihkan</string>
+    <string name="options">Opsi Save</string>
+    <string name="illegalitems">Item tidak legal</string>
+    <string name="howtoedit">Cara ganti save PC Simulator</string>
 </resources>

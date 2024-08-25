@@ -12,7 +12,7 @@
         app:actionLayout="@layout/switch_item" />
     <item
         android:id="@+id/changelog"
-        android:title="Changelog" />
+        android:title="@string/Changelog" />
     <item
         android:id="@+id/about"
         android:title="@string/about" />
@@ -29,11 +29,11 @@
         android:title="@string/insert" />
     <item
         android:id="@+id/saveoptions"
-        android:title="Save options" />
+        android:title="@string/options" />
     <item
         android:id="@+id/dump"
-        android:title="Password dumper" />
+        android:title="@string/dumper" />
     <item
         android:id="@+id/clear"
-        android:title="Cleanup" />
+        android:title="@string/clean" />
 </menu>
