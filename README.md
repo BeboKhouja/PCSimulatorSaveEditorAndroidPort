@@ -4,7 +4,7 @@
 
 This is basically PC Simulator Save Editor, but ported to Android to eliminate the need of PojavLauncher.
 
-Developer builds available on the Actions tab.
+Developer builds available on the [Actions](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions) tab.
 
 # Advantages over PCSim Save Editor
 - Backwards compatible down to Android 5.0, 1 version below PC Simulator's minimum version.
