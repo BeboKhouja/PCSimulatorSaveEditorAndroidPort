@@ -17,6 +17,7 @@ class GlobalVars(resources: Resources){
         Url("Yiming.AntiCheat", 5, "file:///android_asset/Source/Yiming.AntiCheat.htm"),
         Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm"),
         Url("Illegal items", 7, "file:///android_asset/Illegal items.htm"),
+        Url("How to edit a PC Simulator Save file", 8, "file:///android_asset/How to edit PC Simulator Save Files.htm")
     )
     val urlArrayArray = ArrayList<Url>()
     init {

@@ -319,14 +319,14 @@ class MainActivity2 : AppCompatActivity() {
                 encrypt_after_saving = encrypt_after_saving.not()
             }
             R.id.changelog -> {
-                dialog("Changelog (version $version)", globalVars.ChangelogText, null, null)
+                dialog("Changelog (version $version)", globalVars.ChangelogText, {_,_->}, null)
             }
             R.id.about -> {
                 dialog("PC Simulator Save Editor Android Port (version $version)", """
                         |Created by Mokka Chocolata.
                         |Free, and open source.
                         |Get beta builds at the Actions tab at the GitHub repository.
-                        |""".trimMargin(), null, null
+                        |""".trimMargin(), {_,_->}, null
                 )
             }
             R.id.help -> {

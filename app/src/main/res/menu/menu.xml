@@ -35,5 +35,5 @@
         android:title="Password dumper" />
     <item
         android:id="@+id/clear"
-        android:title="Clear all cardboard boxes" />
+        android:title="Cleanup" />
 </menu>
