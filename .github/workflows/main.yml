@@ -1,4 +1,4 @@
-name: Production Builds
+name: Dev Builds
 on:
   push:
       branches: 'master'
