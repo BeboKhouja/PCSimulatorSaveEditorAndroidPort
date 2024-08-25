@@ -5,9 +5,9 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/BeboKhouja/PCSimulatorSaveEditorAndroidPort)](https://github.com/PojavLauncherTeam/PojavLauncher/actions)
 [![Discord](https://img.shields.io/discord/1274384588092866685.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.com/invite/GXRECJjhVr)
 
-From PCSim Save Editor's source here comes PC Simulator Save Editor Android!
-PC Simulator Save Editor is a save editor that allows you to edit PC Simulator saves!
-It can open huge files (up to 200MB on 8GB RAM) unlike PCSim Save Editor!
+- From PCSim Save Editor's source here comes PC Simulator Save Editor Android!
+- PC Simulator Save Editor is a save editor that allows you to edit PC Simulator saves!
+- It can open huge files (up to 200MB on 8GB RAM) unlike PCSim Save Editor!
 
 # Contributing
 We welcome any contributions! For example, you can change the code, the documentation, and also help translate the app!
@@ -33,8 +33,8 @@ Library is [here](https://github.com/BeboKhouja/PC-Simulator-Save-Editor).
 ```
 
 # Current status
-[ ] Service to decrypt/encrypt very huge files
-[ ] Convert PC Simulator 1.6.0 and below save files to newer versions
+- [ ] Service to decrypt/encrypt very huge files
+- [ ] Convert PC Simulator 1.6.0 and below save files to newer versions
 
 # Known issues
 - Frequent crashes when opening huge files.
