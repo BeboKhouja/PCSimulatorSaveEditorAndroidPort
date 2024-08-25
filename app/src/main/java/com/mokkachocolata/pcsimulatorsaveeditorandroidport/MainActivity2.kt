@@ -95,26 +95,27 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
+    data class apps(val name : String, val path : String)
     private var fileList = arrayOf(
-        "App Manager",
-        "Daily Market",
-        "Personalization",
-        "EZ Mining",
-        "Benchmark",
-        "File Manager",
-        "Disk Management",
-        "System Info",
-        "Frequency Settings",
-        "Paint",
-        "RGB Controller",
-        "Terminal",
-        "Text Editor",
-        "Video Player",
-        "Animator",
-        "My Devices",
-        "Browser",
-        "Boot File",
-        "Virus"
+        apps("App Manager", "App Downloader.exe"),
+        apps("Daily Market","Daily Market.exe"),
+        apps("Personalization","Personalization.exe"),
+        apps("EZ Mining", "EZ Mining.exe"),
+        apps("Benchmark", "Benchmark.exe"),
+        apps("File Manager", "File Manager.exe"),
+        apps("Disk Management","Disk Management.exe"),
+        apps("System Info","System Info.exe"),
+        apps("Frequency Settings","Frequency Settings.exe"),
+        apps("Frequency Settings","Frequency Settings.exe"),
+        apps("RGB Controller","RGB Controller.exe"),
+        apps("Terminal","Terminal.exe"),
+        apps("Text Editor","Text Editor.exe"),
+        apps("Video Player","Video Player.exe"),
+        apps("Animator","Animator.exe"),
+        apps("My Devices","My Devices.exe"),
+        apps("Browser","Browser.exe"),
+        apps("Boot File", "System/boot.bin"),
+        apps("Virus", "Launcher.exe")
     )
     @SuppressLint("SetTextI18n")
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -414,29 +415,18 @@ class MainActivity2 : AppCompatActivity() {
                     "Daily Market (bypass bitcoin requirement)",
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
-                    fun getItemArray() : JSONArray {
-                        val text = input.text.toString()
-                        val jsonObject = JSONObject(text.lines()[1])
-                        val itemArray = jsonObject.getJSONArray("itemData")
-                        return itemArray
-                    }
-                    fun getPos() : Position {
-                        val text = input.text.toString()
-                        val jsonObject = JSONObject(text.lines()[1])
-                        val position = Position(
-                            (jsonObject.get("playerData") as JSONObject).getDouble("x"),
-                            (jsonObject.get("playerData") as JSONObject).getDouble("y"),
-                            (jsonObject.get("playerData") as JSONObject).getDouble("z")
-                        )
-                        return position
-                    }
+                    val text = input.text.toString()
+                    val jsonObject = JSONObject(text.lines()[1])
+                    val lines = text.lines()
+                    val itemArray = jsonObject.getJSONArray("itemData")
+                    val position = Position(
+                        (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                        (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                        (jsonObject.get("playerData") as JSONObject).getDouble("z")
+                    )
                     fun doit() {
-                        val text = input.text.toString()
-                        val jsonObject = JSONObject(text.lines()[1])
-                        val itemArray = getItemArray()
-                        val obj = ObjectJson(itemList[i], (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
+                        val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                         itemArray.put(obj.toJson())
-                        val lines = text.lines()
                         input.setText(lines[0] + "\n" + jsonObject.toString())
                     }
                     fun doitBanner() {
@@ -444,85 +434,25 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
-                            0 -> {
-                                val file = FileObjectJson("App Downloader.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            1 -> {
-                                val file = FileObjectJson("Daily Market.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            2 -> {
-                                val file = FileObjectJson("Personalization.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            3 -> {
-                                val file = FileObjectJson("EZ Mining.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            4 -> {
-                                val file = FileObjectJson("Benchmark.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            5 -> {
-                                val file = FileObjectJson("File Manager.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            6 -> {
-                                val file = FileObjectJson("Disk Management.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            7 -> {
-                                val file = FileObjectJson("System Info.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            8 -> {
-                                val file = FileObjectJson("Frequency Settings.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            9 -> {
-                                val file = FileObjectJson("Paint.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            10 -> {
-                                val file = FileObjectJson("RGB Controller.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            11 -> {
-                                val file = FileObjectJson("Terminal.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            12 -> {
-                                val file = FileObjectJson("Text Editor.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            13 -> {
-                                val file = FileObjectJson("Video Player.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            14 -> {
-                                val file = FileObjectJson("Animator.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            15 -> {
-                                val file = FileObjectJson("My Devices.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
-                            16 -> {
-                                val file = FileObjectJson("Browser.exe", "", false, 0, 0)
-                                array.put(file.toJson())
-                            }
                             17 -> {
-                                val file = FileObjectJson("System/boot.bin", "pcos", true, 0, 0)
+                                val file = FileObjectJson(fileList[i].path, "pcos", true, 0, 0)
                                 array.put(file.toJson())
                             }
-                            18 -> {
-                                val file = FileObjectJson("Launcher.exe", "", false, 0, 0)
+
+                            else -> {
+                                val file = FileObjectJson(fileList[i].path, "", false, 0, 0)
                                 array.put(file.toJson())
                             }
                         }
                     }
+                    val arr : Array<String>
+                    val arrayList = ArrayList<String>()
+                    for (i in fileList) {
+                        arrayList.add(i.name)
+                    }
+                    arr = arrayList.toTypedArray()
                     when (i) {
+
                         0 -> {
                             doit()
                         }
@@ -543,11 +473,7 @@ class MainActivity2 : AppCompatActivity() {
                         }
 
                         5 -> {
-                            val text = input.text.toString()
-                            val jsonObject = JSONObject(text.lines()[1])
-                            val itemArray = jsonObject.getJSONArray("itemData")
-                            val position = getPos()
-                            val lines = text.lines()
+                            val position = position
                             var driveName : String
                             val boolArray = BooleanArray(fileList.size)
 
@@ -571,7 +497,7 @@ class MainActivity2 : AppCompatActivity() {
                                         val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
                                         itemArray.put(drive.toJson())
                                         input.setText(lines[0] + "\n" + jsonObject.toString())
-                                    }, null, fileList, {_, which, isChecked ->
+                                    }, null, arr, {_, which, isChecked ->
                                         boolArray[which] = isChecked
                                         val currentItem = selectedItems[which]
                                     }, boolArray)
@@ -579,11 +505,8 @@ class MainActivity2 : AppCompatActivity() {
                             }, {_,_->}, edittext)
                         }
 
-                        6 -> {val text = input.text.toString()
-                            val jsonObject = JSONObject(text.lines()[1])
-                            val itemArray = jsonObject.getJSONArray("itemData")
-                            val position = getPos()
-                            val lines = text.lines()
+                        6 -> {
+                            val position = position
                             var driveName: String
 
                             val boolArray = BooleanArray(fileList.size)
@@ -619,7 +542,7 @@ class MainActivity2 : AppCompatActivity() {
                                             val drive = SSDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
                                             itemArray.put(drive.toJson())
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, fileList, {_, which, isChecked ->
+                                        }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
                                             val currentItem = selectedItems[which]
                                         }, boolArray)
@@ -627,10 +550,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittext)
                             }, {_,_->}, edittext)}
 
-                        7 -> {val text = input.text.toString()
-                            val jsonObject = JSONObject(text.lines()[1])
-                            val itemArray = jsonObject.getJSONArray("itemData")
-                            val lines = text.lines()
+                        7 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
@@ -661,10 +581,10 @@ class MainActivity2 : AppCompatActivity() {
                                                     putFile(i, array)
                                                 }
                                             }
-                                            val drive = M2ObjectJson(size, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                            val drive = M2ObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
                                             itemArray.put(drive.toJson())
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, fileList, {_, which, isChecked ->
+                                        }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
                                             val currentItem = selectedItems[which]
                                         }, boolArray)
@@ -672,10 +592,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittext)
                             }, {_,_->}, edittext)}
 
-                        8 -> {val text = input.text.toString()
-                            val jsonObject = JSONObject(text.lines()[1])
-                            val itemArray = jsonObject.getJSONArray("itemData")
-                            val lines = text.lines()
+                        8 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
@@ -707,10 +624,10 @@ class MainActivity2 : AppCompatActivity() {
                                                     putFile(i, array)
                                                 }
                                             }
-                                            val drive = HDDObjectJson(size, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                            val drive = HDDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
                                             itemArray.put(drive.toJson())
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, fileList, {_, which, isChecked ->
+                                        }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
                                             val currentItem = selectedItems[which]
                                         }, boolArray)
@@ -719,11 +636,7 @@ class MainActivity2 : AppCompatActivity() {
                             }, {_,_->}, edittext)}
 
                         9 -> {
-                            val text = input.text.toString()
-                            val jsonObject = JSONObject(text.lines()[1])
-                            val itemArray = jsonObject.getJSONArray("itemData")
                             var obj: ObjectJson
-                            val lines = text.lines()
                             data class dailyObj(val name: String, val internalName: String)
                             val daily = arrayOf(
                                 dailyObj("Apson A3", "Apson_A3"),
@@ -787,7 +700,7 @@ class MainActivity2 : AppCompatActivity() {
                                         val random = (0..2147483647).random()
                                         itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
                                     } else {
-                                        obj = ObjectJson(daily[i].internalName, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
+                                        obj = ObjectJson(daily[i].internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                         itemArray.put(obj.toJson())
                                     }
                                 } else {
@@ -796,7 +709,7 @@ class MainActivity2 : AppCompatActivity() {
                                             val random = (0..2147483647).random()
                                             itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
                                         } else {
-                                            obj = ObjectJson(i.internalName, (0..2147483647).random(), getPos(), Rotation(0.0,0.0,0.0,0.0))
+                                            obj = ObjectJson(i.internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                             itemArray.put(obj.toJson())
                                         }
                                         input.setText(lines[0] + "\n" + jsonObject.toString())
@@ -967,7 +880,6 @@ class MainActivity2 : AppCompatActivity() {
                 when (event.action) {
                     ACTION_DROP -> {
                         // The app sometimes crashes whenever the dragged content goes into the app. This is not our fault, it's Android's fault.
-
                         val fileItem: ClipData.Item = event.clipData.getItemAt(0)
                         val uri : Uri? = fileItem.uri
                         // The complicated way to check if a Uri is a file or not
@@ -999,7 +911,7 @@ class MainActivity2 : AppCompatActivity() {
 
         decrypt.setOnClickListener { _ ->
             System.gc()
-            if (input.text.toString() != "") {
+            if (input.text.isNotEmpty()) {
                 input.setText(functions.Decrypt(input.text.toString()))
             }
         }
@@ -1023,7 +935,7 @@ class MainActivity2 : AppCompatActivity() {
 
         save.setOnClickListener {_ ->
             System.gc()
-            if (input.text.toString() != "") {
+            if (input.text.isNotEmpty()) {
                 if (encrypt_after_saving) {
                     saveString = functions.Decrypt(input.text.toString())
                 }
@@ -1040,7 +952,7 @@ class MainActivity2 : AppCompatActivity() {
 
         copy.setOnClickListener{_ ->
             System.gc()
-            if (input.text.toString() != "") {
+            if (input.text.isNotEmpty()) {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("PC Simulator Save", input.text.toString())
                 clipboard.setPrimaryClip(clip)
