@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/pc_simulator_save_editor_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
-        android:usesCleartextTraffic="true"
+        android:usesCleartextTraffic="false"
         tools:targetApi="33">
         <activity
             android:name=".BrowserActivity"
