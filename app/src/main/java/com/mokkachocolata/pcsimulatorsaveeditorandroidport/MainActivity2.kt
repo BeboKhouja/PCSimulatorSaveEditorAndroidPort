@@ -82,6 +82,7 @@ class MainActivity2 : AppCompatActivity() {
 
     private lateinit var globalVars : GlobalVars
     lateinit var text : String
+    private var saveString = "" // This way, we dont have to change the edittext, which reduces memory.
     private val openFile = 0
     private val saveFile = 1
     private val openFileAndSaveToTxt = 2
@@ -1024,7 +1025,7 @@ class MainActivity2 : AppCompatActivity() {
             System.gc()
             if (input.text.toString() != "") {
                 if (encrypt_after_saving) {
-                    input.setText(functions.Decrypt(input.text.toString()))
+                    saveString = functions.Decrypt(input.text.toString())
                 }
                 startActivityForResult(saveIntent, saveFile)
             }
@@ -1112,7 +1113,7 @@ class MainActivity2 : AppCompatActivity() {
             if (data != null) {
                 afterread.afterData = data
             }
-            afterread.text = input.text.toString()
+            afterread.text = saveString
             afterReadThread.start()
             System.gc()
         } else if (requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK) {
