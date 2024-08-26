@@ -12,6 +12,8 @@
 # Contributing
 We welcome any contributions! For example, you can change the code, the documentation, and also help translate the app!
 
+When commiting, open a pull request, saying what you added, a short description of it.
+
 # Installing
 You can get PC Simulator Save Editor via two methods:
 

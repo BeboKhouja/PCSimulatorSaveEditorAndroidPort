@@ -9,6 +9,7 @@ class GlobalVars(resources: Resources){
             - A new help document is added.
             - Now saving files are faster.
             - Autocorrection is now disabled, improving performance.
+            - Thai support added.
             - Compose libraries removed, this should reduce app size.
         """.trimIndent()
     val urlArray = listOf(
