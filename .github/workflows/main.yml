@@ -39,7 +39,10 @@ jobs:
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
 
-      - name: Build dev apk
+      - name: Build library
+        run: gradle library:assemble --stacktrace
+
+      - name: Build developer APK
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
@@ -66,7 +69,7 @@ jobs:
       - name: Zip
         uses: vimtor/action-zip@v1.2
         with:
-            files: app/build/outputs/apk/release/app-release.apk/ app/build/outputs/apk/release/app-release.md5
+            files: app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/app-release.md5
             dest: save-editor.zip
 
       - name: Upload artifact
