@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
-    lateinit var datanew : List<Url>
+    var datanew : List<Url>
     lateinit var thisholder : ViewHolder
     init {
         datanew = data

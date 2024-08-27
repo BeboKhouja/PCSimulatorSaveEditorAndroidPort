@@ -33,7 +33,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
                 filteredlist.add(item)
             }
         }
-        if (!filteredlist.isEmpty()) {
+        if (filteredlist.isNotEmpty()) {
             // at last we are passing that filtered
             // list to our adapter class.
             adapter.filterList(filteredlist)

@@ -4,15 +4,11 @@
 
     <application
         android:allowBackup="false"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/pc_simulator_save_editor"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:roundIcon="@mipmap/pc_simulator_save_editor_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light"
-        android:usesCleartextTraffic="false"
+        android:theme="@style/Theme.PCSimulatorSaveEditor"
         tools:targetApi="35">
         <activity
             android:name=".BrowserActivity"

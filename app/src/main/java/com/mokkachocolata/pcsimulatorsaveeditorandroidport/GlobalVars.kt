@@ -6,6 +6,9 @@ class GlobalVars(resources: Resources){
 
     val version = "1.4.0"
     val ChangelogText = """
+        - Now you can add CPUs.
+        - Backups and data extraction rules are removed because the app does not store any preference, it should reduce app size.
+        - Shrinking is now enabled on release builds, this should reduce app size to about 2MB.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
