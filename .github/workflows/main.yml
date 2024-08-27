@@ -65,7 +65,8 @@ jobs:
             keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
             zipAlign: true
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
             name: dev-artifacts
             path: ${{steps.sign.outputs.signedReleaseFile}}
