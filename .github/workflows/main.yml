@@ -8,23 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache
-        uses: actions/cache@v4.0.2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Checking out branch
         uses: actions/checkout@v3
 
       - name: Init submodules
         uses: snickerbockers/submodules-init@v4
 
-      - name: Prepare summary
+      - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 7.6.1
@@ -49,15 +39,12 @@ jobs:
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Build dev apk
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --stacktrace
+        run: gradle assembleRelease --stacktrace
 
       - name: ZipAlign & Sign Android release
         uses: kevin-david/zipalign-sign-android-release@v2.0.1
@@ -70,13 +57,16 @@ jobs:
           keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
           zipAlign: true
 
-      - name: Generate MD5 sums
-        run: md5sum ${{steps.sign.outputs.signedReleaseFile}} > app/build/outputs/apk/release/app-release-unsigned-signed.md5
+      - name: Rename APK
+        run: cp ${{steps.sign.outputs.signedReleaseFile}} app/build/outputs/apk/release/app-release.apk
+
+      - name: Generate MD5sum
+        run: md5sum ${{steps.sign.outputs.signedReleaseFile}} > app/build/outputs/apk/release/app-release.md5
 
       - name: Zip
         uses: vimtor/action-zip@v1.2
         with:
-            files: ${{steps.sign.outputs.signedReleaseFile}}/ app/build/outputs/apk/release/app-release-unsigned-signed.md5
+            files: app/build/outputs/apk/release/app-release.apk/ app/build/outputs/apk/release/app-release.md5
             dest: save-editor.zip
 
       - name: Upload artifact
