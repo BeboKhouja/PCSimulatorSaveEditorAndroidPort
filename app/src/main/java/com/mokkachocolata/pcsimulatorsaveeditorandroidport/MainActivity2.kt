@@ -95,27 +95,27 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
-    data class apps(val name : String, val path : String)
+    data class Apps(val name : String, val path : String)
     private var fileList = arrayOf(
-        apps("App Manager", "App Downloader.exe"),
-        apps("Daily Market","Daily Market.exe"),
-        apps("Personalization","Personalization.exe"),
-        apps("EZ Mining", "EZ Mining.exe"),
-        apps("Benchmark", "Benchmark.exe"),
-        apps("File Manager", "File Manager.exe"),
-        apps("Disk Management","Disk Management.exe"),
-        apps("System Info","System Info.exe"),
-        apps("Frequency Settings","Frequency Settings.exe"),
-        apps("Frequency Settings","Frequency Settings.exe"),
-        apps("RGB Controller","RGB Controller.exe"),
-        apps("Terminal","Terminal.exe"),
-        apps("Text Editor","Text Editor.exe"),
-        apps("Video Player","Video Player.exe"),
-        apps("Animator","Animator.exe"),
-        apps("My Devices","My Devices.exe"),
-        apps("Browser","Browser.exe"),
-        apps("Boot File", "System/boot.bin"),
-        apps("Virus", "Launcher.exe")
+        Apps("App Manager", "App Downloader.exe"),
+        Apps("Daily Market","Daily Market.exe"),
+        Apps("Personalization","Personalization.exe"),
+        Apps("EZ Mining", "EZ Mining.exe"),
+        Apps("Benchmark", "Benchmark.exe"),
+        Apps("File Manager", "File Manager.exe"),
+        Apps("Disk Management","Disk Management.exe"),
+        Apps("System Info","System Info.exe"),
+        Apps("Frequency Settings","Frequency Settings.exe"),
+        Apps("Frequency Settings","Frequency Settings.exe"),
+        Apps("RGB Controller","RGB Controller.exe"),
+        Apps("Terminal","Terminal.exe"),
+        Apps("Text Editor","Text Editor.exe"),
+        Apps("Video Player","Video Player.exe"),
+        Apps("Animator","Animator.exe"),
+        Apps("My Devices","My Devices.exe"),
+        Apps("Browser","Browser.exe"),
+        Apps("Boot File", "System/boot.bin"),
+        Apps("Virus", "Launcher.exe")
     )
     @SuppressLint("SetTextI18n")
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -158,12 +158,8 @@ class MainActivity2 : AppCompatActivity() {
                 .setIcon(R.drawable.baseline_info_outline_24)
                 .setMessage(message)
                 .setTitle(title)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -171,12 +167,8 @@ class MainActivity2 : AppCompatActivity() {
                 .setIcon(R.drawable.baseline_info_outline_24)
                 .setMessage(message)
                 .setTitle(title)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
 
             builder.show()
         }
@@ -193,15 +185,11 @@ class MainActivity2 : AppCompatActivity() {
             val builder = MaterialAlertDialogBuilder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage(message)
                 .setTitle(title)
                 .setItems(adapter, adapterOnClickListener)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (message != null) { builder.setMessage(message) }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -213,12 +201,8 @@ class MainActivity2 : AppCompatActivity() {
                 builder
                     .setTitle(title)
                     .setItems(adapter, adapterOnClickListener)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         }
     }
@@ -236,32 +220,22 @@ class MainActivity2 : AppCompatActivity() {
             val builder = MaterialAlertDialogBuilder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage(message)
                 .setTitle(title)
                 .setMultiChoiceItems(adapter, items, adapterOnClickListener)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (message != null) { builder.setMessage(message) }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
-            if (message != null) {
-                builder.setMessage(message)
-            }
+            if (message != null) { builder.setMessage(message) }
             builder
                 .setTitle(title)
                 .setMultiChoiceItems(adapter, items, adapterOnClickListener)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         }
     }
@@ -276,32 +250,22 @@ class MainActivity2 : AppCompatActivity() {
             val builder = MaterialAlertDialogBuilder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage(message)
                 .setTitle(title)
                 .setView(view)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (message != null) { builder.setMessage(message) }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
-            if (message != null) {
-                builder.setMessage(message)
-            }
+            if (message != null) { builder.setMessage(message) }
             builder
                 .setTitle(title)
                 .setView(view)
-            if (okListener != null) {
-                builder.setPositiveButton("Ok", okListener)
-            }
-            if (cancelListener != null) {
-                builder.setNegativeButton("Cancel", cancelListener)
-            }
+            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
+            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         }
     }
@@ -366,29 +330,13 @@ class MainActivity2 : AppCompatActivity() {
                 for (i in 0 until itemArray.length()) {
                     val storage = itemArray.getJSONObject(i)
                     val spawnId = storage.getString("spawnId")
-                    if (spawnId.contains("SSD") or spawnId.contains("HDD") or spawnId.contains("SSD_M.2")) {
+                    if (spawnId.contains("SSD") or spawnId.contains("HDD") or spawnId.contains("SSD_M.2") or spawnId.contains("FlashDrive")) {
                         val data = storage.getJSONObject("data")
                         if (data.has("storageData")) {
                             val storageData = data.getJSONObject("storageData")
                             val password = storageData.getString("userPassword")
                             if (password.isNotEmpty()) {
                                 pwd += "$password : $spawnId \n"
-                            }
-                        } else {
-                            // Assume we use a different way to do this
-                            val password = data.getString("password")
-                            if (password.isNotEmpty()) {
-                                pwd += "$password : $spawnId\n"
-                            }
-                        }
-                    } else if (spawnId == "FlashDrive") {
-                        // Flash Drive uses a different structure
-                        val data = storage.getJSONObject("data")
-                        if (data.has("storageData")) {
-                            val storageData = data.getJSONObject("storageData")
-                            val password = storageData.getString("userPassword")
-                            if (password.isNotEmpty()) {
-                                pwd += "$password : $spawnId\n"
                             }
                         } else {
                             // Assume we use a different way to do this

@@ -7,14 +7,6 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
-    signingConfigs {
-        create("release") {
-            storeFile = file("../keystore.jks")
-            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("RELEASE_KEYSTORE_ALIAS")
-            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
-        }
-    }
     namespace = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
     compileSdk = 35
 
@@ -22,8 +14,8 @@ android {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
         minSdk = 21
         targetSdk = 35
-        versionCode = 14
-        versionName = "1.3.9"
+        versionCode = 15
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -33,11 +25,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            isMinifyEnabled = true
         }
     }
     compileOptions {
@@ -46,9 +34,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    buildFeatures {
-
     }
     packaging {
         resources {
@@ -69,12 +54,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(files("libs\\PC Simulator Save Editor Library.jar"))
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.ui)
     implementation(libs.material3)
+    implementation(project(":library"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

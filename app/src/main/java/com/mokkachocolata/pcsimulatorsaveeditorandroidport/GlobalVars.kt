@@ -4,13 +4,8 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    val version = "1.3.9"
+    val version = "1.4.0"
     val ChangelogText = """
-            - A new help document is added.
-            - Now saving files are faster.
-            - Autocorrection is now disabled, improving performance.
-            - Thai support added.
-            - Compose libraries removed, this should reduce app size.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
