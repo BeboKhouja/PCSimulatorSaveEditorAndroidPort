@@ -1,7 +1,7 @@
 name: Dev Builds
 on:
   push:
-      branches: 'master'
+    branches: 'master'
 
 jobs:
   build:
@@ -23,6 +23,11 @@ jobs:
 
       - name: Init submodules
         uses: snickerbockers/submodules-init@v4
+
+      - name: Prepare summary
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.6.1
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -58,15 +63,24 @@ jobs:
         uses: kevin-david/zipalign-sign-android-release@v2.0.1
         id: sign
         with:
-            releaseDirectory: app/build/outputs/apk/release
-            signingKeyBase64: ${{ secrets.KEYSTORE_BASE_64 }}
-            alias: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
-            keyStorePassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
-            keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
-            zipAlign: true
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE_64 }}
+          alias: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+          keyStorePassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          zipAlign: true
+
+      - name: Generate MD5 sums
+        run: md5sum ${{steps.sign.outputs.signedReleaseFile}} > app/build/outputs/apk/release/app-release-unsigned-signed.md5
+
+      - name: Zip
+        uses: vimtor/action-zip@v1.2
+        with:
+            files: ${{steps.sign.outputs.signedReleaseFile}}/ app/build/outputs/apk/release/app-release-unsigned-signed.md5
+            dest: save-editor.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-            name: dev-artifacts
-            path: ${{steps.sign.outputs.signedReleaseFile}}
+          name: dev-artifacts
+          path: ${{ github.workspace }}/save-editor.zip

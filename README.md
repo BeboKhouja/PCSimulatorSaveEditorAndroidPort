@@ -18,16 +18,25 @@ When commiting, open a pull request, saying what you added, a short description 
 You can get PC Simulator Save Editor via two methods:
 
 1. You can get it from the [stable releases](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/releases), or [automatic builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions)
+However, they are not debuggable and are shrinked to reduce the size of the app.
 
 2. You can [build](#building) from source code.
 
 ## Building
 
+* Pull the submodules
+```
+git submodule init
+```
+
+
 ### PC Simulator Save Editor Library
 Library is [here](https://github.com/BeboKhouja/PC-Simulator-Save-Editor).
-
+* Build the library
+```
+./gradlew library:assemble
+```
 ### The App
-
 * Build the app
 
 ```
