@@ -117,6 +117,15 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
+    fun readTextFromUri(uri: Uri): String {
+        val uriThread = ReadTextFromUriThread()
+        uriThread.resolver = contentResolver
+        uriThread.uri = uri
+        val actualThread = Thread(uriThread)
+        actualThread.start()
+        actualThread.join()
+        return uriThread.output
+    }
     @SuppressLint("SetTextI18n")
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
@@ -361,6 +370,7 @@ class MainActivity2 : AppCompatActivity() {
                     "M.2 NVMe SSD",
                     "HDD",
                     "Daily Market (bypass bitcoin requirement)",
+                    "CPU"
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -386,7 +396,6 @@ class MainActivity2 : AppCompatActivity() {
                                 val file = FileObjectJson(fileList[i].path, "pcos", true, 0, 0)
                                 array.put(file.toJson())
                             }
-
                             else -> {
                                 val file = FileObjectJson(fileList[i].path, "", false, 0, 0)
                                 array.put(file.toJson())
@@ -400,7 +409,6 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     arr = arrayList.toTypedArray()
                     when (i) {
-
                         0 -> {
                             doit()
                         }
@@ -665,6 +673,28 @@ class MainActivity2 : AppCompatActivity() {
                                 }
                             }
                         }
+
+                        10 -> {
+                            var cpu: ObjectJson
+                            val cpulist = arrayOf(
+                                "CPU RMD Ryzen 9 7950X",
+                                "CPU i9-12900K",
+                                "CPU i9-9900K",
+                                "CPU i9-7900X",
+                                "CPU i7-14700K",
+                                "CPU i7-13700K",
+                                "CPU i7-8700K",
+                                "CPU i5-8400",
+                                "CPU i3-8300",
+                                "CPU Celeron G3920"
+                            )
+
+                            dialog("CPU", null, null, null, cpulist) {_, i ->
+                                cpu = ObjectJson(cpulist[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(cpu.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                            }
+                        }
                     }
                 }
             }
@@ -813,16 +843,6 @@ class MainActivity2 : AppCompatActivity() {
 
         val functions = MainFunctions()
 
-        fun readTextFromUri(uri: Uri): String {
-            val uriThread = ReadTextFromUriThread()
-            uriThread.resolver = contentResolver
-            uriThread.uri = uri
-            val actualThread = Thread(uriThread)
-            actualThread.start()
-            actualThread.join()
-            return uriThread.output
-        }
-
         if (Build.VERSION.SDK_INT > 24) {
             input.setOnDragListener{view, event ->
                 when (event.action) {
@@ -916,17 +936,10 @@ class MainActivity2 : AppCompatActivity() {
         Log.d("App", appLinkData.toString())
         if (Intent.ACTION_VIEW == appLinkAction) {
             appLinkData?.lastPathSegment?.also { _ ->
-                val uriThread = ReadTextFromUriThread()
-                val uri = Thread(uriThread)
-                uriThread.uri = appLinkData
-                uriThread.resolver = contentResolver
-                uri.start()
-                uri.join()
-                System.gc()
                 if (decrypt_after_opening) {
-                    input.setText(functions.Decrypt(uriThread.output))
+                    input.setText(functions.Decrypt(readTextFromUri(appLinkData)))
                 } else {
-                    input.setText(uriThread.output)
+                    input.setText(readTextFromUri(appLinkData))
                 }
             }
         }
@@ -941,57 +954,62 @@ class MainActivity2 : AppCompatActivity() {
         val writeorread = WriteOrReadThread()
         val afterread = AfterReadThread()
 
-        if (requestCode == saveToTxtInClass && resultCode == Activity.RESULT_OK) {
-            Log.i("App","Reached here")
-            val afterReadThread = Thread(afterread)
-            afterread.resolver = contentResolver
-            if (data != null) {
-                afterread.afterData = data
-            }
-            Log.d("App", text)
-            afterread.text = text
-            afterReadThread.start()
-            afterReadThread.join()
+        when {
+            requestCode == saveToTxtInClass && resultCode == Activity.RESULT_OK -> {
+                Log.i("App","Reached here")
+                val afterReadThread = Thread(afterread)
+                afterread.resolver = contentResolver
+                if (data != null) {
+                    afterread.afterData = data
+                }
+                Log.d("App", text)
+                afterread.text = text
+                afterReadThread.start()
+                afterReadThread.join()
 
-        } else if (requestCode == openFile && resultCode == Activity.RESULT_OK) {
-            val writeOrReadThread = Thread(writeorread)
-            writeorread.clazz = this
-           writeorread.resolver = contentResolver
-            if (data != null) {
-                writeorread.data = data
             }
-           writeorread.input = input
-           writeorread.decrypt_after_opening = decrypt_after_opening
-           writeorread.encrypt_after_saving = encrypt_after_saving
-           writeorread.WriteOrRead = false
-            writeOrReadThread.start()
-            writeOrReadThread.join()
-            System.gc()
-        } else if (requestCode == saveFile && resultCode == Activity.RESULT_OK) {
-            val afterReadThread = Thread(afterread)
-            afterread.resolver = contentResolver
-            if (data != null) {
-                afterread.afterData = data
+            requestCode == openFile && resultCode == Activity.RESULT_OK -> {
+                val writeOrReadThread = Thread(writeorread)
+                writeorread.clazz = this
+                writeorread.resolver = contentResolver
+                if (data != null) {
+                    writeorread.data = data
+                }
+                writeorread.input = input
+                writeorread.decrypt_after_opening = decrypt_after_opening
+                writeorread.encrypt_after_saving = encrypt_after_saving
+                writeorread.WriteOrRead = false
+                writeOrReadThread.start()
+                writeOrReadThread.join()
+                System.gc()
             }
-            afterread.text = saveString
-            afterReadThread.start()
-            System.gc()
-        } else if (requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK) {
-            val writeOrReadThread = Thread(writeorread)
-            writeorread.clazz = this
-            writeorread.resolver = contentResolver
-            if (data != null) {
-                writeorread.data = data
+            requestCode == saveFile && resultCode == Activity.RESULT_OK -> {
+                val afterReadThread = Thread(afterread)
+                afterread.resolver = contentResolver
+                if (data != null) {
+                    afterread.afterData = data
+                }
+                afterread.text = saveString
+                afterReadThread.start()
+                System.gc()
             }
-            writeorread.input = input
-            writeorread.decrypt_after_opening = decrypt_after_opening
-            writeorread.encrypt_after_saving = encrypt_after_saving
-            writeorread.WriteOrRead = true
-            writeorread.saveToTxt = true
-            writeorread.doClazz = afterread
-            writeOrReadThread.start()
-            writeOrReadThread.join()
-            System.gc()
+            requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK -> {
+                val writeOrReadThread = Thread(writeorread)
+                writeorread.clazz = this
+                writeorread.resolver = contentResolver
+                if (data != null) {
+                    writeorread.data = data
+                }
+                writeorread.input = input
+                writeorread.decrypt_after_opening = decrypt_after_opening
+                writeorread.encrypt_after_saving = encrypt_after_saving
+                writeorread.WriteOrRead = true
+                writeorread.saveToTxt = true
+                writeorread.doClazz = afterread
+                writeOrReadThread.start()
+                writeOrReadThread.join()
+                System.gc()
+            }
         }
     }
 }
