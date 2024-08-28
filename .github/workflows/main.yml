@@ -5,6 +5,7 @@ on:
 
 jobs:
   notifyDiscord:
+    name: Notify Discord
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,7 +20,9 @@ jobs:
         uses: tsickert/discord-webhook@v6.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          content: "A new build has been triggered by *${{ env.COMMIT_AUTHOR }}*.\n*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
+          embed-title: "New build triggered"
+          embed-description: "*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
+          embed-footer-text: "Triggered by ${{ env.COMMIT_AUTHOR }}"
 
   build:
     runs-on: ubuntu-latest
@@ -71,3 +74,23 @@ jobs:
           path: |
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/apk/release/app-release.md5
+
+  sendFile:
+    name: Send file to Discord
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Download Dev Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: dev-artifacts
+          path: ./out/apk
+
+      - name: Send APK to builds channel
+        uses: sinshutu/upload-to-discord@master
+        env:
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+            args: ./out/apk/app-release.apk ./out/apk/app-release.md5
