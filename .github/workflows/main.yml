@@ -20,7 +20,7 @@ jobs:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
           MESSAGE: "A new build has been triggered by *${{ env.COMMIT_AUTHOR }}*.\n*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
         run: |
-              curl -i -H "Accept: application/json" -H "Content-Type: application/json" POST ${WEBHOOK_URL} -d "{\"content\": \"${MESSAGE}\"}"
+              curl -i -H "Accept: application/json" -H "Content-Type: application/json" POST ${WEBHOOK_URL} -d "{\"content\": ${MESSAGE}}"
   build:
     runs-on: ubuntu-latest
     steps:
