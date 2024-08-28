@@ -4,9 +4,25 @@ on:
     branches: 'master'
 
 jobs:
+  notifyDiscord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Git commit info
+        id: info
+        run: |
+              echo "COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
+              echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Send message to Discord
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          MESSAGE: "A new build has been triggered by *${{ env.COMMIT_AUTHOR }}*.\n*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
+        run: |
+              curl -X POST ${WEBHOOK_URL}
+              -d "{\"content\": \"${MESSAGE}\"}"
+              -H "Content-Type: application/json"
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checking out branch
         uses: actions/checkout@v3
@@ -29,10 +45,6 @@ jobs:
         run: gradle library:assemble --stacktrace
 
       - name: Build developer APK
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: gradle assembleRelease --stacktrace
 
       - name: ZipAlign & Sign Android release

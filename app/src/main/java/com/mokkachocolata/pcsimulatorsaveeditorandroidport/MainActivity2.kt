@@ -52,7 +52,6 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
-import java.security.Key
 import kotlin.properties.Delegates
 
 class ReadTextFromUriThread : Runnable {
