@@ -19,6 +19,9 @@ import android.text.InputType
 import android.util.Base64
 import android.util.Log
 import android.view.DragEvent.ACTION_DROP
+import android.view.KeyEvent
+import android.view.KeyboardShortcutGroup
+import android.view.KeyboardShortcutInfo
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -28,6 +31,7 @@ import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -48,6 +52,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
+import java.security.Key
 import kotlin.properties.Delegates
 
 class ReadTextFromUriThread : Runnable {
@@ -80,6 +85,7 @@ class ReadTextFromUriThread : Runnable {
 
 class MainActivity2 : AppCompatActivity() {
 
+    lateinit var menus : Menu
     private lateinit var globalVars : GlobalVars
     lateinit var text : String
     private var saveString = "" // This way, we dont have to change the edittext, which reduces memory.
@@ -279,12 +285,69 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                if (event?.isCtrlPressed == true) {
+                    findViewById<Button>(R.id.decryptencrypt).performClick()
+                }
+            }
+            KeyEvent.KEYCODE_F1 -> {
+                startActivity(Intent(applicationContext, HelpActivity::class.java))
+            }
+            KeyEvent.KEYCODE_INSERT -> {
+                menus.performIdentifierAction(R.id.insert, 0)
+            }
+            KeyEvent.KEYCODE_F2 -> {
+                menus.performIdentifierAction(R.id.saveoptions, 0)
+            }
+            KeyEvent.KEYCODE_F3 -> {
+                menus.performIdentifierAction(R.id.dump, 0)
+            }
+            KeyEvent.KEYCODE_F4 -> {
+                menus.performIdentifierAction(R.id.clear, 0)
+            }
+        }
+        return super.onKeyUp(keyCode, event)
+    }
 
-
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onProvideKeyboardShortcuts(
+        data: MutableList<KeyboardShortcutGroup>?,
+        menu: Menu?,
+        deviceId: Int
+    ) {
+        super.onProvideKeyboardShortcuts(data, menu, deviceId)
+        val appShortcutGroup = KeyboardShortcutGroup(
+            "Save Editor",
+            listOf(
+                KeyboardShortcutInfo("Decrypt/Encrypt", KeyEvent.KEYCODE_ENTER, KeyEvent.META_CTRL_ON),
+                KeyboardShortcutInfo("Help", KeyEvent.KEYCODE_F1, 0),
+                KeyboardShortcutInfo("Insert Object", KeyEvent.KEYCODE_INSERT, 0),
+                KeyboardShortcutInfo("Save Options", KeyEvent.KEYCODE_F2, 0),
+                KeyboardShortcutInfo("Password Dumper", KeyEvent.KEYCODE_F3, 0),
+                KeyboardShortcutInfo("Cleanup", KeyEvent.KEYCODE_F4, 0)
+            )
+        )
+        val helpShortcutGroup = KeyboardShortcutGroup(
+            "Help",
+            listOf(
+                KeyboardShortcutInfo("Back", KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.META_ALT_ON),
+                KeyboardShortcutInfo("Forward", KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.META_ALT_ON)
+            )
+        )
+        data?.add(appShortcutGroup)
+        data?.add(helpShortcutGroup)
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.shortcuts -> {
+                if (Build.VERSION.SDK_INT >= 24) {
+                    requestShowKeyboardShortcuts()
+                }
+            }
             R.id.decrypt_after_opening -> {
                 decrypt_after_opening = decrypt_after_opening.not()
             }
@@ -816,6 +879,13 @@ class MainActivity2 : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
+
+        if (menu != null) {
+            menus = menu
+        }
+        if (Build.VERSION.SDK_INT <= 24) {
+            menu?.findItem(R.id.shortcuts)?.isEnabled = false
+        }
 
         return super.onCreateOptionsMenu(menu)
     }

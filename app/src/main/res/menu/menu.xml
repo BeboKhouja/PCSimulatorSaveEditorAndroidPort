@@ -36,4 +36,8 @@
     <item
         android:id="@+id/clear"
         android:title="@string/clean" />
+    <item
+        android:id="@+id/shortcuts"
+        android:title="Keyboard Shortcuts"
+        android:titleCondensed="Shortcuts" />
 </menu>
