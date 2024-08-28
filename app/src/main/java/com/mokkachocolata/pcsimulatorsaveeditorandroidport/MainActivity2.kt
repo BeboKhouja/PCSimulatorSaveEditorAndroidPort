@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.ContentResolver
-import android.content.Context
 import android.content.DialogInterface.OnClickListener
 import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.content.Intent
@@ -34,6 +32,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import android.content.ClipboardManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -53,6 +53,7 @@ import java.io.InputStreamReader
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
 import kotlin.properties.Delegates
+
 
 class ReadTextFromUriThread : Runnable {
 
@@ -990,9 +991,11 @@ class MainActivity2 : AppCompatActivity() {
         copy.setOnClickListener{_ ->
             System.gc()
             if (input.text.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("PC Simulator Save", input.text.toString())
-                clipboard.setPrimaryClip(clip)
+                getSystemService(
+                    this,
+                    ClipboardManager::class.java
+                )?.setPrimaryClip(clip)
             }
         }
 
@@ -1016,6 +1019,7 @@ class MainActivity2 : AppCompatActivity() {
     }
 
 
+    // Soon will be migrated to Activity Result API
     @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
