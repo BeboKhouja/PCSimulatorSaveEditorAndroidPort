@@ -78,6 +78,7 @@ jobs:
   sendFile:
     name: Send file to Discord
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@master
