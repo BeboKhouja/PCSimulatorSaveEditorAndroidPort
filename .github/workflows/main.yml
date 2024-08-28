@@ -7,6 +7,8 @@ jobs:
   notifyDiscord:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Get Git commit info
         id: info
         run: |
