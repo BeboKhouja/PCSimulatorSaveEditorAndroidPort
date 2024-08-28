@@ -15,12 +15,12 @@ jobs:
               echo "COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
               echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
 
-      - name: Send message to Discord
-        env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
-          MESSAGE: "A new build has been triggered by *${{ env.COMMIT_AUTHOR }}*.\n*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
-        run: |
-              curl -i -H "Accept: application/json" -H "Content-Type: application/json" POST ${WEBHOOK_URL} -d "{\"content\": \"${{ env.MESSAGE }}\"}"
+      - name: Publish
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: "A new build has been triggered by *${{ env.COMMIT_AUTHOR }}*.\n*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
+
   build:
     runs-on: ubuntu-latest
     steps:
