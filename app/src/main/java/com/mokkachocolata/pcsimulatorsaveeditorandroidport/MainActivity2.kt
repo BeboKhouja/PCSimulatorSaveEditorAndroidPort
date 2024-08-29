@@ -402,6 +402,7 @@ class MainActivity2 : AppCompatActivity() {
                         |Free, and open source.
                         |Get beta builds at the Actions tab at the GitHub repository.
                         |Report any issues at the Issues tab at the GitHub repository.
+                        |Please attack the PC Simulator discord by sharing invites to the PC Simulator Save Editor Discord!
                         |""".trimMargin(), {_,_->}, null
                 )
             }
