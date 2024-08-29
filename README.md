@@ -2,7 +2,7 @@
 <img src="https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/master/app/src/main/pc_simulator_save_editor-playstore.png" width="200" height="200" alt="PC Simulator Save Editor Logo" align="left">
 
 [![Dev Builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml/badge.svg)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/BeboKhouja/PCSimulatorSaveEditorAndroidPort)](https://github.com/PojavLauncherTeam/PojavLauncher/actions)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/BeboKhouja/PCSimulatorSaveEditorAndroidPort)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions)
 [![Discord](https://img.shields.io/discord/1274384588092866685.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.com/invite/GXRECJjhVr)
 
 - From PCSim Save Editor's source here comes PC Simulator Save Editor Android!
