@@ -59,5 +59,5 @@ The [Stack Overflow](https://stackoverflow.com) community for resolving a lot of
 
 # Message to Yiming
 
-Dear Yiming, we made this save editor because we want our users to have freedom, so please do not ban us from the PC Simulator Discord.
+Dear Yiming, we made this save editor because we want our users to have freedom with their save, so please do not ban us from the PC Simulator Discord.
 We will not advertise this server on the official PC Simulator Discord.

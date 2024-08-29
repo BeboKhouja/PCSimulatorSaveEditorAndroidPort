@@ -8,6 +8,7 @@ class GlobalVars(resources: Resources){
     val ChangelogText = """
         - Keyboard support added.
         - In the backend, the app has been migrated to the Activity Result API.
+        - Now you can add custom spawnIds.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
