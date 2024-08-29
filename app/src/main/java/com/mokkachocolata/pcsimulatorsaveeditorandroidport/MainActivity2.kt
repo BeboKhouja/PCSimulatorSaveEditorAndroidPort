@@ -1,9 +1,9 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.DialogInterface.OnClickListener
 import android.content.DialogInterface.OnMultiChoiceClickListener
@@ -32,7 +32,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import android.content.ClipboardManager
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -85,20 +84,15 @@ class ReadTextFromUriThread : Runnable {
 
 class MainActivity2 : AppCompatActivity() {
 
-    lateinit var menus : Menu
+    private lateinit var menus : Menu
     private lateinit var globalVars : GlobalVars
-    lateinit var text : String
-    private var saveString = "" // This way, we dont have to change the edittext, which reduces memory.
-    private val openFile = 0
-    private val saveFile = 1
-    private val openFileAndSaveToTxt = 2
-    val saveToTxtInClass = 3
+    var text = ""
+    var saveString = "" // This way, we dont have to change the edittext, which reduces memory.
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
     private lateinit var version : String
     private lateinit var input : EditText
     lateinit var save : Button
-    lateinit var saveIntent: Intent
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
     data class Apps(val name : String, val path : String)
@@ -123,7 +117,7 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
-    fun readTextFromUri(uri: Uri): String {
+    private fun readTextFromUri(uri: Uri): String {
         val uriThread = ReadTextFromUriThread()
         uriThread.resolver = contentResolver
         uriThread.uri = uri
@@ -166,6 +160,53 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    private val writeorread = WriteOrReadThread()
+    private val afterread = AfterReadThread()
+
+    private val pickFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
+        if (data != null) {
+            val writeOrReadThread = Thread(writeorread)
+            writeorread.clazz = this
+            writeorread.resolver = contentResolver
+            writeorread.data = data
+            writeorread.input = input
+            writeorread.decrypt_after_opening = decrypt_after_opening
+            writeorread.encrypt_after_saving = encrypt_after_saving
+            writeorread.WriteOrRead = false
+            writeOrReadThread.start()
+            writeOrReadThread.join()
+            System.gc()
+        }
+    }
+    val saveTheFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) {uri ->
+        if (uri != null) {
+            val afterReadThread = Thread(afterread)
+            afterread.resolver = contentResolver
+            afterread.afterData = uri
+            afterread.text = saveString
+            afterReadThread.start()
+            System.gc()
+        }
+    }
+
+    private val openandSavetotxt = registerForActivityResult(ActivityResultContracts.OpenDocument()) {uri ->
+        if (uri != null) {
+            val writeOrReadThread = Thread(writeorread)
+            writeorread.clazz = this
+            writeorread.resolver = contentResolver
+            writeorread.data = uri
+            writeorread.input = input
+            writeorread.decrypt_after_opening = decrypt_after_opening
+            writeorread.encrypt_after_saving = encrypt_after_saving
+            writeorread.WriteOrRead = true
+            writeorread.saveToTxt = true
+            writeorread.doClazz = afterread
+            writeOrReadThread.start()
+            writeOrReadThread.join()
+            System.gc()
+        }
+    }
+
     fun dialog(title: String, message: String, okListener: OnClickListener?, cancelListener: OnClickListener?) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
@@ -190,11 +231,11 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     fun dialog(title: String,
-               message: String?,
-               okListener: OnClickListener?,
-               cancelListener: OnClickListener?,
-               adapter : Array<String>,
-               adapterOnClickListener: OnClickListener
+                       message: String?,
+                       okListener: OnClickListener?,
+                       cancelListener: OnClickListener?,
+                       adapter : Array<String>,
+                       adapterOnClickListener: OnClickListener
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
@@ -221,22 +262,20 @@ class MainActivity2 : AppCompatActivity() {
             builder.show()
         }
     }
-
     fun dialogMultiChoice(title: String,
-               message: String?,
-               okListener: OnClickListener?,
-               cancelListener: OnClickListener?,
-               adapter : Array<String>,
-               adapterOnClickListener: OnMultiChoiceClickListener,
-                          boolArray: BooleanArray
+                                  message: String?,
+                                  okListener: OnClickListener?,
+                                  cancelListener: OnClickListener?,
+                                  adapter : Array<String>,
+                                  adapterOnClickListener: OnMultiChoiceClickListener,
+                                  boolArray: BooleanArray
     ) {
-        val items = boolArray
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
             builder
                 .setIcon(R.drawable.baseline_info_outline_24)
                 .setTitle(title)
-                .setMultiChoiceItems(adapter, items, adapterOnClickListener)
+                .setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
             if (message != null) { builder.setMessage(message) }
             if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
             if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
@@ -248,18 +287,18 @@ class MainActivity2 : AppCompatActivity() {
             if (message != null) { builder.setMessage(message) }
             builder
                 .setTitle(title)
-                .setMultiChoiceItems(adapter, items, adapterOnClickListener)
+                .setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
             if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
             if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
             builder.show()
         }
     }
 
-    fun dialog(title: String,
-               message: String?,
-               okListener: OnClickListener?,
-               cancelListener: OnClickListener?,
-               view : View
+    private fun dialog(title: String,
+                       message: String?,
+                       okListener: OnClickListener?,
+                       cancelListener: OnClickListener?,
+                       view : View
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
@@ -362,6 +401,7 @@ class MainActivity2 : AppCompatActivity() {
                         |Created by Mokka Chocolata.
                         |Free, and open source.
                         |Get beta builds at the Actions tab at the GitHub repository.
+                        |Report any issues at the Issues tab at the GitHub repository.
                         |""".trimMargin(), {_,_->}, null
                 )
             }
@@ -740,20 +780,20 @@ class MainActivity2 : AppCompatActivity() {
                         10 -> {
                             var cpu: ObjectJson
                             val cpulist = arrayOf(
-                                "CPU RMD Ryzen 9 7950X",
-                                "CPU i9-12900K",
-                                "CPU i9-9900K",
-                                "CPU i9-7900X",
-                                "CPU i7-14700K",
-                                "CPU i7-13700K",
-                                "CPU i7-8700K",
-                                "CPU i5-8400",
-                                "CPU i3-8300",
-                                "CPU Celeron G3920"
+                                "RMD Ryzen 9 7950X",
+                                "i9-12900K",
+                                "i9-9900K",
+                                "i9-7900X",
+                                "i7-14700K",
+                                "i7-13700K",
+                                "i7-8700K",
+                                "i5-8400",
+                                "i3-8300",
+                                "Celeron G3920"
                             )
 
                             dialog("CPU", null, null, null, cpulist) {_, i ->
-                                cpu = ObjectJson(cpulist[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                cpu = ObjectJson("CPU " + cpulist[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                 itemArray.put(cpu.toJson())
                                 input.setText(lines[0] + "\n" + jsonObject.toString())
                             }
@@ -957,27 +997,18 @@ class MainActivity2 : AppCompatActivity() {
         val open = findViewById<Button>(R.id.open)
         save = findViewById(R.id.save)
         val copy = findViewById<Button>(R.id.clipboard)
-        val chooseFile = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            type = "application/octet-stream"
-        }
-        saveIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            type = "application/octet-stream"
-            addCategory(Intent.CATEGORY_OPENABLE)
-        }
-
 
         open.setOnClickListener {_ ->
             System.gc()
-            startActivityForResult(chooseFile, openFile)
+            pickFile.launch(arrayOf("application/octet-stream"))
         }
 
         save.setOnClickListener {_ ->
             System.gc()
             if (input.text.isNotEmpty()) {
-                if (encrypt_after_saving) {
-                    saveString = functions.Decrypt(input.text.toString())
-                }
-                startActivityForResult(saveIntent, saveFile)
+                saveString =
+                    if (encrypt_after_saving) functions.Decrypt(input.text.toString()) else input.text.toString()
+                saveTheFile.launch("Save.pc")
             }
         }
 
@@ -985,7 +1016,7 @@ class MainActivity2 : AppCompatActivity() {
 
         decryptToTxt.setOnClickListener { _ ->
             System.gc()
-            startActivityForResult(chooseFile, openFileAndSaveToTxt)
+            openandSavetotxt.launch(arrayOf("application/octet-stream"))
         }
 
         copy.setOnClickListener{_ ->
@@ -1017,81 +1048,13 @@ class MainActivity2 : AppCompatActivity() {
         }
 
     }
-
-
-    // Soon will be migrated to Activity Result API
-    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val input = findViewById<EditText>(R.id.inputText)
-        val writeorread = WriteOrReadThread()
-        val afterread = AfterReadThread()
-
-        when {
-            requestCode == saveToTxtInClass && resultCode == Activity.RESULT_OK -> {
-                Log.i("App","Reached here")
-                val afterReadThread = Thread(afterread)
-                afterread.resolver = contentResolver
-                if (data != null) {
-                    afterread.afterData = data
-                }
-                Log.d("App", text)
-                afterread.text = text
-                afterReadThread.start()
-                afterReadThread.join()
-
-            }
-            requestCode == openFile && resultCode == Activity.RESULT_OK -> {
-                val writeOrReadThread = Thread(writeorread)
-                writeorread.clazz = this
-                writeorread.resolver = contentResolver
-                if (data != null) {
-                    writeorread.data = data
-                }
-                writeorread.input = input
-                writeorread.decrypt_after_opening = decrypt_after_opening
-                writeorread.encrypt_after_saving = encrypt_after_saving
-                writeorread.WriteOrRead = false
-                writeOrReadThread.start()
-                writeOrReadThread.join()
-                System.gc()
-            }
-            requestCode == saveFile && resultCode == Activity.RESULT_OK -> {
-                val afterReadThread = Thread(afterread)
-                afterread.resolver = contentResolver
-                if (data != null) {
-                    afterread.afterData = data
-                }
-                afterread.text = saveString
-                afterReadThread.start()
-                System.gc()
-            }
-            requestCode == openFileAndSaveToTxt && resultCode == Activity.RESULT_OK -> {
-                val writeOrReadThread = Thread(writeorread)
-                writeorread.clazz = this
-                writeorread.resolver = contentResolver
-                if (data != null) {
-                    writeorread.data = data
-                }
-                writeorread.input = input
-                writeorread.decrypt_after_opening = decrypt_after_opening
-                writeorread.encrypt_after_saving = encrypt_after_saving
-                writeorread.WriteOrRead = true
-                writeorread.saveToTxt = true
-                writeorread.doClazz = afterread
-                writeOrReadThread.start()
-                writeOrReadThread.join()
-                System.gc()
-            }
-        }
-    }
 }
 
 
 class WriteOrReadThread : Runnable{
     var WriteOrRead by Delegates.notNull<Boolean>()
     lateinit var input : EditText
-    lateinit var data : Intent
+    lateinit var data : Uri
     lateinit var resolver : ContentResolver
     var saveToTxt by Delegates.notNull<Boolean>()
     private var functions = MainFunctions()
@@ -1112,39 +1075,34 @@ class WriteOrReadThread : Runnable{
 
     override fun run() {
         if (!WriteOrRead) {
-            data.data?.also { uri ->
-                val thread = Thread(functions)
-                functions.input = readTextFromUri(uri)
-                thread.start()
-                thread.join()
-                if (decrypt_after_opening) {
-                    input.setText(functions.Output)
-                } else {
-                    input.setText(readTextFromUri(uri))
-                }
+            val thread = Thread(functions)
+            functions.input = readTextFromUri(data)
+            thread.start()
+            thread.join()
+            if (decrypt_after_opening) {
+                input.setText(functions.Output)
+            } else {
+                input.setText(readTextFromUri(data))
             }
         } else if (saveToTxt) {
-            data.data?.also {uri ->
-                val thread = Thread(functions)
-                functions.input = readTextFromUri(uri)
-                thread.start()
-                thread.join()
-                Log.d("App", functions.Output)
-                clazz.text = functions.Output
-                clazz.startActivityForResult(clazz.saveIntent, clazz.saveToTxtInClass)
-            }
+            val thread = Thread(functions)
+            functions.input = readTextFromUri(data)
+            thread.start()
+            thread.join()
+            Log.d("App", functions.Output)
+            clazz.saveString = functions.Output
+            clazz.saveTheFile.launch("Save.txt")
         } }
     }
 
 class AfterReadThread : Runnable{
-    lateinit var afterData : Intent
+    lateinit var afterData : Uri
     lateinit var resolver : ContentResolver
     lateinit var text: String
 
     override fun run() {
-        afterData.data?.also {uri ->
-            try {
-                resolver.openFileDescriptor(uri, "w")?.use { it ->
+        try {
+                resolver.openFileDescriptor(afterData, "w")?.use { it ->
                     val outputstream = FileOutputStream(it.fileDescriptor)
 
                     outputstream.use {
@@ -1157,7 +1115,6 @@ class AfterReadThread : Runnable{
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        }
     }
 
 }
