@@ -463,6 +463,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             R.id.insert -> {
                 val itemList = arrayOf(
+                    "Custom Spawn ID",
                     "RTX4080Ti",
                     "Pillow",
                     "Cube",
@@ -513,9 +514,14 @@ class MainActivity2 : AppCompatActivity() {
                     arr = arrayList.toTypedArray()
                     when (i) {
                         0 -> {
-                            doit()
+                            val edittext = EditText(this)
+                            var obj: ObjectJson
+                            dialog("Custom Spawn ID", "Add an object with a custom spawn ID.", {_,_->
+                                obj = ObjectJson(edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(obj.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                            }, {_,_->}, edittext)
                         }
-
                         1 -> {
                             doit()
                         }
@@ -527,11 +533,15 @@ class MainActivity2 : AppCompatActivity() {
                         3 -> {
                             doit()
                         }
+
                         4 -> {
+                            doit()
+                        }
+                        5 -> {
                             doitBanner()
                         }
 
-                        5 -> {
+                        6 -> {
                             val position = position
                             var driveName : String
                             val boolArray = BooleanArray(fileList.size)
@@ -564,7 +574,7 @@ class MainActivity2 : AppCompatActivity() {
                             }, {_,_->}, edittext)
                         }
 
-                        6 -> {
+                        7 -> {
                             val position = position
                             var driveName: String
 
@@ -609,7 +619,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittext)
                             }, {_,_->}, edittext)}
 
-                        7 -> {
+                        8 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
@@ -651,7 +661,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittext)
                             }, {_,_->}, edittext)}
 
-                        8 -> {
+                        9 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
@@ -694,7 +704,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittext)
                             }, {_,_->}, edittext)}
 
-                        9 -> {
+                        10 -> {
                             var obj: ObjectJson
                             data class dailyObj(val name: String, val internalName: String)
                             val daily = arrayOf(
@@ -777,7 +787,7 @@ class MainActivity2 : AppCompatActivity() {
                             }
                         }
 
-                        10 -> {
+                        11 -> {
                             var cpu: ObjectJson
                             val cpulist = arrayOf(
                                 "RMD Ryzen 9 7950X",
