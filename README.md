@@ -12,7 +12,7 @@
 # Contributing
 We welcome any contributions! For example, you can change the code, the documentation, and also help translate the app!
 
-When commiting, open a pull request, saying what you added, a short description of it.
+When commiting, open a pull request, saying what you added, a short description of it, and how to execute it.
 
 # Installing
 You can get PC Simulator Save Editor via two methods:
@@ -56,3 +56,8 @@ PC Simulator Save Editor Android is licensed under [GPLv3.0](https://github.com/
 
 # Credits & Licenses (if available)
 The [Stack Overflow](https://stackoverflow.com) community for resolving a lot of bugs.
+
+# Message to Yiming
+
+Dear Yiming, we made this save editor because we want our users to have freedom, so please do not ban us from the PC Simulator Discord.
+We will not advertise this server on the official PC Simulator Discord.

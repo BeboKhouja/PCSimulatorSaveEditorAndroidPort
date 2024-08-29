@@ -1,0 +1,2 @@
+Dear Yiming, we made this save editor because we want our users to have freedom, so please do not ban us from the PC Simulator Discord.
+We will not advertise this server on the official PC Simulator Discord.
