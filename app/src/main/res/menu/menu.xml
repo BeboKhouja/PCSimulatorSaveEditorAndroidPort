@@ -40,4 +40,8 @@
         android:id="@+id/shortcuts"
         android:title="Keyboard Shortcuts"
         android:titleCondensed="Shortcuts" />
+    <item
+        android:id="@+id/license"
+        android:title="Open Source Licenses"
+        android:titleCondensed="Licenses" />
 </menu>

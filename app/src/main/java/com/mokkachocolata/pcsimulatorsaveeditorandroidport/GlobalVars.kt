@@ -1,14 +1,32 @@
+/**
+ * PC Simulator Save Editor is a free and open source save editor for PC Simulator.
+ *     Copyright (C) 2024  Mokka Chocolata
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Email: mokkachocolata@gmail.com
+ */
+
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    val version = "1.4.1"
+    val version = "1.4.2"
     val ChangelogText = """
-        - Keyboard support added.
-        - In the backend, the app has been migrated to the Activity Result API.
-        - Now you can add custom spawnIds.
+        - Open Source Licenses added.
+        - Now you can add RAMs.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

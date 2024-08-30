@@ -1,3 +1,22 @@
+/**
+ * PC Simulator Save Editor is a free and open source save editor for PC Simulator.
+ *     Copyright (C) 2024  Mokka Chocolata
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Email: mokkachocolata@gmail.com
+ */
+
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.annotation.SuppressLint
@@ -475,7 +494,8 @@ class MainActivity2 : AppCompatActivity() {
                     "M.2 NVMe SSD",
                     "HDD",
                     "Daily Market (bypass bitcoin requirement)",
-                    "CPU"
+                    "CPU",
+                    "RAM"
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -809,8 +829,39 @@ class MainActivity2 : AppCompatActivity() {
                                 input.setText(lines[0] + "\n" + jsonObject.toString())
                             }
                         }
+
+                        12 -> {
+                            var ram: ObjectJson
+                            var ramList = arrayOf(
+                                "32GB",
+                                "32GB(RGB)",
+                                "16GB",
+                                "16GB(RGB)",
+                                "8GB",
+                                "8GB(RGB)",
+                                "4GB",
+                                "4GB(RGB)",
+                                "2GB",
+                                "1GB"
+                            )
+
+                            dialog("RAM", null, null, null, ramList) {_, i ->
+                                ram = ObjectJson("RAM " + ramList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(ram.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                            }
+                        }
                     }
                 }
+            }
+            R.id.license -> {
+                dialog("Open Source Licenses", """
+                    This app is licensed with GPLv3.0.
+                    AndroidX (Apache License 2.0)
+                    WebView (MIT License)
+                    Android (Apache License 2.0)
+                    JSONJava (Public Domain)
+                """.trimIndent(), {_,_->}, null)
             }
             R.id.saveoptions -> {
                 val optionList = arrayOf(
