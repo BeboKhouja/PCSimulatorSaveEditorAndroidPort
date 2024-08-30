@@ -84,8 +84,8 @@ class ReadTextFromUriThread : Runnable {
         val stringBuilder = StringBuilder()
         val inputStream = resolver.openInputStream(uri)
 
-        inputStream?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+        inputStream?.use { stream ->
+            BufferedReader(InputStreamReader(stream)).use { reader ->
                 var line: String? = reader.readLine()
                 while (line != null) {
                     stringBuilder.append(line)
@@ -541,8 +541,8 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     val arr : Array<String>
                     val arrayList = ArrayList<String>()
-                    for (i in fileList) {
-                        arrayList.add(i.name)
+                    for (files in fileList) {
+                        arrayList.add(files.name)
                     }
                     arr = arrayList.toTypedArray()
                     when (i) {
@@ -575,25 +575,23 @@ class MainActivity2 : AppCompatActivity() {
                         }
 
                         6 -> {
-                            val position = position
                             var driveName : String
                             val boolArray = BooleanArray(fileList.size)
 
-                            val selectedItems = mutableListOf(*fileList)
                             var password : String
                             val edittext = EditText(this)
                             dialog("USB Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
-                                val edittext = EditText(this)
-                                edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                val edittextUSB = EditText(this)
+                                edittextUSB.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                                 dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittext.text.toString()
+                                    password = edittextUSB.text.toString()
                                     // Null the message out because the items wont appear
                                     dialogMultiChoice("Files", null, {_, _ ->
                                         val array = JSONArray()
-                                        for (i in boolArray.indices) {
-                                            if (boolArray[i]) {
-                                                putFile(i, array)
+                                        for (checked in boolArray.indices) {
+                                            if (boolArray[checked]) {
+                                                putFile(checked, array)
                                             }
                                         }
                                         val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
@@ -601,28 +599,25 @@ class MainActivity2 : AppCompatActivity() {
                                         input.setText(lines[0] + "\n" + jsonObject.toString())
                                     }, null, arr, {_, which, isChecked ->
                                         boolArray[which] = isChecked
-                                        val currentItem = selectedItems[which]
                                     }, boolArray)
-                                }, {_,_->}, edittext)
+                                }, {_,_->}, edittextUSB)
                             }, {_,_->}, edittext)
                         }
 
                         7 -> {
-                            val position = position
                             var driveName: String
 
                             val boolArray = BooleanArray(fileList.size)
 
-                            val selectedItems = mutableListOf(*fileList)
                             var password: String
                             var size : String
                             val edittext = EditText(this)
                             dialog("SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
-                                val edittext = EditText(this)
-                                edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                val edittextssd = EditText(this)
+                                edittextssd.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                                 dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittext.text.toString()
+                                    password = edittextssd.text.toString()
                                     // Null the message out because the items wont appear
                                     val ssdSize = arrayOf(
                                         "128GB",
@@ -636,9 +631,9 @@ class MainActivity2 : AppCompatActivity() {
 
                                         dialogMultiChoice("Files", null, {_, _ ->
                                             val array = JSONArray()
-                                            for (i in boolArray.indices) {
-                                                if (boolArray[i]) {
-                                                    putFile(i, array)
+                                            for (checked in boolArray.indices) {
+                                                if (boolArray[checked]) {
+                                                    putFile(checked, array)
                                                 }
                                             }
                                             val drive = SSDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
@@ -646,26 +641,24 @@ class MainActivity2 : AppCompatActivity() {
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
                                         }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
-                                            val currentItem = selectedItems[which]
                                         }, boolArray)
                                     }
-                                }, {_,_->}, edittext)
+                                }, {_,_->}, edittextssd)
                             }, {_,_->}, edittext)}
 
                         8 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
-                            val selectedItems = mutableListOf(*fileList)
                             var password: String
                             var size : String
                             val edittext = EditText(this)
                             dialog("M.2 NVMe SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
-                                val edittext = EditText(this)
-                                edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                val edittextm2 = EditText(this)
+                                edittextm2.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                                 dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittext.text.toString()
+                                    password = edittextm2.text.toString()
                                     // Null the message out because the items wont appear
                                     val m2size = arrayOf(
                                         "128GB",
@@ -678,9 +671,9 @@ class MainActivity2 : AppCompatActivity() {
 
                                         dialogMultiChoice("Files", null, {_, _ ->
                                             val array = JSONArray()
-                                            for (i in boolArray.indices) {
-                                                if (boolArray[i]) {
-                                                    putFile(i, array)
+                                            for (checked in boolArray.indices) {
+                                                if (boolArray[checked]) {
+                                                    putFile(checked, array)
                                                 }
                                             }
                                             val drive = M2ObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
@@ -688,27 +681,24 @@ class MainActivity2 : AppCompatActivity() {
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
                                         }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
-                                            val currentItem = selectedItems[which]
                                         }, boolArray)
                                     }
-                                }, {_,_->}, edittext)
+                                }, {_,_->}, edittextm2)
                             }, {_,_->}, edittext)}
 
                         9 -> {
                             var driveName: String
                             val boolArray = BooleanArray(fileList.size)
 
-                            val selectedItems = mutableListOf(*fileList)
                             var password: String
                             var size: String
                             val edittext = EditText(this)
                             dialog("HDD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
-                                val edittext = EditText(this)
-                                edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                val edittextHDD = EditText(this)
+                                edittextHDD.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                                 dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittext.text.toString()
-                                    val edittext = EditText(this)
+                                    password = edittextHDD.text.toString()
                                     // Null the message out because the items wont appear
                                     val hddsize = arrayOf(
                                         "500GB",
@@ -721,9 +711,9 @@ class MainActivity2 : AppCompatActivity() {
 
                                         dialogMultiChoice("Files", null, {_, _ ->
                                             val array = JSONArray()
-                                            for (i in boolArray.indices) {
-                                                if (boolArray[i]) {
-                                                    putFile(i, array)
+                                            for (checked in boolArray.indices) {
+                                                if (boolArray[checked]) {
+                                                    putFile(checked, array)
                                                 }
                                             }
                                             val drive = HDDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
@@ -731,10 +721,9 @@ class MainActivity2 : AppCompatActivity() {
                                             input.setText(lines[0] + "\n" + jsonObject.toString())
                                         }, null, arr, {_, which, isChecked ->
                                             boolArray[which] = isChecked
-                                            val currentItem = selectedItems[which]
                                         }, boolArray)
                                     }
-                                }, {_,_->}, edittext)
+                                }, {_,_->}, edittextHDD)
                             }, {_,_->}, edittext)}
 
                         10 -> {
@@ -789,29 +778,29 @@ class MainActivity2 : AppCompatActivity() {
                                 dailyObj("Camera", "Webcam"),
                                 dailyObj("Insert all", "")
                             )
-                            val arr : Array<String>
-                            val arrayList = ArrayList<String>()
-                            for (i in daily) {
-                                arrayList.add(i.name)
+                            val arrDaily : Array<String>
+                            val dailyArrList = ArrayList<String>()
+                            for (davey in daily) {
+                                dailyArrList.add(davey.name)
                             }
-                            arr = arrayList.toTypedArray()
+                            arrDaily = dailyArrList.toTypedArray()
                             // Items referred internally in the code
-                            dialog("Daily Market", null, null, null, arr) {_, i ->
-                                if (daily[i].name != "Insert all") {
-                                    if (daily[i].internalName == "SSD 128GB") {
+                            dialog("Daily Market", null, null, null, arrDaily) { _, index ->
+                                if (daily[index].name != "Insert all") {
+                                    if (daily[index].internalName == "SSD 128GB") {
                                         val random = (0..2147483647).random()
                                         itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
                                     } else {
-                                        obj = ObjectJson(daily[i].internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                        obj = ObjectJson(daily[index].internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                         itemArray.put(obj.toJson())
                                     }
                                 } else {
-                                    for (i in daily) {
-                                        if (i.internalName == "SSD 128GB") {
+                                    for (daveys in daily) {
+                                        if (daveys.internalName == "SSD 128GB") {
                                             val random = (0..2147483647).random()
                                             itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
                                         } else {
-                                            obj = ObjectJson(i.internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                            obj = ObjectJson(daveys.internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                             itemArray.put(obj.toJson())
                                         }
                                         input.setText(lines[0] + "\n" + jsonObject.toString())
