@@ -54,17 +54,20 @@ The <code>sign</code> property is the name of the creator that can be seen in th
 <h2>Second line of a save</h2><br>
 It's getting more complicated now, so try to stay with me if you're interested.<br><br>
 
-<b>This is how the player's property look's like:</b> <br>
-<code>{"playerData":{"x":-4.90798426,"y":-2.70895219,"z":-10.656539,"ry":192.328568,"rx":19.5388222}</code> <br>
-The <code>x, y, z</code> properties relate to the position of the player. <br>
-The <code>ry, rx</code> properties relate to the rotation of the player camera.<br><br>
+<p>
+    <b>This is how the player's property look's like:</b> <br>
+    <code>{"playerData":{"x":-4.90798426,"y":-2.70895219,"z":-10.656539,"ry":192.328568,"rx":19.5388222}</code> <br>
+    The <code>x, y, z</code> properties relate to the position of the player. <br>
+    The <code>ry, rx</code> properties relate to the rotation of the player camera.<br><br>
+</p>
 
 Now, global applies to all, and specifics applies to a specific <code>spawnId</code>. <br><br> 
 
-<b>This is how an object's global property look's like:</b><br>
-<code>"itemData":[{"spawnId":"BannerStand","id":28630066,"pos":{"x":-24.26478,"y":-2.19383526,"z":4.321465},"rot":{"x":-1.38645992E-05,"y":0.8149904,"z":9.117648E-06,"w":0.579474568},"data":{}}</code><br>
-Notice the <code>itemData</code>, that's where all the objects are stored.<br>
-The <code>spawnId</code> property is the type of the object (SSDs, Banners in this case). This property cannot be changed after the object has been created without the use of save editors or hacks. This can also be used to spawn illegal items like: <br><br>
+<p>
+    <b>This is how an object's global property look's like:</b><br>
+    <code>"itemData":[{"spawnId":"BannerStand","id":28630066,"pos":{"x":-24.26478,"y":-2.19383526,"z":4.321465},"rot":{"x":-1.38645992E-05,"y":0.8149904,"z":9.117648E-06,"w":0.579474568},"data":{}}</code><br>
+    Notice the <code>itemData</code>, that's where all the objects are stored.<br>
+    The <code>spawnId</code> property is the type of the object (SSDs, Banners in this case). This property cannot be changed after the object has been created without the use of save editors or hacks. This can also be used to spawn illegal items like: <br><br>
 <pre>
 Projector
 Cube
@@ -75,32 +78,37 @@ The <code>id</code> property is like a UUID, assigned to each object. Make sure 
 The <code>pos</code> property relates to the position of the object in 3D (X, Y, Z). <br>
 The <code>rot</code> property relates to the rotation of the object in 3D (4D?). What is the W property? West? Weight?<br>
 The <code>data</code> property is specific to each <code>spawnId</code>, containing it's data. <br><br>
+</p>
 
-<b>This is how an SSDs and HDDs data look's like:</b><br>
-<code>{"storageName":"Local Disk","password":"","files":[{"path":"System/boot.bin","content":"pcos","hidden":true,"size":60000,"StorageSize":60000},{"path":"App Downloader.exe","content":"","hidden":false,"size":432,"StorageSize":432},{"path":"Personalization.exe","content":"","hidden":false,"size":374,"StorageSize":374},{"path":"System/user","content":"{\"userPicturePath\":\"\",\"userName\":\"Video PC\",\"background\":0}","hidden":true,"size":0,"StorageSize":59},{"path":"System/devices","content":"{\"devices\":[{\"name\":\"LED Display 1225\",\"type\":2,\"id\":-666251422}]}","hidden":true,"size":0,"StorageSize":66},{"path":"f0.pic","content":"","hidden":false,"size":0,"StorageSize":596},],"hooked":true,"glue":false}}</code><br><br>
+<p>
+    <b>This is how an SSDs and HDDs data look's like:</b><br>
+    <code>{"storageName":"Local Disk","password":"","files":[{"path":"System/boot.bin","content":"pcos","hidden":true,"size":60000,"StorageSize":60000},{"path":"App Downloader.exe","content":"","hidden":false,"size":432,"StorageSize":432},{"path":"Personalization.exe","content":"","hidden":false,"size":374,"StorageSize":374},{"path":"System/user","content":"{\"userPicturePath\":\"\",\"userName\":\"Video PC\",\"background\":0}","hidden":true,"size":0,"StorageSize":59},{"path":"System/devices","content":"{\"devices\":[{\"name\":\"LED Display 1225\",\"type\":2,\"id\":-666251422}]}","hidden":true,"size":0,"StorageSize":66},{"path":"f0.pic","content":"","hidden":false,"size":0,"StorageSize":596},],"hooked":true,"glue":false}}</code><br><br>
 
-This would be way too long to explain if everything was included.<br><br>
-The <code>storageName</code> property is the text that appears in Disk Management and if you hold the drive. <br>
-The <code>password</code> property is if you set a password in Personalization. Without the password, you won't be able to boot your computer. This property cannot be changed if you forgot the password without save editors or hacks.<br>
-The <code>files</code> property is the contents of the drive. We'll get into that in the next section.<br>
-The <code>hooked</code> property is if it's in a PC?<br>
-The <code>glue</code> property is probably for the glue item which we'll get to in the next page.<br><br>
+    This would be way too long to explain if everything was included.<br>
+    This may differ.<br><br>
+    The <code>storageName</code> property is the text that appears in Disk Management and if you hold the drive. <br>
+    The <code>password</code> property is if you set a password in Personalization. Without the password, you won't be able to boot your computer. This property cannot be changed if you forgot the password without save editors or hacks.<br>
+    The <code>files</code> property is the contents of the drive. We'll get into that in the next section.<br>
+    The <code>hooked</code> property is if it's in a PC?<br>
+    The <code>glue</code> property is probably for the glue item which we'll get to in the next page.<br><br>
+</p>
 
-<b>This is how a file look's like:</b><br>
-<code>{"path":"System/boot.bin","content":"pcos","hidden":true,"size":60000,"StorageSize":60000}</code><br>
-The <code>path</code> property is just the name of the file/directory. But there's more.<br><br>
+<p>
+    <b>This is how a file look's like:</b><br>
+    <code>{"path":"System/boot.bin","content":"pcos","hidden":true,"size":60000,"StorageSize":60000}</code><br>
+    The <code>path</code> property is just the name of the file/directory. But there's more.<br><br>
 
-The file <code>System/boot.bin</code> is required to boot PCOS. If missing, PCOS won't boot.<br>
-The file <code>System/boot.bin</code> cannot be copied, deleted, or cut without the use of save editors or hacks.<br>
-The file <code>System/boot.bin</code> is hidden by default, but still won't appear in the desktop. (though this does not apply with a save editor.) <br>
-The <code>content</code> property is the contents of the file.<br>
-The <code>System/boot.bin</code> contents has to be either <code>pcos</code> (PCOS) or <code>pcos_ins</code> (PCOS Installer).<br>
-Apps have to be either the apps that are in the list of the App Downloader app, and ends with .exe <br><br>
+    The file <code>System/boot.bin</code> is required to boot PCOS. If missing, PCOS won't boot.<br>
+    The file <code>System/boot.bin</code> cannot be copied, deleted, or cut without the use of save editors or hacks.<br>
+    The file <code>System/boot.bin</code> is hidden by default, but still won't appear in the desktop. (though this does not apply with a save editor.) <br>
+    The <code>content</code> property is the contents of the file.<br>
+    The <code>System/boot.bin</code> contents has to be either <code>pcos</code> (PCOS) or <code>pcos_ins</code> (PCOS Installer).<br>
+    Apps have to be either the apps that are in the list of the App Downloader app, and ends with .exe <br><br>
 
-The <code>size</code> property indicates the size it takes up in MBs? This property cannot be changed after the file has been created without the use of save editors or hacks.<br>
-The <code>StorageSize</code> property is the same as the <code>size</code> property.<br><br>
+    The <code>size</code> property indicates the size it takes up in MBs? This property cannot be changed after the file has been created without the use of save editors or hacks.<br>
+    The <code>StorageSize</code> property is the same as the <code>size</code> property.<br><br>
 
-You can also make illegal drives. Examples:<br>
+    You can also make illegal drives. Examples:<br>
 
 <pre>
 PCOS Installer on an SSD (Inserting and unplugging this drive on a PC that's turned on won't cause it to BSOD):
@@ -113,61 +121,78 @@ PCOS without System/boot.bin (system32):
 {"spawnId":"SSD_M.2 1TB","id":1162601802,"pos":{"x":3.757841,"y":0.347554,"z":20.272131},"rot":{"x":0.482912481,"y":-0.516290247,"z":-0.5159509,"w":-0.483771175},"data":{"storageName":"Local Disk","password":"","files":[{"path":"App Downloader.exe","content":"","hidden":false,"size":432,"StorageSize":432},{"path":"Benchmark.exe","content":"","hidden":false,"size":482,"StorageSize":482},{"path":"Disk Management.exe","content":"","hidden":false,"size":297,"StorageSize":297},{"path":"File Manager.exe","content":"","hidden":false,"size":127,"StorageSize":127},{"path":"System Info.exe","content":"","hidden":false,"size":273,"StorageSize":273},{"path":"EZ Mining.exe","content":"","hidden":false,"size":673,"StorageSize":673},{"path":"Daily Market.exe","content":"","hidden":false,"size":382,"StorageSize":382},{"path":"Frequency Settings.exe","content":"","hidden":false,"size":339,"StorageSize":339},{"path":"Paint.exe","content":"","hidden":false,"size":619,"StorageSize":619},{"path":"Personalization.exe","content":"","hidden":false,"size":374,"StorageSize":374},{"path":"RGB Controller.exe","content":"","hidden":false,"size":477,"StorageSize":477},{"path":"Terminal.exe","content":"","hidden":false,"size":297,"StorageSize":297},{"path":"Video Player.exe","content":"","hidden":false,"size":816,"StorageSize":816},{"path":"Text Editor.exe","content":"","hidden":false,"size":264,"StorageSize":264},{"path":"Animator.exe","content":"","hidden":false,"size":1329,"StorageSize":1329},{"path":"My Devices.exe","content":"","hidden":false,"size":203,"StorageSize":203},{"path":"Browser.exe","content":"","hidden":false,"size":593,"StorageSize":593},{"path":"Camera.exe","content":"","hidden":false,"size":210,"StorageSize":210},{"path":"System/devices","content":"{\"devices\":[{\"name\":\"LED Display 1225\",\"type\":2,\"id\":-1345284304},{\"name\":\"Projector A13\",\"type\":2,\"id\":-190089260},{\"name\":\"Cooler\",\"type\":2,\"id\":-1747949538},{\"name\":\"Camera\",\"type\":3,\"id\":-840008272}]}","hidden":true,"size":0,"StorageSize":204}],"uptime":2580.43213,"health":100.0,"damaged":false,"glue":false}}
 
 </pre>
+</p>
 
-<b>This is how the <code>System/user</code> file look's like:</b><br>
-<code>{\"userPicturePath\":\"\",\"userName\":\"Video PC\",\"background\":0}</code><br>
-There is a lot of backslashes, but ignore them. <br>
-All of these properties can be changed in the Personalization app.<br>
-The <code>userPicturePath</code> property is the path to the file of the user picture.<br>
-The <code>userName</code> property is the username of the drive.<br>
-The <code>background</code> property is the background in integer from 0-3. Examples:<br><br>
+<p>
+    <b>This is how the <code>System/user</code> file look's like:</b><br>
+    <code>{\"userPicturePath\":\"\",\"userName\":\"Video PC\",\"background\":0}</code><br>
+    There is a lot of backslashes, but ignore them. <br>
+    All of these properties can be changed in the Personalization app.<br>
+    The <code>userPicturePath</code> property is the path to the file of the user picture.<br>
+    The <code>userName</code> property is the username of the drive.<br>
+    The <code>background</code> property is the background in integer from 0-3. Examples:<br><br>
 
-Blue: <code>0</code><br>
-Light Blue - Purple: <code>1</code><br>
-Black: <code>2</code><br>
-Windows 9x: <code>3</code><br><br>
+    Blue: <code>0</code><br>
+    Light Blue - Purple: <code>1</code><br>
+    Black: <code>2</code><br>
+    Windows 9x: <code>3</code><br><br>
+</p>
 
-<b>This is how the <code>System/Devices</code> file look's like:</b><br>
-<code>{\"devices\":[{\"name\":\"LED Display 1225\",\"type\":2,\"id\":-666251422}]}</code><br>
-<code>devices</code> is where the devices are stored, so we won't get into that.<br>
-In each device:<br>
-The <code>name</code> property is the name of the device. This can be changed in My Devices.<br>
-The <code>type</code> property is the type of the device in integer.<br>
-The <code>id</code> property is the id of the object as explained in object global properties.<br><br>
+<p>
+    <b>This is how the <code>System/Devices</code> file look's like:</b><br>
+    <code>{\"devices\":[{\"name\":\"LED Display 1225\",\"type\":2,\"id\":-666251422}]}</code><br>
+    <code>devices</code> is where the devices are stored, so we won't get into that.<br>
+    In each device:<br>
+    The <code>name</code> property is the name of the device. This can be changed in My Devices.<br>
+    The <code>type</code> property is the type of the device in integer.<br>
+    The <code>id</code> property is the id of the object as explained in object global properties.<br><br>
+</p>
 
-<b>This is how a paper's properties look's like:</b><br>
-<code>{"dat":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAABGUlEQVRIDe1WyxKEIAyTHf//l91AMZan7Sh7Wg9OCzRJW0DDcRzbyudD8BAC7ReNTAB0pLKCIxIIOowVHFeJXiyLhtrFaYuji/ZkI2QCQpBJRjiuRbns2FtXgHdxbrI3zL5+eZMvAlSfDbALvF2ZCQCNZuB5nSMTALrWgptDLo/2XS+d+fUN0WGahd/P/WSb3st4sOLaRQ9AZqF/gll10py/ROWXVQ4m3q0h3M5tSvT2YA5y8WRAdGCdtggfgMdhcwYnYoFlyMOcAbA0HF0QC3dXwbblT2ahy+WQlUYZbs6gDKOXtk/8Y9NG4fquT9ZhoJfENPwZVNC6B2wGdTh2ESUhuOLgVM9wZiDoWmCyR8cYjOZz0FNnGfsCDzJXey42hpUAAAAASUVORK5CYII=","glue":false}</code><br>
-The <code>dat</code> property is the image in Base64.
+<p>
+    <b>This is how a paper's properties look's like:</b><br>
+    <code>{"dat":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAABGUlEQVRIDe1WyxKEIAyTHf//l91AMZan7Sh7Wg9OCzRJW0DDcRzbyudD8BAC7ReNTAB0pLKCIxIIOowVHFeJXiyLhtrFaYuji/ZkI2QCQpBJRjiuRbns2FtXgHdxbrI3zL5+eZMvAlSfDbALvF2ZCQCNZuB5nSMTALrWgptDLo/2XS+d+fUN0WGahd/P/WSb3st4sOLaRQ9AZqF/gll10py/ROWXVQ4m3q0h3M5tSvT2YA5y8WRAdGCdtggfgMdhcwYnYoFlyMOcAbA0HF0QC3dXwbblT2ahy+WQlUYZbs6gDKOXtk/8Y9NG4fquT9ZhoJfENPwZVNC6B2wGdTh2ESUhuOLgVM9wZiDoWmCyR8cYjOZz0FNnGfsCDzJXey42hpUAAAAASUVORK5CYII=","glue":false}</code><br>
+    The <code>dat</code> property is the image in Base64.
+</p>
 
 <h1>Some fun stuff</h1><br>
 
+<p>
 <h2>Crash the game when you load a save</h2><br>
 It is too big to include it here, so ill include it in a Google Drive link:<br>
 <a href="https://drive.google.com/file/d/1-8KdDEjUxQuYPPDUDaOdxAXmpaEIPIG0/view?usp=sharing">Google Drive Link</a><br>
 But how you do it is to spam a lot of objects. This causes the Unity engine to crash from the physics it needs to process.
+</p>
 
+<p>
 <h2>Crash the game when you try to view the info of a save</h2><br>
 This is the most destructive out of the 2 crash methods, if someone tries to delete their save file then the game crashes due to the amount of text that it needs to process.<br>
 However, this method spends a lot of size, so its suspicious.<br>
 <a href="https://drive.google.com/file/d/1-DScIKThU-GU0zQhCzT_dBhcdJTXPM9f/view?usp=sharing">Drive link</a><br>
 This method also creates lag when you go into the Load Save menu.<br>
-However, you can remove it using 3 methods.<br> 
+However, you can remove it using 3 methods.<br>
 First, you can reinstall the app. <br>
 Second, you can go clear the app data<br>
-Third, navigate to /Android/data/com.Yiming.PC/files/saves/ and delete the one that has the most size
+Third, navigate to /Android/data/com.Yiming.PC/files/saves/ and delete the one that has the most size.
+</p>
+<p>
 
 <h2>Combine the 2 crash methods</h2><br>
 Why not combine the 2 to create the most destructive save?
 Whenever loaded, BOOM! Your game crashes.<br>
 If you try to delete the file, BOOM! Your game crashes again.<br>
 <a href="https://drive.google.com/file/d/1-ESfsVTgyultcIP3DK6LXI9J4ldlq9ZD/view?usp=sharing">Drive</a>
+</p>
 
+<p>
 <h2>Exceed the 9,999,999 coin limit</h2><br>
 Simply modify the coin value as explained at the start of the page to anything above 9,999,999 (max <code>2,147,483,647</code> and min <code>-2,147,483,647</code>).
+</p>
 
+<p>
 <h2>Change the AC temperature to below the minimum or above the max</h2><br>
 Again, very easy. Just change the temperature to whatever you want. (min <code>-2,147,483,647</code> and max <code>2,147,483,647</code>)<br>
 Very useful to get to the top of the leaderboard.
+</p>
 
 </BODY>
 </HTML>

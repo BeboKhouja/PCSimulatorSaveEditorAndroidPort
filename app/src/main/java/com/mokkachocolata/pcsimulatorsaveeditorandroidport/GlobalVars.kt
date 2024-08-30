@@ -27,6 +27,7 @@ class GlobalVars(resources: Resources){
     val ChangelogText = """
         - Open Source Licenses added.
         - Now you can add RAMs.
+        - The documentation has been fixed.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
