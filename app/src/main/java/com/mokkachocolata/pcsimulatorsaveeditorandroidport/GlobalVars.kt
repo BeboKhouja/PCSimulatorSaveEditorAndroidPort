@@ -27,6 +27,7 @@ class GlobalVars(resources: Resources){
     val ChangelogText = """
         - Now you can add motherboards.
         - Now you can add monitors.
+        - Now you can add cases.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

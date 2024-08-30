@@ -501,7 +501,8 @@ class MainActivity2 : AppCompatActivity() {
                     "GPU",
                     "PSU",
                     "Motherboard", // Skipped storage, because thats already implemented.
-                    resources.getString(R.string.monitor)
+                    resources.getString(R.string.monitor),
+                    "Case"
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -902,6 +903,30 @@ class MainActivity2 : AppCompatActivity() {
                                 "CRT_Monitor"
                             ), "Monitor")
                         }
+
+                        18 -> {
+                            doitMarket(null, arrayOf(
+                                "Case_ATX(Black)",
+                                "Case_ATX(White)",
+                                "Case_ATX 2(Black)",
+                                "Case_ATX 2(White)",
+                                "Case_ITX(Black)",
+                                "Case_ITX(White)",
+                                "Case_ITX(Red)",
+                                "Case_ITX(Green)",
+                                "Case_ITX(Yellow)",
+                                "Cover_ATX(Black)",
+                                "Cover_ATX(White)",
+                                "Glass_ATX",
+                                "Cover_ITX(Black)",
+                                "Cover_ITX(White)",
+                                "Glass_ITX",
+                                "Miner",
+                                "TestBench",
+                            ), "Case")
+                        }
+
+                        // All complete, no more additions until the game updates.
                     }
                 }
             }
