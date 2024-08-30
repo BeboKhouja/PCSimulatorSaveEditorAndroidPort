@@ -496,7 +496,8 @@ class MainActivity2 : AppCompatActivity() {
                     "HDD",
                     "Daily Market (bypass bitcoin requirement)",
                     "CPU",
-                    "RAM"
+                    "RAM",
+                    "Cooler"
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -852,6 +853,26 @@ class MainActivity2 : AppCompatActivity() {
                                 input.setText(lines[0] + "\n" + jsonObject.toString())
                             }
                         }
+
+                        13 -> {
+                            var cooler: ObjectJson
+                            val coolerList = arrayOf(
+                                "Cooler(RGB)",
+                                "Cooler",
+                                "TowerCooler(RGB)",
+                                "TowerCooler",
+                                "WaterCooler",
+                                "CaseFan(RGB)",
+                                "CaseFan",
+                                "WaterCooler_1"
+                            )
+
+                            dialog("Cooler", null, null, null, coolerList) { _, i ->
+                                cooler = ObjectJson(coolerList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(cooler.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                            }
+                        }
                     }
                 }
             }
@@ -859,7 +880,6 @@ class MainActivity2 : AppCompatActivity() {
                 dialog("Open Source Licenses", """
                     This app is licensed with GPLv3.0.
                     AndroidX (Apache License 2.0)
-                    WebView (MIT License)
                     Android (Apache License 2.0)
                     JSONJava (Public Domain)
                 """.trimIndent(), {_,_->}, null)

@@ -55,11 +55,10 @@ Library is [here](https://github.com/BeboKhouja/PC-Simulator-Save-Editor).
 PC Simulator Save Editor Android is licensed under [GPLv3.0](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/master/LICENSE).
 
 # Credits & Licenses (if available)
-The [Stack Overflow](https://stackoverflow.com) community for resolving a lot of bugs.
-[JSONJava](https://github.com/stleary/JSON-java) ([Public Domain](https://github.com/stleary/JSON-java/blob/master/LICENSE))
-[AndroidX](https://github.com/androidx/androidx) ([Apache License 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt))
-[WebView](https://github.com/webview/webview) ([MIT License](https://github.com/webview/webview/blob/master/LICENSE))
-[Android](https://android.googlesource.com/) ([Apache License 2.0](https://android.googlesource.com/trusty/vendor/google/aosp/+/master/LICENSE))
+- The [Stack Overflow](https://stackoverflow.com) community for resolving a lot of bugs.
+- [JSONJava](https://github.com/stleary/JSON-java) ([Public Domain](https://github.com/stleary/JSON-java/blob/master/LICENSE))
+- [AndroidX](https://github.com/androidx/androidx) ([Apache License 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt))
+- [Android](https://android.googlesource.com/) ([Apache License 2.0](https://android.googlesource.com/trusty/vendor/google/aosp/+/master/LICENSE))
 
 # Message to Yiming
 
