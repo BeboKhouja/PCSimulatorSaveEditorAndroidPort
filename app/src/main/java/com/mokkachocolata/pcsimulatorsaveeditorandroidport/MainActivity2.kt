@@ -497,7 +497,11 @@ class MainActivity2 : AppCompatActivity() {
                     "Daily Market (bypass bitcoin requirement)",
                     "CPU",
                     "RAM",
-                    "Cooler"
+                    "Cooler",
+                    "GPU",
+                    "PSU",
+                    "Motherboard", // Skipped storage, because thats already implemented.
+                    resources.getString(R.string.monitor)
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -844,6 +848,59 @@ class MainActivity2 : AppCompatActivity() {
                                 "CaseFan(RGB)",
                                 "CaseFan",
                                 "WaterCooler_1"), "Cooler")
+                        }
+
+                        14 -> {
+                            doitMarket(null, arrayOf(
+                                "GT440",
+                                "GT1030",
+                                "GTX1060",
+                                "GTX1070",
+                                "GTX1070Ti",
+                                "GTX1080",
+                                "GTX1080Ti",
+                                "RTX2080",
+                                "RTX2080Ti",
+                                "RTX3080",
+                                "RT3080Ti",
+                                "Titan V" // Congratulations, you are the only spawnid to have a space!
+                            ), "GPU")
+                        }
+
+                        15 -> {
+                            doitMarket("PSU ", arrayOf(
+                                "300W",
+                                "500W",
+                                "1kW",
+                                "2kW"
+                            ), "PSU")
+                        }
+
+                        16 -> {
+                            doitMarket(null, arrayOf(
+                                "ATX", // Because its like that
+                                "ATX 2", // One of the only spawnids to have a space
+                                "EATX",
+                                "Micro_ATX",
+                                "Mini-ITX"
+                            ), "Motherboard")
+                        }
+
+                        17 -> {
+                            doitMarket(null, arrayOf(
+                                "TV",
+                                "CurvedMonitor",
+                                "FlatMonitor",
+                                "Monitor(Black)",
+                                "Monitor(White)",
+                                "Monitor 2(White)",
+                                "Monitor 2(Red)",
+                                "Monitor 2(Yellow)",
+                                "Monitor 2(Green)",
+                                "Monitor 2(Blue)",
+                                "MonitorStand",
+                                "CRT_Monitor"
+                            ), "Monitor")
                         }
                     }
                 }

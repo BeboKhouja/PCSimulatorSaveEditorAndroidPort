@@ -23,13 +23,10 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    val version = "1.4.2"
+    val version = "1.4.3"
     val ChangelogText = """
-        - Open Source Licenses added.
-        - Now you can add RAMs.
-        - The documentation has been fixed.
-        - Coolers can now be added.
-        - All warnings are now resolved.
+        - Now you can add motherboards.
+        - Now you can add monitors.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),
@@ -46,4 +43,5 @@ class GlobalVars(resources: Resources){
     init {
         urlArray.toCollection(urlArrayArray)
     }
+
 }
