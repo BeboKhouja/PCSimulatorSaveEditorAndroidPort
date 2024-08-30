@@ -529,6 +529,16 @@ class MainActivity2 : AppCompatActivity() {
                             }
                         }
                     }
+
+                    fun doitMarket(prefix: String?, array: Array<String>, dialogName: String) {
+                        var obj: ObjectJson
+
+                        dialog(dialogName, null, null, null, array) { _, i ->
+                            obj = ObjectJson(if(prefix != null) prefix + array[i] else "" + array[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                            itemArray.put(obj.toJson())
+                            input.setText(lines[0] + "\n" + jsonObject.toString())
+                        }
+                    }
                     val arr : Array<String>
                     val arrayList = ArrayList<String>()
                     for (i in fileList) {
@@ -811,9 +821,7 @@ class MainActivity2 : AppCompatActivity() {
                         }
 
                         11 -> {
-                            var cpu: ObjectJson
-                            val cpulist = arrayOf(
-                                "RMD Ryzen 9 7950X",
+                            doitMarket("CPU ", arrayOf("RMD Ryzen 9 7950X",
                                 "i9-12900K",
                                 "i9-9900K",
                                 "i9-7900X",
@@ -822,20 +830,11 @@ class MainActivity2 : AppCompatActivity() {
                                 "i7-8700K",
                                 "i5-8400",
                                 "i3-8300",
-                                "Celeron G3920"
-                            )
-
-                            dialog("CPU", null, null, null, cpulist) {_, i ->
-                                cpu = ObjectJson("CPU " + cpulist[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(cpu.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
-                            }
+                                "Celeron G3920"), "CPU")
                         }
 
                         12 -> {
-                            var ram: ObjectJson
-                            var ramList = arrayOf(
-                                "32GB",
+                            doitMarket("RAM ", arrayOf("32GB",
                                 "32GB(RGB)",
                                 "16GB",
                                 "16GB(RGB)",
@@ -844,34 +843,18 @@ class MainActivity2 : AppCompatActivity() {
                                 "4GB",
                                 "4GB(RGB)",
                                 "2GB",
-                                "1GB"
-                            )
-
-                            dialog("RAM", null, null, null, ramList) {_, i ->
-                                ram = ObjectJson("RAM " + ramList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(ram.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
-                            }
+                                "1GB"), "RAM")
                         }
 
                         13 -> {
-                            var cooler: ObjectJson
-                            val coolerList = arrayOf(
-                                "Cooler(RGB)",
+                            doitMarket(null, arrayOf("Cooler(RGB)",
                                 "Cooler",
                                 "TowerCooler(RGB)",
                                 "TowerCooler",
                                 "WaterCooler",
                                 "CaseFan(RGB)",
                                 "CaseFan",
-                                "WaterCooler_1"
-                            )
-
-                            dialog("Cooler", null, null, null, coolerList) { _, i ->
-                                cooler = ObjectJson(coolerList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(cooler.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
-                            }
+                                "WaterCooler_1"), "Cooler")
                         }
                     }
                 }
@@ -885,8 +868,7 @@ class MainActivity2 : AppCompatActivity() {
                 """.trimIndent(), {_,_->}, null)
             }
             R.id.saveoptions -> {
-                val optionList = arrayOf(
-                    "AC Temperature",
+                val optionList = arrayOf("AC Temperature",
                     "AC Power",
                     "Version",
                     "Money",
@@ -896,8 +878,7 @@ class MainActivity2 : AppCompatActivity() {
                     "Playtime",
                     "Light",
                     "Sign",
-                    "Save name"
-                )
+                    "Save name")
                 val text = input.text.toString()
                 lateinit var jsonObject : JSONObject
                 val lines = text.lines()
