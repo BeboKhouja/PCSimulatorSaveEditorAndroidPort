@@ -486,15 +486,15 @@ class MainActivity2 : AppCompatActivity() {
                 val itemList = arrayOf(
                     "Custom Spawn ID",
                     "RTX4080Ti",
-                    "Pillow",
+                    resources.getString(R.string.pillow),
                     "Cube",
                     "Projector",
                     "Banner",
                     "Flash Drive",
                     "SSD",
-                    "M.2 NVMe SSD",
+                    resources.getString(R.string.m2),
                     "HDD",
-                    "Daily Market (bypass bitcoin requirement)",
+                    resources.getString(R.string.dailymarket),
                     "CPU",
                     "RAM",
                     "Cooler",
@@ -503,7 +503,7 @@ class MainActivity2 : AppCompatActivity() {
                     "Motherboard", // Skipped storage, because thats already implemented.
                     resources.getString(R.string.monitor),
                     "Case",
-                    "PCOS Installer"
+                    resources.getString(R.string.installer)
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -622,7 +622,7 @@ class MainActivity2 : AppCompatActivity() {
                                 driveName = edittext.text.toString()
                                 val edittextssd = EditText(this)
                                 edittextssd.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog("Password", "Set the password of this drive.", { _, _ ->
+                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
                                     password = edittextssd.text.toString()
                                     // Null the message out because the items wont appear
                                     val ssdSize = arrayOf(
@@ -659,11 +659,11 @@ class MainActivity2 : AppCompatActivity() {
                             var password: String
                             var size : String
                             val edittext = EditText(this)
-                            dialog("M.2 NVMe SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
+                            dialog(resources.getString(R.string.m2Name), "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
                                 val edittextm2 = EditText(this)
                                 edittextm2.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog("Password", "Set the password of this drive.", { _, _ ->
+                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
                                     password = edittextm2.text.toString()
                                     // Null the message out because the items wont appear
                                     val m2size = arrayOf(
@@ -672,7 +672,7 @@ class MainActivity2 : AppCompatActivity() {
                                         "512GB",
                                         "1TB",
                                     )
-                                    dialog("M.2 NVMe SSD Size", null, null,  null, m2size) {_, i ->
+                                    dialog(resources.getString(R.string.m2Size), null, null,  null, m2size) {_, i ->
                                         size = m2size[i]
 
                                         dialogMultiChoice("Files", null, {_, _ ->
@@ -703,7 +703,7 @@ class MainActivity2 : AppCompatActivity() {
                                 driveName = edittext.text.toString()
                                 val edittextHDD = EditText(this)
                                 edittextHDD.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog("Password", "Set the password of this drive.", { _, _ ->
+                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
                                     password = edittextHDD.text.toString()
                                     // Null the message out because the items wont appear
                                     val hddsize = arrayOf(

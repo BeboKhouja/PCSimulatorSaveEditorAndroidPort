@@ -29,6 +29,7 @@ class GlobalVars(resources: Resources){
         - Now you can add monitors.
         - Now you can add cases.
         - Now you can add an installer flash drive.
+        - Some of the text on Insert Object has been translated.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

@@ -24,4 +24,11 @@
     <string name="Changelog">Changelog</string>
     <string name="howtoedit">How to edit a PC Simulator Save File</string>
     <string name="monitor">Monitor</string>
+    <string name="pillow">Pillow</string>
+    <string name="installer">PCOS Installer</string>
+    <string name="dailymarket">Daily Market (bypass Bitcoin requirement)</string>
+    <string name="m2">M.2 NVMe SSD</string>
+    <string name="m2Name">M.2 NVMe SSD Drive Name</string>
+    <string name="password">Password</string>
+    <string name="m2Size">M.2 NVMe SSD Size</string>
 </resources>
