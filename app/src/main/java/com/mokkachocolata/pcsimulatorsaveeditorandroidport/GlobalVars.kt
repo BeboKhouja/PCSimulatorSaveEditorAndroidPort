@@ -28,6 +28,7 @@ class GlobalVars(resources: Resources){
         - Now you can add motherboards.
         - Now you can add monitors.
         - Now you can add cases.
+        - Now you can add an installer flash drive.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

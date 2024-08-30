@@ -502,7 +502,8 @@ class MainActivity2 : AppCompatActivity() {
                     "PSU",
                     "Motherboard", // Skipped storage, because thats already implemented.
                     resources.getString(R.string.monitor),
-                    "Case"
+                    "Case",
+                    "PCOS Installer"
                 )
                 dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
                     val text = input.text.toString()
@@ -924,6 +925,16 @@ class MainActivity2 : AppCompatActivity() {
                                 "Miner",
                                 "TestBench",
                             ), "Case")
+                        }
+
+                        19 -> {
+                            val files = JSONArray()
+                            files.apply {
+                                put(FileObjectJson("System/boot.bin", "pcos_ins", true, 0, 0).toJson())
+                            }
+                            val obj = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), "PCOS Installer", "", 0.0, 100.0, files)
+                            itemArray.put(obj.toJson())
+                            input.setText(lines[0] + "\n" + jsonObject.toString())
                         }
 
                         // All complete, no more additions until the game updates.
