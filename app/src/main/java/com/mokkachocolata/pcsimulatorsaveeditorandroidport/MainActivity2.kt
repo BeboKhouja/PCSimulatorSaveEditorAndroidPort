@@ -24,6 +24,7 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentResolver
+import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.content.Intent
@@ -249,12 +250,13 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
-    fun dialog(title: String,
-                       message: String?,
-                       okListener: OnClickListener?,
-                       cancelListener: OnClickListener?,
-                       adapter : Array<String>,
-                       adapterOnClickListener: OnClickListener
+    fun dialog(
+        title: String,
+        message: String?,
+        okListener: OnClickListener?,
+        cancelListener: OnClickListener?,
+        adapter: Array<String>,
+        adapterOnClickListener: (dialog: DialogInterface, which: Int) -> Unit
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
@@ -483,46 +485,23 @@ class MainActivity2 : AppCompatActivity() {
                 dialog("Result", pwd, {_,_->}, null)
             }
             R.id.insert -> {
-                val itemList = arrayOf(
-                    "Custom Spawn ID",
-                    "RTX4080Ti",
-                    resources.getString(R.string.pillow),
-                    "Cube",
-                    "Projector",
-                    "Banner",
-                    "Flash Drive",
-                    "SSD",
-                    resources.getString(R.string.m2),
-                    "HDD",
-                    resources.getString(R.string.dailymarket),
-                    "CPU",
-                    "RAM",
-                    "Cooler",
-                    "GPU",
-                    "PSU",
-                    "Motherboard", // Skipped storage, because thats already implemented.
-                    resources.getString(R.string.monitor),
-                    "Case",
-                    resources.getString(R.string.installer)
+                val text = input.text.toString()
+                if (text.lines().size < 2) return false
+                val jsonObject = JSONObject(text.lines()[1])
+                val lines = text.lines()
+                val itemArray = jsonObject.getJSONArray("itemData")
+                val position = Position(
+                    (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+                    (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+                    (jsonObject.get("playerData") as JSONObject).getDouble("z")
                 )
-                dialog(resources.getString(R.string.insert), null, null, null, itemList) { _, i ->
-                    val text = input.text.toString()
-                    val jsonObject = JSONObject(text.lines()[1])
-                    val lines = text.lines()
-                    val itemArray = jsonObject.getJSONArray("itemData")
-                    val position = Position(
-                        (jsonObject.get("playerData") as JSONObject).getDouble("x"),
-                        (jsonObject.get("playerData") as JSONObject).getDouble("y"),
-                        (jsonObject.get("playerData") as JSONObject).getDouble("z")
-                    )
-                    fun doit() {
-                        val obj = ObjectJson(itemList[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                        itemArray.put(obj.toJson())
-                        input.setText(lines[0] + "\n" + jsonObject.toString())
-                    }
-                    fun doitBanner() {
-                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    }
+                val itemListJson = arrayListOf<String>()
+                val inputStream = assets.open("insertJSON.json").bufferedReader().use(BufferedReader::readText)
+                val json = JSONArray(inputStream)
+                fun addObjectFromJson(json: JSONObject) {
+                    itemListJson.add(json.getString("name"))
+                }
+                fun handleClickJson(index : Int) {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
                             17 -> {
@@ -545,400 +524,64 @@ class MainActivity2 : AppCompatActivity() {
                             input.setText(lines[0] + "\n" + jsonObject.toString())
                         }
                     }
-                    val arr : Array<String>
-                    val arrayList = ArrayList<String>()
-                    for (files in fileList) {
-                        arrayList.add(files.name)
-                    }
-                    arr = arrayList.toTypedArray()
-                    when (i) {
-                        0 -> {
+                    var jsonObj : ObjectJson
+                    val obj = json.getJSONObject(index)
+                    val additionals = obj.getJSONObject("additional")
+                    val action = obj.getJSONObject("action")
+                    when (obj.getString("type")) {
+                        "dialogEditText" -> {
                             val edittext = EditText(this)
-                            var obj: ObjectJson
-                            dialog("Custom Spawn ID", "Add an object with a custom spawn ID.", {_,_->
-                                obj = ObjectJson(edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(obj.toJson())
+                            dialog(itemListJson[index], additionals.optString("message"), {_, _ ->
+                                when (action.optString("propertyType")) {
+                                    "password" -> {
+                                        edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                        jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                    }
+
+                                    "long" -> {
+                                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+                                        jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                    }
+
+                                    else -> {
+                                        jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                    }
+                                }
+                                itemArray.put(jsonObj.toJson())
                                 input.setText(lines[0] + "\n" + jsonObject.toString())
                             }, {_,_->}, edittext)
                         }
-                        1 -> {
-                            doit()
-                        }
 
-                        2 -> {
-                            doit()
-                        }
-
-                        3 -> {
-                            doit()
-                        }
-
-                        4 -> {
-                            doit()
-                        }
-                        5 -> {
-                            doitBanner()
-                        }
-
-                        6 -> {
-                            var driveName : String
-                            val boolArray = BooleanArray(fileList.size)
-
-                            var password : String
-                            val edittext = EditText(this)
-                            dialog("USB Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
-                                driveName = edittext.text.toString()
-                                val edittextUSB = EditText(this)
-                                edittextUSB.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittextUSB.text.toString()
-                                    // Null the message out because the items wont appear
-                                    dialogMultiChoice("Files", null, {_, _ ->
-                                        val array = JSONArray()
-                                        for (checked in boolArray.indices) {
-                                            if (boolArray[checked]) {
-                                                putFile(checked, array)
-                                            }
-                                        }
-                                        val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
-                                        itemArray.put(drive.toJson())
-                                        input.setText(lines[0] + "\n" + jsonObject.toString())
-                                    }, null, arr, {_, which, isChecked ->
-                                        boolArray[which] = isChecked
-                                    }, boolArray)
-                                }, {_,_->}, edittextUSB)
-                            }, {_,_->}, edittext)
-                        }
-
-                        7 -> {
-                            var driveName: String
-
-                            val boolArray = BooleanArray(fileList.size)
-
-                            var password: String
-                            var size : String
-                            val edittext = EditText(this)
-                            dialog("SSD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
-                                driveName = edittext.text.toString()
-                                val edittextssd = EditText(this)
-                                edittextssd.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
-                                    password = edittextssd.text.toString()
-                                    // Null the message out because the items wont appear
-                                    val ssdSize = arrayOf(
-                                        "128GB",
-                                        "256GB",
-                                        "512GB",
-                                        "1TB",
-                                        "2TB",
-                                    )
-                                    dialog("SSD Size", null, null,  null, ssdSize) {_, i ->
-                                        size = ssdSize[i]
-
-                                        dialogMultiChoice("Files", null, {_, _ ->
-                                            val array = JSONArray()
-                                            for (checked in boolArray.indices) {
-                                                if (boolArray[checked]) {
-                                                    putFile(checked, array)
-                                                }
-                                            }
-                                            val drive = SSDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
-                                            itemArray.put(drive.toJson())
-                                            input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, arr, {_, which, isChecked ->
-                                            boolArray[which] = isChecked
-                                        }, boolArray)
-                                    }
-                                }, {_,_->}, edittextssd)
-                            }, {_,_->}, edittext)}
-
-                        8 -> {
-                            var driveName: String
-                            val boolArray = BooleanArray(fileList.size)
-
-                            var password: String
-                            var size : String
-                            val edittext = EditText(this)
-                            dialog(resources.getString(R.string.m2Name), "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
-                                driveName = edittext.text.toString()
-                                val edittextm2 = EditText(this)
-                                edittextm2.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
-                                    password = edittextm2.text.toString()
-                                    // Null the message out because the items wont appear
-                                    val m2size = arrayOf(
-                                        "128GB",
-                                        "256GB",
-                                        "512GB",
-                                        "1TB",
-                                    )
-                                    dialog(resources.getString(R.string.m2Size), null, null,  null, m2size) {_, i ->
-                                        size = m2size[i]
-
-                                        dialogMultiChoice("Files", null, {_, _ ->
-                                            val array = JSONArray()
-                                            for (checked in boolArray.indices) {
-                                                if (boolArray[checked]) {
-                                                    putFile(checked, array)
-                                                }
-                                            }
-                                            val drive = M2ObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
-                                            itemArray.put(drive.toJson())
-                                            input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, arr, {_, which, isChecked ->
-                                            boolArray[which] = isChecked
-                                        }, boolArray)
-                                    }
-                                }, {_,_->}, edittextm2)
-                            }, {_,_->}, edittext)}
-
-                        9 -> {
-                            var driveName: String
-                            val boolArray = BooleanArray(fileList.size)
-
-                            var password: String
-                            var size: String
-                            val edittext = EditText(this)
-                            dialog("HDD Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
-                                driveName = edittext.text.toString()
-                                val edittextHDD = EditText(this)
-                                edittextHDD.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog(resources.getString(R.string.password), "Set the password of this drive.", { _, _ ->
-                                    password = edittextHDD.text.toString()
-                                    // Null the message out because the items wont appear
-                                    val hddsize = arrayOf(
-                                        "500GB",
-                                        "1TB",
-                                        "2TB",
-                                        "5TB",
-                                    )
-                                    dialog("HDD Size", null, null,  null, hddsize) {_, i ->
-                                        size = hddsize[i]
-
-                                        dialogMultiChoice("Files", null, {_, _ ->
-                                            val array = JSONArray()
-                                            for (checked in boolArray.indices) {
-                                                if (boolArray[checked]) {
-                                                    putFile(checked, array)
-                                                }
-                                            }
-                                            val drive = HDDObjectJson(size, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
-                                            itemArray.put(drive.toJson())
-                                            input.setText(lines[0] + "\n" + jsonObject.toString())
-                                        }, null, arr, {_, which, isChecked ->
-                                            boolArray[which] = isChecked
-                                        }, boolArray)
-                                    }
-                                }, {_,_->}, edittextHDD)
-                            }, {_,_->}, edittext)}
-
-                        10 -> {
-                            var obj: ObjectJson
-                            data class dailyObj(val name: String, val internalName: String)
-                            val daily = arrayOf(
-                                dailyObj("Apson A3", "Apson_A3"),
-                                dailyObj("Bitcoin", "Bitcoin"),
-                                dailyObj("Box Removal Bomb", "BoxRemovalBomb"),
-                                dailyObj("Cooler", "Carrot"),
-                                dailyObj("Chair", "Chair"),
-                                dailyObj("Crate", "Crate"),
-                                dailyObj("Gaming Chair (Blue)", "GamingChair"),
-                                dailyObj("Gaming Chair (Purple)", "GamingChair_1"),
-                                dailyObj("Gaming Chair (Red)", "GamingChair_2"),
-                                dailyObj("Gaming Chair (White)", "GamingChair_2"),
-                                dailyObj("Generator", "Generator"),
-                                dailyObj("Bomb", "Gift"),
-                                dailyObj("Hammer", "Hammer"),
-                                dailyObj("Headphone", "Headphone"),
-                                dailyObj("Headphone Stand", "HeadphoneStand"),
-                                dailyObj("Holographic Projector", "HolographicProjector"),
-                                dailyObj("Keyboard", "Keyboard"),
-                                dailyObj("Laptop", "Laptop"),
-                                dailyObj("Led Display (Clock)", "LedDisplay_Clock"),
-                                dailyObj("Led Display (PC)", "LedDisplay_PC"),
-                                dailyObj("Led Display (Rain)", "LedDisplay_Rain"),
-                                dailyObj("Light Panel (Hexagon)", "LightPanel_Hexagon"),
-                                dailyObj("Light Panel (Triangle)", "LightPanel_Triangle"),
-                                dailyObj("Mechanical Keyboard", "MechanicalKeyboard"),
-                                dailyObj("Mechanical Keyboard (Red)", "MechanicalKeyboard_Red"),
-                                dailyObj("Mechanical Keyboard (White)", "MechanicalKeyboard_White"),
-                                dailyObj("Mouse", "Mouse"),
-                                dailyObj("Coffee", "Mug"),
-                                dailyObj("Chair (Office Chair)", "OfficeChair"),
-                                dailyObj("Paper", "Paper"),
-                                dailyObj("Picture Frame (Wall)", "PictureFrame2"),
-                                dailyObj("Picture Frame", "PictureFrame"),
-                                dailyObj("Picture Frame (Standing)", "PictureFrame_Stand"),
-                                dailyObj("Printer Ink (C)", "PrinterInk_C"),
-                                dailyObj("Printer Ink (K)", "PrinterInk_K"),
-                                dailyObj("Printer Ink (M)", "PrinterInk_M"),
-                                dailyObj("Printer Ink (Y)", "PrinterInk_Y"),
-                                dailyObj("Used SSD", "SSD 128GB"),
-                                dailyObj("Wooden Table", "Table"),
-                                dailyObj("Modern Table", "Table_1"),
-                                dailyObj("Chair (Toilet)", "ToiletBowl"),
-                                dailyObj("VR Glasses", "VR_Glasses"),
-                                dailyObj("Wall Mount", "WallMount"),
-                                dailyObj("Wall Shelf (Wall)", "WallShelf"),
-                                dailyObj("Wall Shelf (RGB, Square)", "WallShelf_1"),
-                                dailyObj("Camera", "Webcam"),
-                                dailyObj("Insert all", "")
-                            )
-                            val arrDaily : Array<String>
-                            val dailyArrList = ArrayList<String>()
-                            for (davey in daily) {
-                                dailyArrList.add(davey.name)
+                        "market" -> {
+                            val marketJson = arrayListOf<String>()
+                            for (i in 0 until action.getJSONArray("list").length()) {
+                                val objec = action.getJSONArray("list").getJSONObject(i)
+                                val name = objec.getString("name")
+                                marketJson.add(name)
                             }
-                            arrDaily = dailyArrList.toTypedArray()
-                            // Items referred internally in the code
-                            dialog("Daily Market", null, null, null, arrDaily) { _, index ->
-                                if (daily[index].name != "Insert all") {
-                                    if (daily[index].internalName == "SSD 128GB") {
-                                        val random = (0..2147483647).random()
-                                        itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
-                                    } else {
-                                        obj = ObjectJson(daily[index].internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                        itemArray.put(obj.toJson())
-                                    }
-                                } else {
-                                    for (daveys in daily) {
-                                        if (daveys.internalName == "SSD 128GB") {
-                                            val random = (0..2147483647).random()
-                                            itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
-                                        } else {
-                                            obj = ObjectJson(daveys.internalName, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                            itemArray.put(obj.toJson())
-                                        }
-                                        input.setText(lines[0] + "\n" + jsonObject.toString())
-                                    }
-                                }
+                            dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
+                                jsonObj = ObjectJson(action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(jsonObj.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
                             }
                         }
 
-                        11 -> {
-                            doitMarket("CPU ", arrayOf("RMD Ryzen 9 7950X",
-                                "i9-12900K",
-                                "i9-9900K",
-                                "i9-7900X",
-                                "i7-14700K",
-                                "i7-13700K",
-                                "i7-8700K",
-                                "i5-8400",
-                                "i3-8300",
-                                "Celeron G3920"), "CPU")
+                        "banner" -> {
+                            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                         }
 
-                        12 -> {
-                            doitMarket("RAM ", arrayOf("32GB",
-                                "32GB(RGB)",
-                                "16GB",
-                                "16GB(RGB)",
-                                "8GB",
-                                "8GB(RGB)",
-                                "4GB",
-                                "4GB(RGB)",
-                                "2GB",
-                                "1GB"), "RAM")
-                        }
-
-                        13 -> {
-                            doitMarket(null, arrayOf("Cooler(RGB)",
-                                "Cooler",
-                                "TowerCooler(RGB)",
-                                "TowerCooler",
-                                "WaterCooler",
-                                "CaseFan(RGB)",
-                                "CaseFan",
-                                "WaterCooler_1"), "Cooler")
-                        }
-
-                        14 -> {
-                            doitMarket(null, arrayOf(
-                                "GT440",
-                                "GT1030",
-                                "GTX1060",
-                                "GTX1070",
-                                "GTX1070Ti",
-                                "GTX1080",
-                                "GTX1080Ti",
-                                "RTX2080",
-                                "RTX2080Ti",
-                                "RTX3080",
-                                "RT3080Ti",
-                                "Titan V" // Congratulations, you are the only spawnid to have a space!
-                            ), "GPU")
-                        }
-
-                        15 -> {
-                            doitMarket("PSU ", arrayOf(
-                                "300W",
-                                "500W",
-                                "1kW",
-                                "2kW"
-                            ), "PSU")
-                        }
-
-                        16 -> {
-                            doitMarket(null, arrayOf(
-                                "ATX", // Because its like that
-                                "ATX 2", // One of the only spawnids to have a space
-                                "EATX",
-                                "Micro_ATX",
-                                "Mini-ITX"
-                            ), "Motherboard")
-                        }
-
-                        17 -> {
-                            doitMarket(null, arrayOf(
-                                "TV",
-                                "CurvedMonitor",
-                                "FlatMonitor",
-                                "Monitor(Black)",
-                                "Monitor(White)",
-                                "Monitor 2(White)",
-                                "Monitor 2(Red)",
-                                "Monitor 2(Yellow)",
-                                "Monitor 2(Green)",
-                                "Monitor 2(Blue)",
-                                "MonitorStand",
-                                "CRT_Monitor"
-                            ), "Monitor")
-                        }
-
-                        18 -> {
-                            doitMarket(null, arrayOf(
-                                "Case_ATX(Black)",
-                                "Case_ATX(White)",
-                                "Case_ATX 2(Black)",
-                                "Case_ATX 2(White)",
-                                "Case_ITX(Black)",
-                                "Case_ITX(White)",
-                                "Case_ITX(Red)",
-                                "Case_ITX(Green)",
-                                "Case_ITX(Yellow)",
-                                "Cover_ATX(Black)",
-                                "Cover_ATX(White)",
-                                "Glass_ATX",
-                                "Cover_ITX(Black)",
-                                "Cover_ITX(White)",
-                                "Glass_ITX",
-                                "Miner",
-                                "TestBench",
-                            ), "Case")
-                        }
-
-                        19 -> {
-                            val files = JSONArray()
-                            files.apply {
-                                put(FileObjectJson("System/boot.bin", "pcos_ins", true, 0, 0).toJson())
-                            }
-                            val obj = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), "PCOS Installer", "", 0.0, 100.0, files)
-                            itemArray.put(obj.toJson())
+                        "nothing" -> {
+                            jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                            itemArray.put(jsonObj.toJson())
                             input.setText(lines[0] + "\n" + jsonObject.toString())
                         }
-
-                        // All complete, no more additions until the game updates.
                     }
+                }
+                for (i in 0 until json.length()) {
+                    addObjectFromJson(json.getJSONObject(i))
+                }
+                dialog(resources.getString(R.string.insert), null, null, null, itemListJson.toTypedArray()) { _, i ->
+                    handleClickJson(i)
                 }
             }
             R.id.license -> {

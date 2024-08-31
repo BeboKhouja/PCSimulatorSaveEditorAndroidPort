@@ -50,6 +50,10 @@ class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot
         jsonObject.put("data", JSONObject())
         return jsonObject
     }
+
+    override fun toString(): String {
+        return this.toJson().toString()
+    }
 }
 
 class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val bannerData : String) {

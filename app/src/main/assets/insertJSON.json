@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Custom Spawn ID",
+    "type": "dialogEditText",
+    "additional": {
+      "message": "Spawn a custom SpawnId."
+    },
+    "action": {
+      "property": null,
+      "type": "string"
+    }
+  },
+  {
+    "name": "RTX4080Ti",
+    "type": "nothing",
+    "additional": {},
+    "action": {
+      "property": "RTX4080Ti",
+      "long": false
+    }
+  },
+  {
+    "name": "Pillow",
+    "type": "nothing",
+    "additional": {},
+    "action": {
+      "property": "Pillow",
+      "long": false
+    }
+  },
+  {
+    "name": "Cube",
+    "type": "nothing",
+    "additional": {},
+    "action": {
+      "property": "Cube",
+      "long": false
+    }
+  },
+  {
+    "name": "Projector",
+    "type": "nothing",
+    "additional": {},
+    "action": {
+      "property": "Projector",
+      "long": false
+    }
+  },
+  {
+    "name": "Banner",
+    "type": "banner",
+    "additional": {},
+    "action": {
+
+    }
+  },
+  {
+    "name": "Daily Market (bypass bitcoin requirement)",
+    "type": "market",
+    "additional": {},
+    "action": {
+        "list": [
+          {"name": "Apson A3", "spawnId": "Apson_A3"},
+          {"name": "Bitcoin", "spawnId": "Bitcoin"},
+          {"name": "Box Removal Bomb", "spawnId": "BoxRemovalBomb"},
+          {"name": "Cooler", "spawnId": "Carrot"},
+          {"name": "Chair", "spawnId": "Chair"},
+          {"name": "Crate", "spawnId": "Crate"},
+          {"name": "Gaming Chair (Blue)", "spawnId": "GamingChair"},
+          {"name": "Gaming Chair (Purple)", "spawnId": "GamingChair_1"},
+          {"name": "Gaming Chair (Red)", "spawnId": "GamingChair_2"},
+          {"name": "Gaming Chair (White)", "spawnId": "GamingChair_3"},
+          {"name": "Generator", "spawnId": "Generator"},
+          {"name": "Bomb", "spawnId": "Gift"},
+          {"name": "Hammer", "spawnId": "Hammer"},
+          {"name": "Headphone", "spawnId": "Headphone"},
+          {"name": "Headphone Stand", "spawnId": "HeadphoneStand"},
+          {"name": "Holographic Projector", "spawnId": "HolographicProjector"},
+          {"name": "Keyboard", "spawnId": "Keyboard"},
+          {"name": "Laptop", "spawnId": "Laptop"},
+          {"name": "LED Display (Clock)", "spawnId": "LedDisplay_Clock"},
+          {"name": "LED Display (PC)", "spawnId": "LedDisplay_PC"},
+          {"name": "LED Display (Rain)", "spawnId": "LedDisplay_Rain"},
+          {"name": "Light Panel (Hexagon)", "spawnId": "LightPanel_Hexagon"},
+          {"name": "Light Panel (Triangle)", "spawnId": "LightPanel_Triangle"},
+          {"name": "Mechanical Keyboard", "spawnId": "MechanicalKeyboard"},
+          {"name": "Mechanical Keyboard (Red)", "spawnId": "MechanicalKeyboard_Red"},
+          {"name": "Mechanical Keyboard (White)", "spawnId": "MechanicalKeyboard_White"},
+          {"name": "Mouse", "spawnId": "Mouse"},
+          {"name": "Coffee", "spawnId": "Mug"},
+          {"name": "Office Chair", "spawnId": "OfficeChair"},
+          {"name": "Picture Frame (Wall)", "spawnId": "PictureFrame2"},
+          {"name": "Picture Frame", "spawnId": "PictureFrame"},
+          {"name": "Picture Frame Stand", "spawnId": "PictureFrame_Stand"},
+          {"name": "Printer Ink (C)", "spawnId": "PrinterInk_C"},
+          {"name": "Printer Ink (K)", "spawnId": "PrinterInk_K"},
+          {"name": "Printer Ink (M)", "spawnId": "PrinterInk_M"},
+          {"name": "Printer Ink (Y)", "spawnId": "PrinterInk_Y"},
+          {"name": "Used SSD", "spawnId": "SSD 128GB"},
+          {"name": "Wooden Table", "spawnId": "Table"},
+          {"name": "Modern Table", "spawnId": "Table_1"},
+          {"name": "Chair (Toilet)", "spawnId": "ToiletBowl"},
+          {"name": "VR Glasses", "spawnId": "VR_Glasses"},
+          {"name": "Wall Mount", "spawnId": "WallMount"},
+          {"name": "Wall Shelf", "spawnId": "WallShelf"},
+          {"name": "Wall Shelf (RGB)", "spawnId": "WallShelf_1"},
+          {"name": "Camera", "spawnId": "Webcam"}
+        ]
+    }
+  }
+]
