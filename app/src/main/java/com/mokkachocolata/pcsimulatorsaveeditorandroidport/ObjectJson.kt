@@ -134,7 +134,8 @@ class FileObjectJson(
     }
 }
 
-class SSDObjectJson(
+class DriveObjectJson(
+    val driveType : String,
     val storageSize : String,
 val id : Int,
 val pos : Position,
@@ -147,8 +148,7 @@ val files : JSONArray,
 val username : String) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
-        // SSD 128GB, 256GB, 512GB, 1TB, 2TB
-        jsonObject.put("spawnId", "SSD $storageSize")
+        jsonObject.put("spawnId", "$driveType $storageSize")
         jsonObject.put("id", id)
         jsonObject.put("pos", JSONObject().apply {
             put("x", pos.x)
@@ -173,124 +173,6 @@ val username : String) {
         data.put("uptime", uptime)
         data.put("health", health)
         data.put("damaged", false)
-        jsonObject.put("data", data)
-        return jsonObject
-    }
-}
-
-class M2ObjectJson(
-    val storageSize : String,
-    val id : Int,
-    val pos : Position,
-    val rot : Rotation,
-    val storageName : String,
-    val password: String,
-    val uptime : Double,
-    val health : Double,
-    val files : JSONArray,
-    val username : String) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        // M.2 NVMe 128GB, 256GB, 512GB, 1TB
-        jsonObject.put("spawnId", "SSD_M.2 $storageSize")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        val data = JSONObject()
-        val storageData = JSONObject()
-        storageData.put("storageName", storageName)
-        storageData.put("userPassword", password)
-        storageData.put("userPicturePath", "")
-        storageData.put("userName", username)
-        storageData.put("background", 0)
-        storageData.put("files", files)
-        data.put("storageData", storageData)
-        data.put("uptime", uptime)
-        data.put("health", health)
-        data.put("damaged", false)
-        jsonObject.put("data", data)
-        return jsonObject
-    }
-}
-
-class HDDObjectJson(
-    val storageSize : String,
-    val id : Int,
-    val pos : Position,
-    val rot : Rotation,
-    val storageName : String,
-    val password: String,
-    val uptime : Double,
-    val health : Double,
-    val files : JSONArray,
-    val username : String) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        // HDD 500GB, 1TB, 2TB, 5TB
-        jsonObject.put("spawnId", "HDD $storageSize")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        val data = JSONObject()
-        val storageData = JSONObject()
-        storageData.put("storageName", storageName)
-        storageData.put("userPassword", password)
-        storageData.put("userPicturePath", "")
-        storageData.put("userName", username)
-        storageData.put("background", 0)
-        storageData.put("files", files)
-        data.put("storageData", storageData)
-        data.put("uptime", uptime)
-        data.put("health", health)
-        data.put("damaged", false)
-        jsonObject.put("data", data)
-        return jsonObject
-    }
-}
-
-class PrinterJson(val id : Int, val pos : Position, val rot : Rotation) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("spawnId", "Apson_A3")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        // Data not needed here so leave it empty
-        val data =  JSONObject()
-        data.put("customName", "")
-        data.put("y", 5.0)
-        data.put("m", 5.0)
-        data.put("c", 5.0)
-        data.put("k", 5.0)
-        data.put("paper", 0)
-        data.put("glue", false)
         jsonObject.put("data", data)
         return jsonObject
     }

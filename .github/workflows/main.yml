@@ -2,6 +2,12 @@ name: Android CI
 on:
   push:
     branches: 'master'
+    paths:
+      - "app/**"
+      - ".github/workflows/**"
+      - "PC-Simulator-Save-Editor/**"
+      - "build.gradle.kts"
+      - "settings.gradle.kts"
   pull_request:
     types: [opened, reopened]
 
@@ -17,13 +23,14 @@ jobs:
         run: |
               echo "COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
               echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+              echo "COMMIT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
       - name: Publish
         uses: tsickert/discord-webhook@v6.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           embed-title: "New build triggered"
-          embed-description: "*Commit message:* ${{ env.COMMIT_MESSAGE }}\nIf the build succeeds, ill send the APK here."
+          embed-description: "*Commit message:* ${{ env.COMMIT_MESSAGE }}\n*Commit hash:* ${{ env.COMMIT_HASH }}\nIf the build succeeds, ill send the APK here."
           embed-footer-text: "Triggered by ${{ env.COMMIT_AUTHOR }}"
 
   build:

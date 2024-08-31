@@ -56,7 +56,7 @@
   },
   {
     "name": "Daily Market (bypass bitcoin requirement)",
-    "type": "market",
+    "type": "marketDaily",
     "additional": {},
     "action": {
         "list": [
@@ -106,6 +106,187 @@
           {"name": "Wall Shelf (RGB)", "spawnId": "WallShelf_1"},
           {"name": "Camera", "spawnId": "Webcam"}
         ]
+    }
+  },
+  {
+    "name": "USB Drive",
+    "type": "drive",
+    "additional": {
+      "driveType": "usb"
+    },
+    "action": {}
+  },
+  {
+    "name": "SSD Drive",
+    "type": "drive",
+    "additional": {
+      "driveType": "ssd"
+    },
+    "action": {}
+  },
+  {
+    "name": "M.2 NVMe SSD Drive",
+    "type": "drive",
+    "additional": {
+      "driveType": "nvme"
+    },
+    "action": {}
+  },
+  {
+    "name": "HDD Drive",
+    "type": "drive",
+    "additional": {
+      "driveType": "hdd"
+    },
+    "action": {}
+  },
+  {
+    "name": "CPU",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "AMD Ryzen 9 7950X", "spawnId": "RMD Ryzen 9 7950X"},
+        {"name": "Intel Core i9-12900K", "spawnId": "i9-12900K"},
+        {"name": "Intel Core i7-14700K", "spawnId": "i7-14700K"},
+        {"name": "Intel Core i7-13700K", "spawnId": "i7-13700K"},
+        {"name": "Intel Core i7-8700K", "spawnId": "i7-8700K"},
+        {"name": "Intel Core i5-8400", "spawnId": "i5-8400"},
+        {"name": "Intel Core i3-8300", "spawnId": "i3-8300"},
+        {"name": "Intel Celeron G3920", "spawnId": "Celeron G3920"}
+      ],
+      "prefix": "CPU "
+    }
+  },
+  {
+    "name": "RAM",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "32GB (RGB)", "spawnId": "32GB(RGB)"},
+        {"name": "32GB", "spawnId": "32GB"},
+        {"name": "16GB (RGB)", "spawnId": "16GB(RGB)"},
+        {"name": "16GB", "spawnId": "16GB"},
+        {"name": "8GB (RGB)", "spawnId": "8GB(RGB)"},
+        {"name": "8GB", "spawnId": "8GB"},
+        {"name": "4GB (RGB)", "spawnId": "4GB(RGB)"},
+        {"name": "2GB", "spawnId": "2GB"},
+        {"name": "1GB", "spawnId": "1GB"}
+      ],
+      "prefix": "RAM "
+    }
+  },
+  {
+    "name": "Cooler",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "Cooler", "spawnId": "Cooler"},
+        {"name": "Tower Cooler", "spawnId": "TowerCooler"},
+        {"name": "Tower Cooler (RGB)", "spawnId": "TowerCooler(RGB)"},
+        {"name": "Water Cooler", "spawnId": "WaterCooler"},
+        {"name": "Case Fan (RGB)", "spawnId": "CaseFan(RGB)"},
+        {"name": "Case Fan", "spawnId": "CaseFan"},
+        {"name": "Water Cooler (RGB)", "spawnId": "WaterCooler_1"}
+      ]
+    }
+  },
+  {
+    "name": "GPU",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "GT440", "spawnId": "GT440"},
+        {"name": "GT1030", "spawnId": "GT1030"},
+        {"name": "GTX1060", "spawnId": "GTX1060"},
+        {"name": "GTX1070", "spawnId": "GTX1070"},
+        {"name": "GTX1070Ti", "spawnId": "GTX1070Ti"},
+        {"name": "GTX1080", "spawnId": "GTX1080"},
+        {"name": "GTX1080Ti", "spawnId": "GTX1080Ti"},
+        {"name": "RTX2080", "spawnId": "RTX2080"},
+        {"name": "RTX2080Ti", "spawnId": "RTX2080Ti"},
+        {"name": "RTX3080", "spawnId": "RTX3080"},
+        {"name": "RTX3080Ti", "spawnId": "RTX3080Ti"},
+        {"name": "Titan V", "spawnId": "Titan V"}
+      ]
+    }
+  },
+  {
+    "name": "PSU",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "PSU 300W", "spawnId": "300W"},
+        {"name": "PSU 500W", "spawnId": "500W"},
+        {"name": "PSU 1000W", "spawnId": "1kW"},
+        {"name": "PSU 2000W", "spawnId": "2kW"}
+      ],
+      "prefix": "PSU "
+    }
+  },
+  {
+    "name": "Motherboard",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "ATX", "spawnId": "ATX"},
+        {"name": "ATX (NVMe)", "spawnId": "ATX 2"},
+        {"name": "EATX", "spawnId": "EATX"},
+        {"name": "Micro-ATX", "spawnId": "Micro_ATX"},
+        {"name": "Mini-ITX", "spawnId": "Mini_ITX"}
+      ]
+    }
+  },
+  {
+    "name": "Monitor",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "TV", "spawnId": "TV"},
+        {"name": "Curved Monitor", "spawnId": "CurvedMonitor"},
+        {"name": "Flat Monitor", "spawnId": "FlatMonitor"},
+        {"name": "Monitor (Black)", "spawnId": "Monitor(Black)"},
+        {"name": "Monitor (White)", "spawnId": "Monitor(White)"},
+        {"name": "Monitor 2 (White)", "spawnId": "Monitor 2(White)"},
+        {"name": "Monitor 2 (Red)", "spawnId": "Monitor 2(Red)"},
+        {"name": "Monitor 2 (Yellow)", "spawnId": "Monitor 2(Yellow)"},
+        {"name": "Monitor 2 (Green)", "spawnId": "Monitor 2(Green)"},
+        {"name": "Monitor 2 (Blue)", "spawnId": "Monitor 2(Blue)"},
+        {"name": "CRT Monitor", "spawnId": "CRT_Monitor"},
+        {"name": "Monitor Stand", "spawnId": "MonitorStand"}
+      ]
+    }
+  },
+  {
+    "name": "Case",
+    "type": "market",
+    "additional": {},
+    "action": {
+      "list": [
+        {"name": "ATX (Black)", "spawnId": "ATX(Black"},
+        {"name": "ATX (White)", "spawnId": "ATX(White)"},
+        {"name": "ATX (Translucent White)", "spawnId": "ATX 2(White)"},
+        {"name": "ATX (Translucent Black)", "spawnId": "ATX 2(Black)"},
+        {"name": "ITX (Black)", "spawnId": "ITX(Black)"},
+        {"name": "ITX (White)", "spawnId": "ITX(White)"},
+        {"name": "ITX (Red)", "spawnId": "ITX(Red)"},
+        {"name": "ITX (Green)", "spawnId": "ITX(Green)"},
+        {"name": "ITX (Yellow)", "spawnId": "ITX(Yellow)"},
+        {"name": "ATX Cover (White)", "spawnId": "Cover_ATX(White)"},
+        {"name": "ATX Cover (Black)", "spawnId": "Cover_ATX(Black)"},
+        {"name": "ATX Cover (Glass)", "spawnId": "Glass_ATX"},
+        {"name": "ITX Cover (Glass)", "spawnId": "Glass_ITX"},
+        {"name": "ITX Cover (Black)", "spawnId": "Cover_ITX(Black)"},
+        {"name": "ITX Cover (White)", "spawnId": "Cover_ITX(White)"},
+        {"name": "Miner", "spawnId": "Miner"},
+        {"name": "Test Bench", "spawnId": "TestBench"}
+      ]
     }
   }
 ]

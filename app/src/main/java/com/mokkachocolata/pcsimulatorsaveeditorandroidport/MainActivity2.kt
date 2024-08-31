@@ -515,19 +515,35 @@ class MainActivity2 : AppCompatActivity() {
                         }
                     }
 
-                    fun doitMarket(prefix: String?, array: Array<String>, dialogName: String) {
-                        var obj: ObjectJson
-
-                        dialog(dialogName, null, null, null, array) { _, i ->
-                            obj = ObjectJson(if(prefix != null) prefix + array[i] else "" + array[i], (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                            itemArray.put(obj.toJson())
-                            input.setText(lines[0] + "\n" + jsonObject.toString())
-                        }
-                    }
                     var jsonObj : ObjectJson
                     val obj = json.getJSONObject(index)
                     val additionals = obj.getJSONObject("additional")
                     val action = obj.getJSONObject("action")
+                    fun doItMarket(market : Boolean) {
+                        val marketJson = arrayListOf<String>()
+                        for (i in 0 until action.getJSONArray("list").length()) {
+                            val objec = action.getJSONArray("list").getJSONObject(i)
+                            val name = objec.getString("name")
+                            marketJson.add(name)
+                        }
+                        dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
+                            val random = (0..2147483647).random()
+                            if (!market) {
+                                jsonObj = ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                itemArray.put(jsonObj.toJson())
+                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                            } else {
+                                if (action.getJSONArray("list").getString(i).contains("SSD")) {
+                                    itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
+                                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                                } else {
+                                    jsonObj = ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                    itemArray.put(jsonObj.toJson())
+                                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                                }
+                            }
+                        }
+                    }
                     when (obj.getString("type")) {
                         "dialogEditText" -> {
                             val edittext = EditText(this)
@@ -537,12 +553,10 @@ class MainActivity2 : AppCompatActivity() {
                                         edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                                         jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                     }
-
                                     "long" -> {
                                         edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
                                         jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                     }
-
                                     else -> {
                                         jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                     }
@@ -551,19 +565,101 @@ class MainActivity2 : AppCompatActivity() {
                                 input.setText(lines[0] + "\n" + jsonObject.toString())
                             }, {_,_->}, edittext)
                         }
-
                         "market" -> {
-                            val marketJson = arrayListOf<String>()
-                            for (i in 0 until action.getJSONArray("list").length()) {
-                                val objec = action.getJSONArray("list").getJSONObject(i)
-                                val name = objec.getString("name")
-                                marketJson.add(name)
+                            doItMarket(false)
+                        }
+                        "marketDaily" -> {
+                            doItMarket(true)
+                        }
+                        "drive" -> {
+                            var driveName : String
+                            val driveType = additionals.getString("driveType")
+                            val boolArray = BooleanArray(fileList.size)
+                            var password : String
+                            val edittext = EditText(this)
+                            val dialogDriveName : String
+                            val size : Array<String>
+                            when (driveType) {
+                                "usb" -> {
+                                    dialogDriveName = "USB"
+                                    size = emptyArray()
+                                }
+                                "ssd" -> {
+                                    dialogDriveName = "SATA SSD"
+                                    size = arrayOf("128GB", "256GB", "512GB", "1TB", "2TB")
+                                }
+                                "nvme" -> {
+                                    dialogDriveName = "M.2 NVMe SSD"
+                                    size = arrayOf("128GB", "256GB", "512GB", "1TB")
+                                }
+                                "hdd" -> {
+                                    dialogDriveName = "HDD"
+                                    size = arrayOf("500GB", "1TB", "2TB", "5TB")
+                                }
+                                else -> {
+                                    dialogDriveName = "generic"
+                                    size = emptyArray()
+                                }
                             }
-                            dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
-                                jsonObj = ObjectJson(action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(jsonObj.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
-                            }
+                            dialog("$dialogDriveName Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
+                                driveName = edittext.text.toString()
+                                val edittextUSB = EditText(this)
+                                edittextUSB.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                                dialog("Password", "Set the password of this drive.", { _, _ ->
+                                    password = edittextUSB.text.toString()
+                                    // Null the message out because the items wont appear
+                                    if (size.isEmpty()) {
+                                        dialogMultiChoice("Files", null, {_, _ ->
+                                            val array = JSONArray()
+                                            for (checked in boolArray.indices) {
+                                                if (boolArray[checked]) {
+                                                    putFile(checked, array)
+                                                }
+                                            }
+                                            val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
+                                            itemArray.put(drive.toJson())
+                                            input.setText(lines[0] + "\n" + jsonObject.toString())
+                                        }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
+                                            boolArray[which] = isChecked
+                                        }, boolArray)
+                                    } else {
+                                        dialog("$dialogDriveName Size", null, null,  null, size) {_, i ->
+                                            val driveSize = size[i]
+                                            dialogMultiChoice("Files", null, {_, _ ->
+                                                val array = JSONArray()
+                                                for (checked in boolArray.indices) {
+                                                    if (boolArray[checked]) {
+                                                        putFile(checked, array)
+                                                    }
+                                                }
+                                                val thisdrive : String
+                                                when (driveType) {
+                                                    "ssd" -> {
+                                                        thisdrive = "SSD"
+                                                    }
+
+                                                    "nvme" -> {
+                                                        thisdrive = "M.2"
+                                                    }
+
+                                                    "hdd" -> {
+                                                        thisdrive = "HDD"
+                                                    }
+
+                                                    else -> {
+                                                        thisdrive = "generic"
+                                                    }
+                                                }
+                                                val drive = DriveObjectJson(thisdrive, driveSize, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
+                                                itemArray.put(drive.toJson())
+                                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                                            }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
+                                                boolArray[which] = isChecked
+                                            }, boolArray)
+                                        }
+                                    }
+                                }, {_,_->}, edittextUSB)
+                            }, {_,_->}, edittext)
                         }
 
                         "banner" -> {
@@ -666,23 +762,18 @@ class MainActivity2 : AppCompatActivity() {
                         3 -> {
                             doItEdittext("Money", "Set the money of the save. Max 2147483647 and min -2147483647", "coin",  true, false)
                         }
-
                         4 -> {
                             doItEdittext("Room", "Set the current room.\n0: Medium\n1: Large\n2: Double Storey\n3: Factory.", "room",  true, false)
                         }
-
                         5 -> {
                             doItSwitch("Gravity", "Switch on or off gravity.", "gravity", "Gravity")
                         }
-
                         6 -> {
                             doItSwitch("Hardcore", "Switch on or off hardcore mode.", "hardcore", "Hardcore")
                         }
-
                         7 -> {
                             doItEdittext("Playtime", "Set the current playtime.", "playtime", false, true)
                         }
-
                         8 -> {
                             doItSwitch("Light", "Switch on or off the lamp.", "light", "Light")
                         }
@@ -905,5 +996,4 @@ class AfterReadThread : Runnable{
                 e.printStackTrace()
             }
     }
-
 }
