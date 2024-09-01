@@ -498,8 +498,14 @@ class MainActivity2 : AppCompatActivity() {
                 val itemListJson = arrayListOf<String>()
                 val inputStream = assets.open("insertJSON.json").bufferedReader().use(BufferedReader::readText)
                 val json = JSONArray(inputStream)
+                fun getKeyFromString(key: String): String {
+                    val str = getString(R.string::class.members.first { it.name == key.drop(1) }.call() as Int)
+                    return str
+                }
                 fun addObjectFromJson(json: JSONObject) {
-                    itemListJson.add(json.getString("name"))
+                    var name = json.getString("name")
+                    if (name.startsWith("@")) name = getKeyFromString(name)
+                    itemListJson.add(name)
                 }
                 fun insertObject(item: Any) {
                     itemArray.put(item)
@@ -526,8 +532,7 @@ class MainActivity2 : AppCompatActivity() {
                     fun doItMarket(market : Boolean) {
                         val marketJson = arrayListOf<String>()
                         for (i in 0 until action.getJSONArray("list").length()) {
-                            val objec = action.getJSONArray("list").getJSONObject(i)
-                            val name = objec.getString("name")
+                            val name = action.getJSONArray("list").getJSONObject(i).getString("name")
                             marketJson.add(name)
                         }
                         dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
@@ -547,19 +552,7 @@ class MainActivity2 : AppCompatActivity() {
                         "dialogEditText" -> {
                             val edittext = EditText(this)
                             dialog(itemListJson[index], additionals.optString("message"), {_, _ ->
-                                when (action.optString("propertyType")) {
-                                    "password" -> {
-                                        edittext.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                        jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                    }
-                                    "long" -> {
-                                        edittext.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
-                                        jsonObj = ObjectJson(action.optString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                    }
-                                    else -> {
-                                        jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                    }
-                                }
+                                jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                 insertObject(jsonObj.toJson())
                             }, {_,_->}, edittext)
                         }

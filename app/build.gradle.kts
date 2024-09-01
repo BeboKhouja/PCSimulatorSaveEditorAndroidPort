@@ -14,8 +14,8 @@ android {
         applicationId = "com.mokkachocolata.pcsimulatorsaveeditorandroidport"
         minSdk = 21
         targetSdk = 35
-        versionCode = 18
-        versionName = "1.4.3"
+        versionCode = 19
+        versionName = "1.4.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -66,4 +66,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("reflect"))
 }

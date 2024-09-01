@@ -20,7 +20,7 @@
     }
   },
   {
-    "name": "Pillow",
+    "name": "@pillow",
     "type": "nothing",
     "additional": {},
     "action": {
@@ -55,7 +55,7 @@
     }
   },
   {
-    "name": "Daily Market (bypass bitcoin requirement)",
+    "name": "@dailymarket",
     "type": "marketDaily",
     "additional": {},
     "action": {
@@ -125,7 +125,7 @@
     "action": {}
   },
   {
-    "name": "M.2 NVMe SSD Drive",
+    "name": "@m2",
     "type": "drive",
     "additional": {
       "driveType": "nvme"
@@ -243,7 +243,7 @@
     }
   },
   {
-    "name": "Monitor",
+    "name": "@monitor",
     "type": "market",
     "additional": {},
     "action": {
