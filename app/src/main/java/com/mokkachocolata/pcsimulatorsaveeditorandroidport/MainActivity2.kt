@@ -501,6 +501,10 @@ class MainActivity2 : AppCompatActivity() {
                 fun addObjectFromJson(json: JSONObject) {
                     itemListJson.add(json.getString("name"))
                 }
+                fun insertObject(item: Any) {
+                    itemArray.put(item)
+                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                }
                 fun handleClickJson(index : Int) {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
@@ -529,17 +533,12 @@ class MainActivity2 : AppCompatActivity() {
                         dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
                             val random = (0..2147483647).random()
                             if (!market) {
-                                jsonObj = ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                itemArray.put(jsonObj.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                                insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
                             } else {
                                 if (action.getJSONArray("list").getString(i).contains("SSD")) {
-                                    itemArray.put(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
-                                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                                    insertObject(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
                                 } else {
-                                    jsonObj = ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
-                                    itemArray.put(jsonObj.toJson())
-                                    input.setText(lines[0] + "\n" + jsonObject.toString())
+                                    insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
                                 }
                             }
                         }
@@ -561,8 +560,7 @@ class MainActivity2 : AppCompatActivity() {
                                         jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                                     }
                                 }
-                                itemArray.put(jsonObj.toJson())
-                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                                insertObject(jsonObj.toJson())
                             }, {_,_->}, edittext)
                         }
                         "market" -> {
@@ -617,8 +615,7 @@ class MainActivity2 : AppCompatActivity() {
                                                 }
                                             }
                                             val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
-                                            itemArray.put(drive.toJson())
-                                            input.setText(lines[0] + "\n" + jsonObject.toString())
+                                            insertObject(drive.toJson())
                                         }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
                                             boolArray[which] = isChecked
                                         }, boolArray)
@@ -651,8 +648,7 @@ class MainActivity2 : AppCompatActivity() {
                                                     }
                                                 }
                                                 val drive = DriveObjectJson(thisdrive, driveSize, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
-                                                itemArray.put(drive.toJson())
-                                                input.setText(lines[0] + "\n" + jsonObject.toString())
+                                                insertObject(drive.toJson())
                                             }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
                                                 boolArray[which] = isChecked
                                             }, boolArray)
