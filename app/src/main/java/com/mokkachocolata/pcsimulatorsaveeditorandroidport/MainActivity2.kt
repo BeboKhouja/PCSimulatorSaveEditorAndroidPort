@@ -148,7 +148,6 @@ class MainActivity2 : AppCompatActivity() {
     }
     @SuppressLint("SetTextI18n")
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-
         if (uri != null) {
             val text = input.text.toString()
             val jsonObject = JSONObject(text.lines()[1])
@@ -496,7 +495,7 @@ class MainActivity2 : AppCompatActivity() {
                     (jsonObject.get("playerData") as JSONObject).getDouble("z")
                 )
                 val itemListJson = arrayListOf<String>()
-                val inputStream = assets.open("insertJSON.json").bufferedReader().use(BufferedReader::readText)
+                val inputStream = assets.open("insertJSON.json").bufferedReader().readText()
                 val json = JSONArray(inputStream)
                 fun getKeyFromString(key: String): String {
                     val str = getString(R.string::class.members.first { it.name == key.drop(1) }.call() as Int)
@@ -515,12 +514,10 @@ class MainActivity2 : AppCompatActivity() {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
                             17 -> {
-                                val file = FileObjectJson(fileList[i].path, "pcos", true, 0, 0)
-                                array.put(file.toJson())
+                                array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0))
                             }
                             else -> {
-                                val file = FileObjectJson(fileList[i].path, "", false, 0, 0)
-                                array.put(file.toJson())
+                                array.put(FileObjectJson(fileList[i].path, "", false, 0, 0))
                             }
                         }
                     }
@@ -532,10 +529,13 @@ class MainActivity2 : AppCompatActivity() {
                     fun doItMarket(market : Boolean) {
                         val marketJson = arrayListOf<String>()
                         for (i in 0 until action.getJSONArray("list").length()) {
-                            val name = action.getJSONArray("list").getJSONObject(i).getString("name")
+                            var name = action.getJSONArray("list").getJSONObject(i).getString("name")
+                            if (name.startsWith("@")) name = getKeyFromString(name)
                             marketJson.add(name)
                         }
-                        dialog(obj.getString("name"), null, null, null, marketJson.toTypedArray()) {_, i ->
+                        var name = obj.getString("name")
+                        if (name.startsWith("@")) name = getKeyFromString(name)
+                        dialog(name, null, null, null, marketJson.toTypedArray()) {_, i ->
                             val random = (0..2147483647).random()
                             if (!market) {
                                 insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
