@@ -70,7 +70,6 @@ import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
 import kotlin.properties.Delegates
 
-
 class ReadTextFromUriThread : Runnable {
     lateinit var uri : Uri
     var output = ""
@@ -432,8 +431,8 @@ class MainActivity2 : AppCompatActivity() {
                 val inputStream = assets.open("insertJSON.json").bufferedReader().readText()
                 val json = JSONArray(inputStream)
                 fun getKeyFromString(key: String): String {
-                    val str = getString(R.string::class.members.first { it.name == key.drop(1) }.call() as Int)
-                    return str
+                    val output = getString(R.string::class.members.first { it.name == key.drop(1) }.call() as Int)
+                    return output
                 }
                 fun addObjectFromJson(json: JSONObject) {
                     var name = json.getString("name")
@@ -510,8 +509,7 @@ class MainActivity2 : AppCompatActivity() {
                                     size = arrayOf("500GB", "1TB", "2TB", "5TB")
                                 }
                                 else -> {
-                                    dialogDriveName = "generic"
-                                    size = emptyArray()
+                                    throw UnsupportedOperationException("Thats not a supported type!")
                                 }
                             }
                             dialog("$dialogDriveName Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
@@ -674,6 +672,7 @@ class MainActivity2 : AppCompatActivity() {
         ChangelogText = globalVars.ChangelogText
         version = globalVars.version
         enableEdgeToEdge()
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
         resolver = contentResolver
         setContentView(R.layout.activity_main2)
         DynamicColors.applyToActivitiesIfAvailable(application)

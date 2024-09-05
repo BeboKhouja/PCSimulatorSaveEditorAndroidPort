@@ -23,13 +23,9 @@ import android.content.res.Resources
 
 class GlobalVars(resources: Resources){
 
-    val version = "1.4.3"
+    val version = "1.4.4"
     val ChangelogText = """
-        - Now you can add motherboards.
-        - Now you can add monitors.
-        - Now you can add cases.
-        - Now you can add an installer flash drive.
-        - Some of the text on Insert Object has been translated.
+        - Migrated to the JSON API for the Insert Object menu only.
         """.trimIndent()
     val urlArray = listOf(
         Url(resources.getString(R.string.about),0, "file:///android_asset/About.htm"),

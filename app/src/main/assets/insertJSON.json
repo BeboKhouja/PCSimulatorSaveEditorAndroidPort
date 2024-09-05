@@ -50,9 +50,7 @@
     "name": "Banner",
     "type": "banner",
     "additional": {},
-    "action": {
-
-    }
+    "action": {}
   },
   {
     "name": "@dailymarket",
