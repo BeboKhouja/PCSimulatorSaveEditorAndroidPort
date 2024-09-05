@@ -35,7 +35,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Base64
-import android.util.Log
 import android.view.DragEvent.ACTION_DROP
 import android.view.KeyEvent
 import android.view.KeyboardShortcutGroup
@@ -65,9 +64,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
@@ -75,7 +72,6 @@ import kotlin.properties.Delegates
 
 
 class ReadTextFromUriThread : Runnable {
-
     lateinit var uri : Uri
     var output = ""
     lateinit var resolver : ContentResolver
@@ -99,11 +95,9 @@ class ReadTextFromUriThread : Runnable {
         stringBuilder.clear()
         System.gc()
     }
-
 }
 
 class MainActivity2 : AppCompatActivity() {
-
     private lateinit var menus : Menu
     private lateinit var globalVars : GlobalVars
     var text = ""
@@ -229,22 +223,15 @@ class MainActivity2 : AppCompatActivity() {
     fun dialog(title: String, message: String, okListener: OnClickListener?, cancelListener: OnClickListener?) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage(message)
-                .setTitle(title)
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setMessage(message).setTitle(title)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setMessage(message)
-                .setTitle(title)
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
-
+            builder.setIcon(R.drawable.baseline_info_outline_24).setMessage(message).setTitle(title)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         }
     }
@@ -259,26 +246,17 @@ class MainActivity2 : AppCompatActivity() {
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setTitle(title)
-                .setItems(adapter, adapterOnClickListener)
-            if (message != null) { builder.setMessage(message) }
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setItems(adapter, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                if (message != null) {
-                    builder.setMessage(message)
-                }
-                builder
-                    .setTitle(title)
-                    .setItems(adapter, adapterOnClickListener)
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setItems(adapter, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         }
     }
@@ -292,24 +270,17 @@ class MainActivity2 : AppCompatActivity() {
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setTitle(title)
-                .setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
-            if (message != null) { builder.setMessage(message) }
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         } else {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-            if (message != null) { builder.setMessage(message) }
-            builder
-                .setTitle(title)
-                .setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setMultiChoiceItems(adapter, boolArray, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         }
     }
@@ -322,24 +293,17 @@ class MainActivity2 : AppCompatActivity() {
     ) {
         if (Build.VERSION.SDK_INT >= 31) {
             val builder = MaterialAlertDialogBuilder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-                .setTitle(title)
-                .setView(view)
-            if (message != null) { builder.setMessage(message) }
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setView(view)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         } else {
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder
-                .setIcon(R.drawable.baseline_info_outline_24)
-            if (message != null) { builder.setMessage(message) }
-            builder
-                .setTitle(title)
-                .setView(view)
-            if (okListener != null) { builder.setPositiveButton("Ok", okListener) }
-            if (cancelListener != null) { builder.setNegativeButton("Cancel", cancelListener) }
+            val builder = AlertDialog.Builder(this)
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setView(view)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton("Ok", okListener)
+            if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
             builder.show()
         }
     }
@@ -402,58 +366,32 @@ class MainActivity2 : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.shortcuts -> {
-                if (Build.VERSION.SDK_INT >= 24) {
-                    requestShowKeyboardShortcuts()
-                }
-            }
-            R.id.decrypt_after_opening -> {
-                decrypt_after_opening = decrypt_after_opening.not()
-            }
-            R.id.encrypt_after_saving -> {
-                encrypt_after_saving = encrypt_after_saving.not()
-            }
-            R.id.changelog -> {
-                dialog("Changelog (version $version)", globalVars.ChangelogText, {_,_->}, null)
-            }
-            R.id.about -> {
-                dialog("PC Simulator Save Editor Android Port (version $version)", """
-                        |Created by Mokka Chocolata.
-                        |Free, and open source.
-                        |Get beta builds at the Actions tab at the GitHub repository.
-                        |Report any issues at the Issues tab at the GitHub repository.
-                        |Please attack the PC Simulator discord by sharing invites to the PC Simulator Save Editor Discord!
-                        |This app is licensed with GPLv3.0.
-                        |""".trimMargin(), {_,_->}, null
-                )
-            }
+            R.id.shortcuts -> if (Build.VERSION.SDK_INT >= 24) requestShowKeyboardShortcuts()
+            R.id.decrypt_after_opening -> decrypt_after_opening = decrypt_after_opening.not()
+            R.id.encrypt_after_saving -> encrypt_after_saving = encrypt_after_saving.not()
+            R.id.changelog -> dialog("Changelog (version $version)", globalVars.ChangelogText, {_,_->}, null)
+            R.id.about -> dialog("PC Simulator Save Editor Android Port (version $version)", """
+                    |Created by Mokka Chocolata.
+                    |Free, and open source.
+                    |Get beta builds at the Actions tab at the GitHub repository.
+                    |Report any issues at the Issues tab at the GitHub repository.
+                    |Please attack the PC Simulator discord by sharing invites to the PC Simulator Save Editor Discord!
+                    |This app is licensed with GPLv3.0.
+                    |""".trimMargin(), {_,_->}, null
+            )
             R.id.help -> {
                 System.gc()
                 startActivity(Intent(applicationContext, HelpActivity::class.java))
             }
-            R.id.discord -> {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
-            }
+            R.id.discord -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
             R.id.clear -> {
                 // Clear all cardboard boxes
                 val text = input.text.toString()
                 val lines = text.lines()
                 val jsonObject = JSONObject(lines[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
-                for (i in 0 until itemArray.length()) {
-                    if (i < itemArray.length()) {
-                        if (itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "LongCardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox 2") {
-                            itemArray.remove(i)
-                        }
-                    }
-                }
-                for (i in 0 until itemArray.length()) {
-                    if (i < itemArray.length()) {
-                        if (itemArray.getJSONObject(i).getString("spawnId").contains("Part_") || itemArray.getJSONObject(i).getString("spawnId") == "Part") {
-                            itemArray.remove(i)
-                        }
-                    }
-                }
+                for (i in 0 until itemArray.length()) if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "LongCardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox 2")) itemArray.remove(i)
+                for (i in 0 until itemArray.length()) if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId").contains("Part_") || itemArray.getJSONObject(i).getString("spawnId") == "Part")) itemArray.remove(i)
                 input.setText(lines[0] + "\n" + jsonObject.toString())
             }
             R.id.dump -> {
@@ -469,15 +407,11 @@ class MainActivity2 : AppCompatActivity() {
                         if (data.has("storageData")) {
                             val storageData = data.getJSONObject("storageData")
                             val password = storageData.getString("userPassword")
-                            if (password.isNotEmpty()) {
-                                pwd += "$password : $spawnId \n"
-                            }
+                            if (password.isNotEmpty()) pwd += "$password : $spawnId \n"
                         } else {
                             // Assume we use a different way to do this
                             val password = data.getString("password")
-                            if (password.isNotEmpty()) {
-                                pwd += "$password : $spawnId\n"
-                            }
+                            if (password.isNotEmpty()) pwd += "$password : $spawnId\n"
                         }
                     }
                 }
@@ -513,12 +447,8 @@ class MainActivity2 : AppCompatActivity() {
                 fun handleClickJson(index : Int) {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
-                            17 -> {
-                                array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0))
-                            }
-                            else -> {
-                                array.put(FileObjectJson(fileList[i].path, "", false, 0, 0))
-                            }
+                            17 -> array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0))
+                            else -> array.put(FileObjectJson(fileList[i].path, "", false, 0, 0))
                         }
                     }
 
@@ -537,15 +467,7 @@ class MainActivity2 : AppCompatActivity() {
                         if (name.startsWith("@")) name = getKeyFromString(name)
                         dialog(name, null, null, null, marketJson.toTypedArray()) {_, i ->
                             val random = (0..2147483647).random()
-                            if (!market) {
-                                insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
-                            } else {
-                                if (action.getJSONArray("list").getString(i).contains("SSD")) {
-                                    insertObject(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}"))
-                                } else {
-                                    insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
-                                }
-                            }
+                            if (!market) insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson()) else if (action.getJSONArray("list").getString(i).contains("SSD")) insertObject(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}")) else insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
                         }
                     }
                     when (obj.getString("type")) {
@@ -602,11 +524,7 @@ class MainActivity2 : AppCompatActivity() {
                                     if (size.isEmpty()) {
                                         dialogMultiChoice("Files", null, {_, _ ->
                                             val array = JSONArray()
-                                            for (checked in boolArray.indices) {
-                                                if (boolArray[checked]) {
-                                                    putFile(checked, array)
-                                                }
-                                            }
+                                            for (checked in boolArray.indices) if (boolArray[checked]) putFile(checked, array)
                                             val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
                                             insertObject(drive.toJson())
                                         }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
@@ -622,23 +540,11 @@ class MainActivity2 : AppCompatActivity() {
                                                         putFile(checked, array)
                                                     }
                                                 }
-                                                val thisdrive : String
-                                                when (driveType) {
-                                                    "ssd" -> {
-                                                        thisdrive = "SSD"
-                                                    }
-
-                                                    "nvme" -> {
-                                                        thisdrive = "M.2"
-                                                    }
-
-                                                    "hdd" -> {
-                                                        thisdrive = "HDD"
-                                                    }
-
-                                                    else -> {
-                                                        thisdrive = "generic"
-                                                    }
+                                                val thisdrive : String = when (driveType) {
+                                                    "ssd" -> "SSD"
+                                                    "nvme" -> "M.2"
+                                                    "hdd" -> "HDD"
+                                                    else -> "generic"
                                                 }
                                                 val drive = DriveObjectJson(thisdrive, driveSize, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
                                                 insertObject(drive.toJson())
@@ -650,11 +556,9 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittextUSB)
                             }, {_,_->}, edittext)
                         }
-
                         "banner" -> {
                             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                         }
-
                         "nothing" -> {
                             jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
                             itemArray.put(jsonObj.toJson())
@@ -692,10 +596,9 @@ class MainActivity2 : AppCompatActivity() {
                 val text = input.text.toString()
                 lateinit var jsonObject : JSONObject
                 val lines = text.lines()
-                val init = lines[0].isNotEmpty()
-                if (init) {
-                    jsonObject = JSONObject(lines[0])
-                }
+                val init = lines[0].isEmpty()
+                if (init) return false
+                jsonObject = JSONObject(lines[0])
                 dialog("Save Options", null, null, null, optionList) {_, i ->
                     fun doItEdittext(title: String, message: String, propertyName: String, int: Boolean, long: Boolean) {
                         val edittext = EditText(this)
@@ -704,13 +607,7 @@ class MainActivity2 : AppCompatActivity() {
                         }
                         dialog(title, message ,{_, _ ->
                             if (init) {
-                                if (int) {
-                                    jsonObject.put(propertyName, parseInt(edittext.text.toString()))
-                                } else if (long) {
-                                    jsonObject.put(propertyName, parseLong(edittext.text.toString()))
-                                } else {
-                                    jsonObject.put(propertyName, edittext.text)
-                                }
+                                if (int) jsonObject.put(propertyName, parseInt(edittext.text.toString())) else if (long) jsonObject.put(propertyName, parseLong(edittext.text.toString())) else jsonObject.put(propertyName, edittext.text)
                                 input.setText(jsonObject.toString() + "\n" + lines[1])
                             }
                         } , {_, _ ->}, edittext)
@@ -738,40 +635,17 @@ class MainActivity2 : AppCompatActivity() {
                     }
 
                     when (i) {
-                        0 -> {
-                            doItEdittext("AC Temperature", "Set the temperature of the AC. Max 2147483647 and min -2147483648", "temperature",  true, false)
-                        }
-
-                        1 -> {
-                            doItSwitch("AC Power", "Switch on or off the AC", "ac",  "Power")
-                        }
-                        2 -> {
-                            doItEdittext("Version", "Set the version of the save.", "version",  false, false)
-                        }
-                        3 -> {
-                            doItEdittext("Money", "Set the money of the save. Max 2147483647 and min -2147483647", "coin",  true, false)
-                        }
-                        4 -> {
-                            doItEdittext("Room", "Set the current room.\n0: Medium\n1: Large\n2: Double Storey\n3: Factory.", "room",  true, false)
-                        }
-                        5 -> {
-                            doItSwitch("Gravity", "Switch on or off gravity.", "gravity", "Gravity")
-                        }
-                        6 -> {
-                            doItSwitch("Hardcore", "Switch on or off hardcore mode.", "hardcore", "Hardcore")
-                        }
-                        7 -> {
-                            doItEdittext("Playtime", "Set the current playtime.", "playtime", false, true)
-                        }
-                        8 -> {
-                            doItSwitch("Light", "Switch on or off the lamp.", "light", "Light")
-                        }
-                        9 -> {
-                            doItEdittext("Sign", "Set the signer of the save.", "sign", false, false)
-                        }
-                        10 -> {
-                            doItEdittext("Save name", "Set the name of the save.", "roomName", false, false)
-                        }
+                        0 -> doItEdittext("AC Temperature", "Set the temperature of the AC. Max 2147483647 and min -2147483648", "temperature",  true, false)
+                        1 -> doItSwitch("AC Power", "Switch on or off the AC", "ac",  "Power")
+                        2 -> doItEdittext("Version", "Set the version of the save.", "version",  false, false)
+                        3 -> doItEdittext("Money", "Set the money of the save. Max 2147483647 and min -2147483647", "coin",  true, false)
+                        4 -> doItEdittext("Room", "Set the current room.\n0: Medium\n1: Large\n2: Double Storey\n3: Factory.", "room",  true, false)
+                        5 -> doItSwitch("Gravity", "Switch on or off gravity.", "gravity", "Gravity")
+                        6 -> doItSwitch("Hardcore", "Switch on or off hardcore mode.", "hardcore", "Hardcore")
+                        7 -> doItEdittext("Playtime", "Set the current playtime.", "playtime", false, true)
+                        8 -> doItSwitch("Light", "Switch on or off the lamp.", "light", "Light")
+                        9 -> doItEdittext("Sign", "Set the signer of the save.", "sign", false, false)
+                        10 -> doItEdittext("Save name", "Set the name of the save.", "roomName", false, false)
                     }
                 }
             }
@@ -788,22 +662,14 @@ class MainActivity2 : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
-
-        if (menu != null) {
-            menus = menu
-        }
-        if (Build.VERSION.SDK_INT <= 24) {
-            menu?.findItem(R.id.shortcuts)?.isEnabled = false
-        }
-
+        if (menu != null) menus = menu
+        if (Build.VERSION.SDK_INT <= 24) menu?.findItem(R.id.shortcuts)?.isEnabled = false
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= 31){
-            installSplashScreen()
-        }
+        if (Build.VERSION.SDK_INT >= 31) installSplashScreen()
         globalVars = GlobalVars(resources)
         ChangelogText = globalVars.ChangelogText
         version = globalVars.version
@@ -827,8 +693,8 @@ class MainActivity2 : AppCompatActivity() {
                 when (event.action) {
                     ACTION_DROP -> {
                         // The app sometimes crashes whenever the dragged content goes into the app. This is not our fault, it's Android's fault.
-                        val fileItem: ClipData.Item = event.clipData.getItemAt(0)
-                        val uri : Uri? = fileItem.uri
+                        val fileItem = event.clipData.getItemAt(0)
+                        val uri = fileItem.uri
                         // The complicated way to check if a Uri is a file or not
                         val scheme = uri?.let { contentResolver.getType(it) } != "vnd.android.document/directory" || contentResolver.getType(uri) == null
                         val dropPermissions = requestDragAndDropPermissions(event)
@@ -843,9 +709,7 @@ class MainActivity2 : AppCompatActivity() {
                         } ?: run {
                             return@setOnDragListener false
                         }
-
                         return@setOnDragListener true
-
                     }
 
                     else -> {
@@ -857,26 +721,19 @@ class MainActivity2 : AppCompatActivity() {
 
 
         decrypt.setOnClickListener { _ ->
-            System.gc()
-            if (input.text.isNotEmpty()) {
-                input.setText(functions.Decrypt(input.text.toString()))
-            }
+            if (input.text.isNotEmpty()) input.setText(functions.Decrypt(input.text.toString()))
         }
 
         val open = findViewById<Button>(R.id.open)
         save = findViewById(R.id.save)
         val copy = findViewById<Button>(R.id.clipboard)
 
-        open.setOnClickListener {_ ->
-            System.gc()
-            pickFile.launch(arrayOf("application/octet-stream"))
-        }
+        open.setOnClickListener { _ -> pickFile.launch(arrayOf("application/octet-stream")) }
 
         save.setOnClickListener {_ ->
             System.gc()
             if (input.text.isNotEmpty()) {
-                saveString =
-                    if (encrypt_after_saving) functions.Decrypt(input.text.toString()) else input.text.toString()
+                saveString = if (encrypt_after_saving) functions.Decrypt(input.text.toString()) else input.text.toString()
                 saveTheFile.launch("Save.pc")
             }
         }
@@ -890,32 +747,15 @@ class MainActivity2 : AppCompatActivity() {
 
         copy.setOnClickListener{_ ->
             System.gc()
-            if (input.text.isNotEmpty()) {
-                val clip = ClipData.newPlainText("PC Simulator Save", input.text.toString())
-                getSystemService(
-                    this,
-                    ClipboardManager::class.java
-                )?.setPrimaryClip(clip)
-            }
+            if (input.text.isNotEmpty()) getSystemService(this, ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("PC Simulator Save", input.text.toString()))
         }
 
         val appLinkIntent: Intent = intent
         val appLinkAction: String? = appLinkIntent.action
         val appLinkData: Uri? = appLinkIntent.data
-        if (appLinkAction != null) {
-            Log.d("App", appLinkAction)
+        if (Intent.ACTION_VIEW == appLinkAction) appLinkData?.lastPathSegment?.also { _ ->
+            if (decrypt_after_opening) input.setText(functions.Decrypt(readTextFromUri(appLinkData))) else input.setText(readTextFromUri(appLinkData))
         }
-        Log.d("App", appLinkData.toString())
-        if (Intent.ACTION_VIEW == appLinkAction) {
-            appLinkData?.lastPathSegment?.also { _ ->
-                if (decrypt_after_opening) {
-                    input.setText(functions.Decrypt(readTextFromUri(appLinkData)))
-                } else {
-                    input.setText(readTextFromUri(appLinkData))
-                }
-            }
-        }
-
     }
 }
 
@@ -948,17 +788,12 @@ class WriteOrReadThread : Runnable{
             functions.input = readTextFromUri(data)
             thread.start()
             thread.join()
-            if (decrypt_after_opening) {
-                input.setText(functions.Output)
-            } else {
-                input.setText(readTextFromUri(data))
-            }
+            if (decrypt_after_opening) input.setText(functions.Output) else input.setText(readTextFromUri(data))
         } else if (saveToTxt) {
             val thread = Thread(functions)
             functions.input = readTextFromUri(data)
             thread.start()
             thread.join()
-            Log.d("App", functions.Output)
             clazz.saveString = functions.Output
             clazz.saveTheFile.launch("Save.txt")
         } }
@@ -973,16 +808,11 @@ class AfterReadThread : Runnable{
         try {
                 resolver.openFileDescriptor(afterData, "w")?.use { it ->
                     val outputstream = FileOutputStream(it.fileDescriptor)
-
-                    outputstream.use {
-                        it.write(text.toByteArray())
-                    }
+                    outputstream.use { it.write(text.toByteArray()) }
                     outputstream.close()
                 }
-            } catch (e: FileNotFoundException) {
+        } catch (e: Exception) {
                 e.printStackTrace()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        }
     }
 }
