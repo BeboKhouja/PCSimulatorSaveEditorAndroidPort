@@ -113,7 +113,7 @@ class HelpActivity : AppCompatActivity(), View.OnClickListener {
         this.urlList = globalVars.urlArrayArray
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)
-        var layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
         recyclerView.layoutManager = layoutManager

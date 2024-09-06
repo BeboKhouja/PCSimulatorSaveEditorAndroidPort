@@ -20,7 +20,6 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.webkit.WebView

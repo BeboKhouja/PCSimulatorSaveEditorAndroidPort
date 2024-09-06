@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/material_dynamic_secondary10"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingTop="4dp"
             android:text="Preview"
             android:textColor="#EBDDDD"

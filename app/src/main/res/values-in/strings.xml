@@ -28,7 +28,5 @@
     <string name="installer">Installer PCOS</string>
     <string name="dailymarket">Daily Market (tidak perlu Bitcoin)</string>
     <string name="m2">NVMe SSD M.2</string>
-    <string name="m2Name">Nama NVMe SSD M.2</string>
     <string name="password">Kata Sandi</string>
-    <string name="m2Size">Besar NVMe SSD M.2</string>
 </resources>

@@ -64,11 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:ems="10"
-        android:gravity="start|top"
         android:hint="@string/hint"
-        android:inputType="textMultiLine"
+        android:importantForAutofill="no" android:inputType="textMultiLine"
         android:minWidth="300dp"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

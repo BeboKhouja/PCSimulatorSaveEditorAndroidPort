@@ -20,7 +20,6 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
+class HelpRecyclerAdapter(data : List<Url>): RecyclerView.Adapter<HelpRecyclerAdapter.ViewHolder>() {
     var datanew : List<Url>
     lateinit var thisholder : ViewHolder
     init {
@@ -53,7 +52,6 @@ class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<He
 
     fun destroyWebview() {
         thisholder.webpreview.destroy()
-        Log.d("App", "Destroyed")
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -64,9 +62,6 @@ class HelpRecyclerAdapter(private val data : List<Url>): RecyclerView.Adapter<He
         settings.loadWithOverviewMode = true
         settings.useWideViewPort = true
         holder.textpreview.text = ItemsViewModel.name
-        holder.webpreview.setOnTouchListener{_, _ ->
-            true
-        }
         holder.invisibleButton.bringToFront()
         holder.invisibleButton.setOnClickListener{_ ->
             val intent = Intent(holder.context, BrowserActivity::class.java)
