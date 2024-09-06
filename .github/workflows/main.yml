@@ -14,6 +14,7 @@ jobs:
   notifyDiscord:
     name: Notify Discord
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'BeboKhouja'
     continue-on-error: true
     steps:
       - name: Checkout
@@ -94,6 +95,7 @@ jobs:
   sendFile:
     name: Send file to Discord
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'BeboKhouja'
     needs: build
     continue-on-error: true
     steps:
