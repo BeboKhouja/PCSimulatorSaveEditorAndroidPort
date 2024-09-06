@@ -78,7 +78,7 @@ jobs:
       # You only get an unsigned APK for forks
 
       - name: Copy Signed APK
-        if: github.repository_owner == BeboKhouja
+        if: github.repository_owner == "BeboKhouja"
         run: |
           cp ${{steps.sign.outputs.signedReleaseFile}} out/app-dev.apk
           md5sum ${{steps.sign.outputs.signedReleaseFile}} > out/app-dev.md5
