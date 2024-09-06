@@ -57,7 +57,10 @@ jobs:
         run: gradle library:assemble --stacktrace
 
       - name: Build developer APK
-        run: gradle assembleRelease --stacktrace
+        run: |
+          gradle assembleRelease --stacktrace
+          mkdir out
+          cp app/build/outputs/apk/release/app-release-unsigned.apk out/app-dev-unsigned.apk
 
       - name: ZipAlign & Sign Android release
         uses: kevin-david/zipalign-sign-android-release@v2.0.1
@@ -70,9 +73,8 @@ jobs:
           keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
           zipAlign: true
 
-      - name: Rename APK
+      - name: Gen MD5sum
         run: |
-          cp app/build/outputs/apk/release/app-release-unsigned.apk out/app-dev-unsigned.apk
           md5sum app/build/outputs/apk/release/app-release-unsigned.apk > out/app-dev-unsigned.md5
 
       # You only get an unsigned APK for forks
