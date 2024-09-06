@@ -1,5 +1,4 @@
 name: Android CI
-if:
 on:
   push:
     paths:
