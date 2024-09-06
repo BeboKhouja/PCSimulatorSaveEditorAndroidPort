@@ -9,3 +9,5 @@ Reasons:
 
 Message to Yiming:
 Please lessen the restrictions about Rule 14, so that you wont get banned if you dont talk about cheating. This means that if you are popular in the hacking community, then you should not get banned for such thing, even though you didnt violate the rule.
+
+So if you are at PC Simulator Hacking community, please leave it.
