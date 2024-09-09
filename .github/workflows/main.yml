@@ -65,6 +65,7 @@ jobs:
 
       - name: ZipAlign & Sign Android release
         uses: kevin-david/zipalign-sign-android-release@v2.0.1
+        if: github.repository_owner == 'BeboKhouja'
         id: sign
         with:
           releaseDirectory: app/build/outputs/apk/release
