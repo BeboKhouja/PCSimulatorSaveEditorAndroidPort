@@ -14,6 +14,7 @@ jobs:
   notifyDiscord:
     name: Notify Discord
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'BeboKhouja'
     continue-on-error: true
     steps:
       - name: Checkout
@@ -57,7 +58,10 @@ jobs:
         run: gradle library:assemble --stacktrace
 
       - name: Build developer APK
-        run: gradle assembleRelease --stacktrace
+        run: |
+          gradle assembleRelease --stacktrace
+          mkdir out
+          cp app/build/outputs/apk/release/app-release-unsigned.apk out/app-dev-unsigned.apk
 
       - name: ZipAlign & Sign Android release
         uses: kevin-david/zipalign-sign-android-release@v2.0.1
@@ -70,29 +74,31 @@ jobs:
           keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
           zipAlign: true
 
-      - name: Rename APK
-        run: cp ${{steps.sign.outputs.signedReleaseFile}} app/build/outputs/apk/release/app-release.apk
+      - name: Gen MD5sum
+        run: |
+          md5sum app/build/outputs/apk/release/app-release-unsigned.apk > out/app-dev-unsigned.md5
 
-      - name: Generate MD5sum
-        run: md5sum ${{steps.sign.outputs.signedReleaseFile}} > app/build/outputs/apk/release/app-release.md5
+      # You only get an unsigned APK for forks
+
+      - name: Copy Signed APK
+        if: github.repository_owner == 'BeboKhouja'
+        run: |
+          cp ${{steps.sign.outputs.signedReleaseFile}} out/app-dev.apk
+          md5sum ${{steps.sign.outputs.signedReleaseFile}} > out/app-dev.md5
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: dev-artifacts
-          path: |
-            app/build/outputs/apk/release/app-release.apk
-            app/build/outputs/apk/release/app-release.md5
+          path: out/
 
   sendFile:
     name: Send file to Discord
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'BeboKhouja'
     needs: build
     continue-on-error: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
       - name: Download Dev Artifact
         uses: actions/download-artifact@v4.1.8
         with:
@@ -104,4 +110,4 @@ jobs:
         env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-            args: ./out/apk/app-release.apk ./out/apk/app-release.md5
+            args: ./out/apk/app-dev.apk ./out/apk/app-dev.md5
