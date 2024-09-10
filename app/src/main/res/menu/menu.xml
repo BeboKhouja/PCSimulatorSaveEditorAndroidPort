@@ -44,4 +44,7 @@
         android:id="@+id/license"
         android:title="Open Source Licenses"
         android:titleCondensed="Licenses" />
+    <item
+        android:id="@+id/repo"
+        android:title="GitHub Repository" />
 </menu>

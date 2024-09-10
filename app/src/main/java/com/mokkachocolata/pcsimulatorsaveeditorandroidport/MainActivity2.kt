@@ -382,6 +382,7 @@ class MainActivity2 : AppCompatActivity() {
                 System.gc()
                 startActivity(Intent(applicationContext, HelpActivity::class.java))
             }
+            R.id.repo -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort")))
             R.id.discord -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
             R.id.clear -> {
                 // Clear all cardboard boxes

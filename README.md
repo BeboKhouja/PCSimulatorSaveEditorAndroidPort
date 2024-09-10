@@ -1,5 +1,5 @@
 <h1 align="center">PC Simulator Save Editor</h1>
-<img src="https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/master/app/src/main/pc_simulator_save_editor-playstore.png" width="200" height="200" alt="PC Simulator Save Editor Logo" align="left">
+<img src="https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/blob/main/app/src/main/pc_simulator_save_editor-playstore.png" width="200" height="200" alt="PC Simulator Save Editor Logo" align="left">
 
 [![Dev Builds](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml/badge.svg)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions/workflows/main.yml)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/BeboKhouja/PCSimulatorSaveEditorAndroidPort)](https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort/actions)
