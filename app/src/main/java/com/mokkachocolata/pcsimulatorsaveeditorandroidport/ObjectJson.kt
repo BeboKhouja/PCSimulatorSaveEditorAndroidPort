@@ -23,9 +23,9 @@ import androidx.annotation.Keep
 import org.json.JSONArray
 import org.json.JSONObject
 
-@Keep
+
 data class Position(val x : Double, val y: Double, val z: Double)
-@Keep
+
 data class Rotation(val w : Double, val x : Double, val y : Double, val z : Double)
 
 // SpawnId can be one of these:
@@ -33,7 +33,7 @@ data class Rotation(val w : Double, val x : Double, val y : Double, val z : Doub
 // Cube
 // RTX4080Ti
 // Projector
-@Keep
+
 data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
@@ -59,7 +59,7 @@ data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, va
         return this.toJson().toString()
     }
 }
-@Keep
+
 data class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val bannerData : String) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
@@ -84,7 +84,7 @@ data class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Positi
         return jsonObject
     }
 }
-@Keep
+
 data class USBObjectJson(
     val id : Int,
     val pos : Position,
@@ -121,7 +121,7 @@ data class USBObjectJson(
     }
 }
 
-@Keep
+
 data class FileObjectJson(
     val path : String,
     val content : String,
@@ -138,7 +138,7 @@ data class FileObjectJson(
         return jsonObject
     }
 }
-@Keep
+
 data class DriveObjectJson(
     val driveType : String,
     val storageSize : String,
