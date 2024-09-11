@@ -109,7 +109,6 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
-    @Keep
     data class Apps(val name : String, val path : String)
     private var fileList = arrayOf(
         Apps("App Manager", "App Downloader.exe"),
