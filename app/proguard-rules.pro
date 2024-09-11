@@ -4,3 +4,5 @@
 -keep class **.R$* {
     <fields>;
 }
+
+-keep class com.mokkachocolata.pcsimulatorsaveeditorandroidport.GlobalVars
