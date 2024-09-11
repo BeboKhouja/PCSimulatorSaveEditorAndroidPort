@@ -19,7 +19,6 @@
 
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
-import androidx.annotation.Keep
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -34,7 +33,7 @@ data class Rotation(val w : Double, val x : Double, val y : Double, val z : Doub
 // RTX4080Ti
 // Projector
 
-data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation) {
+data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val data: JSONObject?) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("spawnId", SpawnId)
@@ -51,7 +50,7 @@ data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, va
             put("w", rot.w)
         })
         // Data not needed here so leave it empty
-        jsonObject.put("data", JSONObject())
+        if (data != null) jsonObject.put("data", data) else jsonObject.put("data", JSONObject())
         return jsonObject
     }
 

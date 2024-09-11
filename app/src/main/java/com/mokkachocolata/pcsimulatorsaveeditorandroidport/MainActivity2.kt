@@ -456,33 +456,27 @@ class MainActivity2 : AppCompatActivity() {
                     val obj = json.getJSONObject(index)
                     val additionals = obj.getJSONObject("additional")
                     val action = obj.getJSONObject("action")
-                    fun doItMarket(market : Boolean) {
-                        val marketJson = arrayListOf<String>()
-                        for (i in 0 until action.getJSONArray("list").length()) {
-                            var name = action.getJSONArray("list").getJSONObject(i).getString("name")
-                            if (name.startsWith("@")) name = getKeyFromString(name)
-                            marketJson.add(name)
-                        }
-                        var name = obj.getString("name")
-                        if (name.startsWith("@")) name = getKeyFromString(name)
-                        dialog(name, null, null, null, marketJson.toTypedArray()) {_, i ->
-                            val random = (0..2147483647).random()
-                            if (!market) insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson()) else if (action.getJSONArray("list").getString(i).contains("SSD")) insertObject(JSONObject("{\"spawnId\":\"SSD 128GB\",\"id\":$random,\"pos\":{\"x\":22.4925842,\"y\":66.38136,\"z\":3.829202},\"rot\":{\"x\":0.6850593,\"y\":0.1318201,\"z\":-0.712849855,\"w\":0.07184942},\"data\":{\"storageName\":\"Local Disk\",\"password\":\"\",\"files\":[{\"path\":\"System/boot.bin\",\"content\":\"pcos\",\"hidden\":true,\"size\":60000,\"StorageSize\":60000},{\"path\":\"App Downloader.exe\",\"content\":\"\",\"hidden\":false,\"size\":432,\"StorageSize\":432},{\"path\":\"Text Editor.exe\",\"content\":\"\",\"hidden\":false,\"size\":264,\"StorageSize\":264},{\"path\":\"Launcher.exe\",\"content\":\"\",\"hidden\":false,\"size\":94,\"StorageSize\":94}],\"uptime\":2241.17017,\"health\":100.0,\"damaged\":false,\"glue\":false}}")) else insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0)).toJson())
-                        }
-                    }
                     when (obj.getString("type")) {
                         "dialogEditText" -> {
                             val edittext = EditText(this)
                             dialog(itemListJson[index], additionals.optString("message"), {_, _ ->
-                                jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                                jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), null)
                                 insertObject(jsonObj.toJson())
                             }, {_,_->}, edittext)
                         }
                         "market" -> {
-                            doItMarket(false)
-                        }
-                        "marketDaily" -> {
-                            doItMarket(true)
+                            val marketJson = arrayListOf<String>()
+                            for (i in 0 until action.getJSONArray("list").length()) {
+                                var name = action.getJSONArray("list").getJSONObject(i).getString("name")
+                                if (name.startsWith("@")) name = getKeyFromString(name)
+                                marketJson.add(name)
+                            }
+                            var name = obj.getString("name")
+                            if (name.startsWith("@")) name = getKeyFromString(name)
+                            dialog(name, null, null, null, marketJson.toTypedArray()) {_, i ->
+                                val random = (0..2147483647).random()
+                                insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), random, position, Rotation(0.0, 0.0, 0.0, 0.0), if (action.getJSONArray("list").getJSONObject(i).has("customData")) action.getJSONArray("list").getJSONObject(i).getJSONObject("customData") else null).toJson())
+                            }
                         }
                         "drive" -> {
                             var driveName : String
@@ -509,9 +503,7 @@ class MainActivity2 : AppCompatActivity() {
                                     dialogDriveName = "HDD"
                                     size = arrayOf("500GB", "1TB", "2TB", "5TB")
                                 }
-                                else -> {
-                                    throw UnsupportedOperationException("Thats not a supported type!")
-                                }
+                                else -> throw UnsupportedOperationException("Thats not a supported type!")
                             }
                             dialog("$dialogDriveName Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
@@ -559,7 +551,7 @@ class MainActivity2 : AppCompatActivity() {
                             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                         }
                         "nothing" -> {
-                            jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0))
+                            jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), null)
                             itemArray.put(jsonObj.toJson())
                             input.setText(lines[0] + "\n" + jsonObject.toString())
                         }

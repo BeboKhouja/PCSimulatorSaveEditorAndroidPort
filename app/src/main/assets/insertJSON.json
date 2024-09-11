@@ -54,7 +54,7 @@
   },
   {
     "name": "@dailymarket",
-    "type": "marketDaily",
+    "type": "market",
     "additional": {},
     "action": {
         "list": [
@@ -94,7 +94,42 @@
           {"name": "Printer Ink (K)", "spawnId": "PrinterInk_K"},
           {"name": "Printer Ink (M)", "spawnId": "PrinterInk_M"},
           {"name": "Printer Ink (Y)", "spawnId": "PrinterInk_Y"},
-          {"name": "Used SSD", "spawnId": "SSD 128GB"},
+          {"name": "Used SSD", "spawnId": "SSD 128GB", "customData":  {
+            "storageName":"Local Disk",
+            "password":"",
+            "files":[
+              {
+                "path":"System/boot.bin",
+                "content":"pcos",
+                "hidden":true,
+                "size":60000,
+                "StorageSize":60000
+              }
+            ,{
+                "path":"App Downloader.exe",
+                "content":"",
+                "hidden":false,
+                "size":432,
+                "StorageSize":432
+              },
+              {
+                "path":"Text Editor.exe",
+                "content":"",
+                "hidden":false,
+                "size":264,
+                "StorageSize":264
+              },{
+                "path":"Launcher.exe",
+                "content":"",
+                "hidden":false,
+                "size":94,
+                "StorageSize":94
+              }
+            ],
+            "uptime":2241.17017,
+            "health":100.0,
+            "damaged":false,
+            "glue":false}},
           {"name": "Wooden Table", "spawnId": "Table"},
           {"name": "Modern Table", "spawnId": "Table_1"},
           {"name": "Chair (Toilet)", "spawnId": "ToiletBowl"},
