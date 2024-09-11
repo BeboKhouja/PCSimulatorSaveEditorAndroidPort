@@ -19,6 +19,7 @@
 
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
+import androidx.annotation.Keep
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -30,7 +31,8 @@ data class Rotation(val w : Double, val x : Double, val y : Double, val z : Doub
 // Cube
 // RTX4080Ti
 // Projector
-class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation) {
+@Keep
+data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("spawnId", SpawnId)
@@ -55,8 +57,8 @@ class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot
         return this.toJson().toString()
     }
 }
-
-class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val bannerData : String) {
+@Keep
+data class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val bannerData : String) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("spawnId", "BannerStand")
@@ -80,8 +82,8 @@ class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, v
         return jsonObject
     }
 }
-
-class USBObjectJson(
+@Keep
+data class USBObjectJson(
     val id : Int,
     val pos : Position,
     val rot : Rotation,
@@ -117,7 +119,8 @@ class USBObjectJson(
     }
 }
 
-class FileObjectJson(
+@Keep
+data class FileObjectJson(
     val path : String,
     val content : String,
     val hidden : Boolean,
@@ -133,8 +136,8 @@ class FileObjectJson(
         return jsonObject
     }
 }
-
-class DriveObjectJson(
+@Keep
+data class DriveObjectJson(
     val driveType : String,
     val storageSize : String,
 val id : Int,
