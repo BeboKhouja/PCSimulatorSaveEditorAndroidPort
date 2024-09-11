@@ -20,7 +20,9 @@
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
 import android.content.res.Resources
+import androidx.annotation.Keep
 
+@Keep
 class GlobalVars(resources: Resources){
 
     val version = "1.4.4"
