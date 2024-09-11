@@ -19,4 +19,7 @@
 
 package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 
+import androidx.annotation.Keep
+
+@Keep
 data class Url(val name: String, val index: Int, val url: String)

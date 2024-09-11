@@ -83,8 +83,6 @@ class BrowserActivity : AppCompatActivity() {
         val settings = browser.settings
         settings.javaScriptEnabled = true
 
-        data class Url(val name: String, val index: Int, val url: String)
-
         val urlArray = globalVars.urlArray
         val content = findViewById<TextView>(R.id.content)
 

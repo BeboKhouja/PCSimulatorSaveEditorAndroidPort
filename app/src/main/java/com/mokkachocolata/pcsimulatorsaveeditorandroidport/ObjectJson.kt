@@ -22,8 +22,9 @@ package com.mokkachocolata.pcsimulatorsaveeditorandroidport
 import androidx.annotation.Keep
 import org.json.JSONArray
 import org.json.JSONObject
-
+@Keep
 data class Position(val x : Double, val y: Double, val z: Double)
+@Keep
 data class Rotation(val w : Double, val x : Double, val y : Double, val z : Double)
 
 // SpawnId can be one of these:
