@@ -64,3 +64,11 @@ PC Simulator Save Editor Android is licensed under [GPLv3.0](https://github.com/
 
 Dear Yiming, we made this save editor because we want our users to have freedom with their save, so please do not ban us from the PC Simulator Discord.
 We will not advertise this server on the official PC Simulator Discord.
+
+# Requirements
+
+| Type       | Minimum                 | Recommended           |
+|------------|-------------------------|-----------------------|
+| OS version | Android 5.0             | Latest version        |
+| CPU        | 32-bit 1GHz Single core | 64-bit 2GHz Octa core |
+| RAM        | 512MB                   | 8GB                   |
