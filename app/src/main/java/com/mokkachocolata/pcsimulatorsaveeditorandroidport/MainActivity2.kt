@@ -130,13 +130,16 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
+    private fun doOnThread(obj: Runnable, wait: Boolean) {
+        val actualThread = Thread(obj)
+        actualThread.start()
+        if (wait) actualThread.join()
+    }
     private fun readTextFromUri(uri: Uri): String {
         val uriThread = ReadTextFromUriThread()
         uriThread.resolver = contentResolver
         uriThread.uri = uri
-        val actualThread = Thread(uriThread)
-        actualThread.start()
-        actualThread.join()
+        doOnThread(uriThread, true)
         return uriThread.output
     }
     @SuppressLint("SetTextI18n")
@@ -177,7 +180,6 @@ class MainActivity2 : AppCompatActivity() {
 
     private val pickFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
         if (data != null) {
-            val writeOrReadThread = Thread(writeorread)
             writeorread.clazz = this
             writeorread.resolver = contentResolver
             writeorread.data = data
@@ -185,25 +187,22 @@ class MainActivity2 : AppCompatActivity() {
             writeorread.decrypt_after_opening = decrypt_after_opening
             writeorread.encrypt_after_saving = encrypt_after_saving
             writeorread.WriteOrRead = false
-            writeOrReadThread.start()
-            writeOrReadThread.join()
+            doOnThread(writeorread, true)
             System.gc()
         }
     }
     val saveTheFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) {uri ->
         if (uri != null) {
-            val afterReadThread = Thread(afterread)
             afterread.resolver = contentResolver
             afterread.afterData = uri
             afterread.text = saveString
-            afterReadThread.start()
+            doOnThread(afterread, false)
             System.gc()
         }
     }
 
     private val openandSavetotxt = registerForActivityResult(ActivityResultContracts.OpenDocument()) {uri ->
         if (uri != null) {
-            val writeOrReadThread = Thread(writeorread)
             writeorread.clazz = this
             writeorread.resolver = contentResolver
             writeorread.data = uri
@@ -213,8 +212,7 @@ class MainActivity2 : AppCompatActivity() {
             writeorread.WriteOrRead = true
             writeorread.saveToTxt = true
             writeorread.doClazz = afterread
-            writeOrReadThread.start()
-            writeOrReadThread.join()
+            doOnThread(writeorread, true)
             System.gc()
         }
     }
@@ -547,9 +545,7 @@ class MainActivity2 : AppCompatActivity() {
                                 }, {_,_->}, edittextUSB)
                             }, {_,_->}, edittext)
                         }
-                        "banner" -> {
-                            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                        }
+                        "banner" -> pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                         "nothing" -> {
                             jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), null)
                             itemArray.put(jsonObj.toJson())
@@ -764,28 +760,28 @@ class WriteOrReadThread : Runnable{
     lateinit var clazz : MainActivity2
     lateinit var doClazz : AfterReadThread
 
+    private fun doOnThread(obj: Runnable) {
+        val actualThread = Thread(obj)
+        actualThread.start()
+        actualThread.join()
+    }
+
     private fun readTextFromUri(uri: Uri): String {
         val uriThread = ReadTextFromUriThread()
         uriThread.resolver = resolver
         uriThread.uri = uri
-        val actualThread = Thread(uriThread)
-        actualThread.start()
-        actualThread.join()
+        doOnThread(uriThread)
         return uriThread.output
     }
 
     override fun run() {
         if (!WriteOrRead) {
-            val thread = Thread(functions)
             functions.input = readTextFromUri(data)
-            thread.start()
-            thread.join()
+            doOnThread(functions)
             if (decrypt_after_opening) input.setText(functions.Output) else input.setText(readTextFromUri(data))
         } else if (saveToTxt) {
-            val thread = Thread(functions)
             functions.input = readTextFromUri(data)
-            thread.start()
-            thread.join()
+            doOnThread(functions)
             clazz.saveString = functions.Output
             clazz.saveTheFile.launch("Save.txt")
         } }

@@ -24,7 +24,6 @@ import androidx.annotation.Keep
 
 @Keep
 class GlobalVars(resources: Resources){
-
     val version = "1.4.4"
     val ChangelogText = """
         - Migrated to the JSON API for the Insert Object menu only.
@@ -44,5 +43,4 @@ class GlobalVars(resources: Resources){
     init {
         urlArray.toCollection(urlArrayArray)
     }
-
 }
