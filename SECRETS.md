@@ -11,3 +11,7 @@ Message to Yiming:
 Please lessen the restrictions about Rule 14, so that you wont get banned if you dont talk about cheating. This means that if you are popular in the hacking community, then you should not get banned for such thing, even though you didnt violate the rule.
 
 So if you are at PCSim hecking community, or any server of PC Simulator hacking topic, please leave it. The Discord for this project is the only trusted one.
+
+If we find out that a User is in PCSim Hacking community Discord or some sort, then we'll ban that User's account from the project immediately.
+
+No more PCSim Save Editor!
