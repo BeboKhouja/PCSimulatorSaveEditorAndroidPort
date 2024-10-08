@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.PCSimulatorSaveEditor" parent="Theme.AppCompat.Light" />
 
     <style name="Theme.PCSimulatorSaveEditor.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar" />
     <!-- Redirect to the theme above to prevent crashes -->
-    <style name="Theme.PCSimulatorSaveEditor.Splash" parent="Theme.PCSimulatorSaveEditor"/>
+    <style name="Theme.PCSimulatorSaveEditor.Splash" parent="Theme.PCSimulatorSaveEditor" />
 </resources>

@@ -35,6 +35,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Base64
+import android.util.Log
 import android.view.DragEvent.ACTION_DROP
 import android.view.KeyEvent
 import android.view.KeyboardShortcutGroup
@@ -52,6 +53,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -62,8 +64,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import org.json.JSONArray
 import org.json.JSONObject
+import org.luaj.vm2.LuaValue
+import org.luaj.vm2.lib.OneArgFunction
+import org.luaj.vm2.lib.ThreeArgFunction
+import org.luaj.vm2.lib.TwoArgFunction
+import org.luaj.vm2.lib.ZeroArgFunction
+import org.luaj.vm2.lib.jse.JsePlatform
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
@@ -108,6 +117,15 @@ class MainActivity2 : AppCompatActivity() {
     lateinit var save : Button
     private lateinit var ChangelogText : String
     private lateinit var resolver : ContentResolver
+    data class Mod(
+        val name: String,
+        val description: String?,
+        val license: String?,
+        val creator: String?,
+        val repositoryUrl: String?,
+        val version: String?,
+        val source: String
+    )
     data class Apps(val name : String, val path : String)
     private var fileList = arrayOf(
         Apps("App Manager", "App Downloader.exe"),
@@ -130,6 +148,250 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
+    private class PCSimulatorSaveEditorUtilClass() : TwoArgFunction() {
+        lateinit var globalVars : GlobalVars
+        lateinit var activity2: MainActivity2
+        lateinit var edittext: EditText
+        lateinit var menu: Menu
+        override fun call(modname: LuaValue?, env: LuaValue?): LuaValue {
+            val library = tableOf()
+            val getVer = getVersion()
+            getVer.globalVars = globalVars
+            library.set("GetVersion", getVer)
+            library.set("GetPlatform", object : ZeroArgFunction() {
+                override fun call(): LuaValue {
+                    return LuaValue.valueOf(0)
+                }
+            })
+            library.set("Print", object : OneArgFunction() {
+                override fun call(arg: LuaValue?): LuaValue {
+                    arg?.toString()?.let { Log.i("Script", it) }
+                    return NONE
+                }
+            })
+            library.set("DisplayDialog", object : TwoArgFunction() {
+                override fun call(arg1: LuaValue?, arg2: LuaValue?): LuaValue {
+                    if (Build.VERSION.SDK_INT >= 31) {
+                        val builder = MaterialAlertDialogBuilder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setMessage(arg2?.toString())
+                        builder.setPositiveButton("Ok") {_,_->}
+                        builder.show()
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setMessage(arg2?.toString())
+                        builder.setPositiveButton("Ok") {_,_->}
+                        builder.show()
+                    }
+                    return NONE
+                }
+            })
+            library.set("DecryptString", object : OneArgFunction() {
+                override fun call(arg1: LuaValue?): LuaValue {
+                    return LuaValue.valueOf(MainFunctions().Decrypt(arg1?.toString()))
+                }
+            })
+            library.set("SetSaveContents", object : OneArgFunction() {
+                override fun call(contents: LuaValue?): LuaValue {
+                    edittext.setText(contents?.toString())
+                    return NONE
+                }
+            })
+            library.set("GetSaveContents", object : ZeroArgFunction() {
+                override fun call(): LuaValue {
+                    return LuaValue.valueOf(edittext.text.toString())
+                }
+            })
+            library.set("AddMenuItem", object : TwoArgFunction() {
+                override fun call(name: LuaValue?, callback: LuaValue?): LuaValue {
+                    val item = menu.add(name?.toString())
+                    item.setOnMenuItemClickListener {
+                        if (callback?.isfunction() == true) callback.call()
+                        false
+                    }
+                    val delFunction = tableOf()
+                    delFunction.set("Delete", object : ZeroArgFunction() {
+                        override fun call(): LuaValue {
+                            menu.removeItem(item.itemId)
+                            return NONE
+                        }
+                    })
+                    return delFunction
+                }
+            })
+            library.set("DisplayEditTextDialog", object : ThreeArgFunction() {
+                override fun call(arg1: LuaValue?, message: LuaValue?, callback: LuaValue?): LuaValue {
+                    val edittext = EditText(activity2)
+                    if (Build.VERSION.SDK_INT >= 31) {
+                        val builder = MaterialAlertDialogBuilder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setView(edittext)
+                        builder.setMessage(message?.toString())
+                        builder.setPositiveButton("Ok") { _,_->
+                            callback?.call(LuaValue.valueOf(0), LuaValue.valueOf(edittext.text.toString()))
+                        }
+                        builder.setNegativeButton("Cancel") { _,_->
+                            callback?.call(LuaValue.valueOf(1), LuaValue.valueOf(""))
+                        }
+                        builder.show()
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setView(edittext)
+                        builder.setMessage(message?.toString())
+                        builder.setPositiveButton("Ok") { _,_->
+                            callback?.call(LuaValue.valueOf(0), LuaValue.valueOf(edittext.text.toString()))
+                        }
+                        builder.setNegativeButton("Cancel") { _,_->
+                            callback?.call(LuaValue.valueOf(1), LuaValue.valueOf(""))
+                        }
+                        builder.show()
+                    }
+                    return NONE
+                }
+            })
+            library.set("DisplayCheckboxDialog", object : ThreeArgFunction() {
+                override fun call(arg1: LuaValue?, message: LuaValue?, callback: LuaValue?): LuaValue {
+                    if (Build.VERSION.SDK_INT >= 31) {
+                        val edittext = MaterialSwitch(activity2)
+                        edittext.text = message?.toString()
+                        val builder = MaterialAlertDialogBuilder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setView(edittext)
+                        builder.setPositiveButton("Ok") { _,_->
+                            callback?.call(LuaValue.valueOf(0), LuaValue.valueOf(edittext.isChecked))
+                        }
+                        builder.setNegativeButton("Cancel") { _,_->
+                            callback?.call(LuaValue.valueOf(1), LuaValue.valueOf(edittext.isChecked))
+                        }
+                        builder.show()
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        val edittext = MaterialSwitch(activity2)
+                        edittext.text = message?.toString()
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        builder.setView(edittext)
+                        builder.setPositiveButton("Ok") { _,_->
+                            callback?.call(LuaValue.valueOf(0), LuaValue.valueOf(edittext.isChecked))
+                        }
+                        builder.setNegativeButton("Cancel") { _,_->
+                            callback?.call(LuaValue.valueOf(1), LuaValue.valueOf(edittext.isChecked))
+                        }
+                        builder.show()
+                    }
+                    return NONE
+                }
+            })
+            library.set("DisplayListDialog", object : ThreeArgFunction() {
+                override fun call(arg1: LuaValue?, list: LuaValue?, callback: LuaValue?): LuaValue {
+                    if (Build.VERSION.SDK_INT >= 31) {
+                        val builder = MaterialAlertDialogBuilder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        val arr = arrayListOf<String>()
+                        if (list?.istable() == true) {
+                            for (i in 0..list.length()) {
+                                if (list[i].isstring()) arr.add(list[i].toString())
+                            }
+                            builder.setItems(arr.toTypedArray()) {_, i ->
+                                callback?.call(LuaValue.valueOf(i))
+                            }
+                        }
+                        builder.show()
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        val arr = arrayListOf<String>()
+                        if (list?.istable() == true) {
+                            for (i in 0..list.length()) {
+                                if (list[i].isstring()) arr.add(list[i].toString())
+                            }
+                            builder.setItems(arr.toTypedArray()) {_, i ->
+                                callback?.call(LuaValue.valueOf(i))
+                            }
+                        }
+                        builder.show()
+                    }
+                    return NONE
+                }
+
+            })
+            library.set("DisplayMultiChoiceListDialog", object : ThreeArgFunction() {
+                override fun call(arg1: LuaValue?, list: LuaValue?, callback: LuaValue?): LuaValue {
+                    if (Build.VERSION.SDK_INT >= 31) {
+                        val builder = MaterialAlertDialogBuilder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        val arr = arrayListOf<String>()
+                        if (list?.istable() == true) {
+                            for (i in 0..list.length()) {
+                                if (list[i].isstring()) arr.add(list[i].toString())
+                            }
+                            val checkedItems = BooleanArray(arr.size)
+                            builder.setMultiChoiceItems(arr.toTypedArray(), checkedItems) { _, which, isChecked ->
+                                checkedItems[which] = isChecked
+                            }
+                            builder.setPositiveButton("Ok") { _,_->
+                                val items = arrayListOf<LuaValue>()
+                                for (i in checkedItems.indices) {
+                                    items.add(LuaValue.valueOf(checkedItems[i]))
+                                }
+                                callback?.call(LuaValue.valueOf(0), tableOf(null, items.toTypedArray()))
+                            }
+                            builder.setNegativeButton("Cancel") { _,_->
+                                callback?.call(LuaValue.valueOf(1), LuaValue.NIL)
+                            }
+                        }
+                        builder.show()
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
+                        val arr = arrayListOf<String>()
+                        if (list?.istable() == true) {
+                            for (i in 0..list.length())
+                                if (list[i].isstring()) arr.add(list[i].toString())
+                            val checkedItems = BooleanArray(arr.size)
+                            builder.setMultiChoiceItems(arr.toTypedArray(), checkedItems) { _, which, isChecked ->
+                                checkedItems[which] = isChecked
+                            }
+                            builder.setPositiveButton("Ok") { _,_->
+                                val items = arrayListOf<LuaValue>()
+                                for (i in checkedItems.indices) items.add(LuaValue.valueOf(checkedItems[i]))
+                                callback?.call(LuaValue.valueOf(0), tableOf(null, items.toTypedArray()))
+                            }
+                            builder.setNegativeButton("Cancel") { _,_->
+                                callback?.call(LuaValue.valueOf(1), LuaValue.NIL)
+                            }
+                        }
+                        builder.show()
+                    }
+                    return NONE
+                }
+
+            })
+            library.set("OpenURL", object : OneArgFunction() {
+                override fun call(uri: LuaValue?): LuaValue {
+                    activity2.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri?.toString())))
+                    return NONE
+                }
+
+            })
+            library.set("PLATFORM_ANDROID", 0)
+            library.set("PLATFORM_JAVA", 1)
+            library.set("PLATFORM_UNITY", 2)
+            library.set("DIALOG_BUTTON_OK", 0)
+            library.set("DIALOG_BUTTON_CANCEL", 1)
+            env?.set("SaveEditor", library)
+            return library
+        }
+
+        class getVersion() : ZeroArgFunction() {
+            lateinit var globalVars : GlobalVars
+            override fun call(): LuaValue {
+                return LuaValue.valueOf(globalVars.version)
+            }
+        }
+
+    }
     private fun doOnThread(obj: Runnable, wait: Boolean) {
         val actualThread = Thread(obj)
         actualThread.start()
@@ -189,6 +451,13 @@ class MainActivity2 : AppCompatActivity() {
             writeorread.WriteOrRead = false
             doOnThread(writeorread, true)
             System.gc()
+        }
+    }
+    private val pickMod = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
+        if (data != null) {
+            Log.d("App", readTextFromUri(data))
+            val file = File(filesDir, JSONObject(readTextFromUri(data)).getString("name") + ".pcssemod")
+            file.writeText(readTextFromUri(data))
         }
     }
     val saveTheFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) {uri ->
@@ -254,6 +523,32 @@ class MainActivity2 : AppCompatActivity() {
             if (message != null) builder.setMessage(message)
             if (okListener != null) builder.setPositiveButton("Ok", okListener)
             if (cancelListener != null) builder.setNegativeButton("Cancel", cancelListener)
+            builder.show()
+        }
+    }
+    fun dialog(
+        title: String,
+        message: String?,
+        okListener: OnClickListener?,
+        cancelListener: OnClickListener?,
+        okText : String?,
+        cancelText : String?,
+        adapter: Array<String>,
+        adapterOnClickListener: (dialog: DialogInterface, which: Int) -> Unit
+    ) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setItems(adapter, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton(okText, okListener)
+            if (cancelListener != null) builder.setNegativeButton(cancelText, cancelListener)
+            builder.show()
+        } else {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(title).setItems(adapter, adapterOnClickListener)
+            if (message != null) builder.setMessage(message)
+            if (okListener != null) builder.setPositiveButton(okText, okListener)
+            if (cancelListener != null) builder.setNegativeButton(cancelText, cancelListener)
             builder.show()
         }
     }
@@ -363,6 +658,55 @@ class MainActivity2 : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.mods -> {
+                val globals = JsePlatform.standardGlobals()
+                val utilClass = PCSimulatorSaveEditorUtilClass()
+                utilClass.globalVars = globalVars
+                utilClass.activity2 = this
+                utilClass.edittext = input
+                utilClass.menu = menus
+                globals.load(utilClass)
+                val file = File(filesDir.toURI())
+                val directoryList = file.listFiles()
+                val mods = arrayListOf<Mod>()
+                val files = arrayListOf<File>()
+                if (directoryList != null) {
+                    for (fil in directoryList) {
+                        if (!fil.isDirectory && fil.extension ==  "pcssemod") {
+                            val contents = JSONObject(readTextFromUri(fil.toUri()))
+                            val mod = Mod(
+                                name = contents.getString("name"),
+                                description = contents.optString(
+                                    "description",
+                                    "No description provided."
+                                ),
+                                license = contents.optString("license", "No license provided"),
+                                creator = contents.optString("author", "Anonymous creator"),
+                                repositoryUrl = contents.optString("repository"),
+                                version = contents.optString("version", "v1.0.0"),
+                                source = contents.getString("source")
+                            )
+                            mods.add(mod)
+                            files.add(fil)
+                        }
+                    }
+                }
+                val strArray = arrayListOf<String>()
+                for (mod in mods.toTypedArray()) {
+                    strArray.add(mod.name)
+                }
+                dialog("Mods", null, {_, _ ->
+                    pickMod.launch(arrayOf("application/octet-stream"))
+                }, {_,_->}, "Add Mod", "Close", strArray.toTypedArray()) {_, i ->
+                    val dialog = ModFragment()
+                    dialog.mod = mods[i]
+                    dialog.show(supportFragmentManager, "modFragment")
+                    dialog.deleteListener = {
+                        files[i].delete()
+                        dialog.dismiss()
+                    }
+                }
+            }
             R.id.shortcuts -> if (Build.VERSION.SDK_INT >= 24) requestShowKeyboardShortcuts()
             R.id.decrypt_after_opening -> decrypt_after_opening = decrypt_after_opening.not()
             R.id.encrypt_after_saving -> encrypt_after_saving = encrypt_after_saving.not()
@@ -530,9 +874,9 @@ class MainActivity2 : AppCompatActivity() {
                                                 }
                                                 val thisdrive : String = when (driveType) {
                                                     "ssd" -> "SSD"
-                                                    "nvme" -> "M.2"
+                                                    "nvme" -> "SSD_M.2"
                                                     "hdd" -> "HDD"
-                                                    else -> "generic"
+                                                    else -> throw UnsupportedOperationException("Not a valid DriveType")
                                                 }
                                                 val drive = DriveObjectJson(thisdrive, driveSize, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
                                                 insertObject(drive.toJson())
@@ -645,11 +989,44 @@ class MainActivity2 : AppCompatActivity() {
         System.gc()
     }
 
+    private fun loadScripts() {
+        val globals = JsePlatform.standardGlobals()
+        val utilClass = PCSimulatorSaveEditorUtilClass()
+        utilClass.globalVars = globalVars
+        utilClass.activity2 = this
+        utilClass.edittext = input
+        utilClass.menu = menus
+        globals.load(utilClass)
+        val file = File(filesDir.toURI())
+        val directoryList = file.listFiles()
+        if (directoryList != null) {
+            for (fil in directoryList) {
+                if (!fil.isDirectory && fil.extension ==  "pcssemod") {
+                    val contents = JSONObject(readTextFromUri(fil.toUri()))
+                    val mod = Mod(
+                        name = contents.getString("name"),
+                        description = contents.optString(
+                            "description",
+                            "No description provided."
+                        ),
+                        license = contents.optString("license", "No license provided"),
+                        creator = contents.optString("author", "Anonymous creator"),
+                        repositoryUrl = contents.optString("repository"),
+                        version = contents.optString("version", "v1.0.0"),
+                        source = contents.getString("source")
+                    )
+                    globals.load(mod.source).call()
+                }
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         if (menu != null) menus = menu
         if (Build.VERSION.SDK_INT <= 24) menu?.findItem(R.id.shortcuts)?.isEnabled = false
+        loadScripts()
         return super.onCreateOptionsMenu(menu)
     }
 

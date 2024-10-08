@@ -302,7 +302,7 @@
     "additional": {},
     "action": {
       "list": [
-        {"name": "ATX (Black)", "spawnId": "ATX(Black"},
+        {"name": "ATX (Black)", "spawnId": "ATX(Black)"},
         {"name": "ATX (White)", "spawnId": "ATX(White)"},
         {"name": "ATX (Translucent White)", "spawnId": "ATX 2(White)"},
         {"name": "ATX (Translucent Black)", "spawnId": "ATX 2(Black)"},
@@ -311,6 +311,7 @@
         {"name": "ITX (Red)", "spawnId": "ITX(Red)"},
         {"name": "ITX (Green)", "spawnId": "ITX(Green)"},
         {"name": "ITX (Yellow)", "spawnId": "ITX(Yellow)"},
+        {"name": "ITX (Blue)", "spawnId": "ITX(Blue)"},
         {"name": "ATX Cover (White)", "spawnId": "Cover_ATX(White)"},
         {"name": "ATX Cover (Black)", "spawnId": "Cover_ATX(Black)"},
         {"name": "ATX Cover (Glass)", "spawnId": "Glass_ATX"},

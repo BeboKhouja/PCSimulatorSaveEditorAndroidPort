@@ -15,6 +15,10 @@ recyclerview = "1.4.0-beta01"
 cardview = "1.0.0"
 coreSplashscreen = "1.2.0-alpha02"
 ui = "1.7.0"
+browser = "1.8.0"
+leanback = "1.0.0"
+glide = "4.11.0"
+luajJse = "3.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +42,10 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+androidx-leanback = { group = "androidx.leanback", name = "leanback", version.ref = "leanback" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+luaj-jse = { group = "org.luaj", name = "luaj-jse", version.ref = "luajJse" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

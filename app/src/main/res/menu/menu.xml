@@ -47,4 +47,7 @@
     <item
         android:id="@+id/repo"
         android:title="GitHub Repository" />
+    <item
+        android:id="@+id/mods"
+        android:title="Mods" />
 </menu>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/pc_simulator_save_editor_background"
+        android:width="320dp"/>
+    <item android:drawable="@drawable/pc_simulator_save_editor"
+        android:width="160dp"
+        android:gravity="left|center"/>
+    <item android:drawable="@drawable/tv_banner_text"
+        android:gravity="right|center"
+        android:end="40px"
+        android:bottom="10dp"
+        android:width="180dp"
+        android:height="15dp"/>
+</layer-list>
