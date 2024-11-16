@@ -64,6 +64,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import org.json.JSONArray
 import org.json.JSONObject
+import org.luaj.vm2.Globals
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.ThreeArgFunction
@@ -126,6 +127,18 @@ class MainActivity2 : AppCompatActivity() {
         val version: String?,
         val source: String
     )
+    var lua_openFile_dat : Uri? = null
+    var lua_openFile_picked = false
+    lateinit var lua_global : Globals
+
+    val result = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
+        if (data != null) {
+            lua_openFile_dat = data
+            lua_openFile_picked = true
+        } else {
+            lua_openFile_picked = false
+        }
+    }
     data class Apps(val name : String, val path : String)
     private var fileList = arrayOf(
         Apps("App Manager", "App Downloader.exe"),
@@ -148,28 +161,22 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
-    private class PCSimulatorSaveEditorUtilClass() : TwoArgFunction() {
+    private class PCSimulatorSaveEditorUtilClass : TwoArgFunction() {
         lateinit var globalVars : GlobalVars
         lateinit var activity2: MainActivity2
         lateinit var edittext: EditText
         lateinit var menu: Menu
         override fun call(modname: LuaValue?, env: LuaValue?): LuaValue {
             val library = tableOf()
-            val getVer = getVersion()
-            getVer.globalVars = globalVars
-            library.set("GetVersion", getVer)
-            library.set("GetPlatform", object : ZeroArgFunction() {
-                override fun call(): LuaValue {
-                    return LuaValue.valueOf(0)
-                }
-            })
+            library["Version"] = LuaValue.valueOf(globalVars.version)
+            library["Platform"] = valueOf(0)
             library.set("Print", object : OneArgFunction() {
                 override fun call(arg: LuaValue?): LuaValue {
                     arg?.toString()?.let { Log.i("Script", it) }
                     return NONE
                 }
             })
-            library.set("DisplayDialog", object : TwoArgFunction() {
+            library["DisplayDialog"] = object : TwoArgFunction() {
                 override fun call(arg1: LuaValue?, arg2: LuaValue?): LuaValue {
                     if (Build.VERSION.SDK_INT >= 31) {
                         val builder = MaterialAlertDialogBuilder(activity2)
@@ -186,24 +193,24 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     return NONE
                 }
-            })
-            library.set("DecryptString", object : OneArgFunction() {
+            }
+            library["DecryptString"] = object : OneArgFunction() {
                 override fun call(arg1: LuaValue?): LuaValue {
                     return LuaValue.valueOf(MainFunctions().Decrypt(arg1?.toString()))
                 }
-            })
-            library.set("SetSaveContents", object : OneArgFunction() {
+            }
+            library["SetSaveContents"] = object : OneArgFunction() {
                 override fun call(contents: LuaValue?): LuaValue {
                     edittext.setText(contents?.toString())
                     return NONE
                 }
-            })
-            library.set("GetSaveContents", object : ZeroArgFunction() {
+            }
+            library["GetSaveContents"] = object : ZeroArgFunction() {
                 override fun call(): LuaValue {
                     return LuaValue.valueOf(edittext.text.toString())
                 }
-            })
-            library.set("AddMenuItem", object : TwoArgFunction() {
+            }
+            library["AddMenuItem"] = object : TwoArgFunction() {
                 override fun call(name: LuaValue?, callback: LuaValue?): LuaValue {
                     val item = menu.add(name?.toString())
                     item.setOnMenuItemClickListener {
@@ -219,8 +226,24 @@ class MainActivity2 : AppCompatActivity() {
                     })
                     return delFunction
                 }
-            })
-            library.set("DisplayEditTextDialog", object : ThreeArgFunction() {
+            }
+            library["OpenFile"] = object : OneArgFunction() {
+                override fun call(memeType : LuaValue?): LuaValue {
+                    activity2.lua_openFile_dat = null
+                    activity2.lua_openFile_picked = false
+                    if (memeType != null) activity2.result.launch(arrayOf(memeType.toString()))
+                    else activity2.result.launch(arrayOf("*/*"))
+
+                    val table = tableOf()
+                    if (activity2.lua_openFile_dat != null)
+                        table.set("Text", LuaValue.valueOf(activity2.readTextFromUri(activity2.lua_openFile_dat!!)))
+                    else
+                        table.set("Text", "")
+                    table.set("Picked", LuaValue.valueOf(activity2.lua_openFile_picked))
+                    return table
+                }
+            }
+            library["DisplayEditTextDialog"] = object : ThreeArgFunction() {
                 override fun call(arg1: LuaValue?, message: LuaValue?, callback: LuaValue?): LuaValue {
                     val edittext = EditText(activity2)
                     if (Build.VERSION.SDK_INT >= 31) {
@@ -236,7 +259,7 @@ class MainActivity2 : AppCompatActivity() {
                         }
                         builder.show()
                     } else {
-                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity2)
+                        val builder = AlertDialog.Builder(activity2)
                         builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
                         builder.setView(edittext)
                         builder.setMessage(message?.toString())
@@ -250,8 +273,8 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     return NONE
                 }
-            })
-            library.set("DisplayCheckboxDialog", object : ThreeArgFunction() {
+            }
+            library["DisplayCheckboxDialog"] = object : ThreeArgFunction() {
                 override fun call(arg1: LuaValue?, message: LuaValue?, callback: LuaValue?): LuaValue {
                     if (Build.VERSION.SDK_INT >= 31) {
                         val edittext = MaterialSwitch(activity2)
@@ -282,17 +305,16 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     return NONE
                 }
-            })
-            library.set("DisplayListDialog", object : ThreeArgFunction() {
+            }
+            library["DisplayListDialog"] = object : ThreeArgFunction() {
                 override fun call(arg1: LuaValue?, list: LuaValue?, callback: LuaValue?): LuaValue {
                     if (Build.VERSION.SDK_INT >= 31) {
                         val builder = MaterialAlertDialogBuilder(activity2)
                         builder.setIcon(R.drawable.baseline_info_outline_24).setTitle(arg1?.toString())
                         val arr = arrayListOf<String>()
                         if (list?.istable() == true) {
-                            for (i in 0..list.length()) {
+                            for (i in 0..list.length())
                                 if (list[i].isstring()) arr.add(list[i].toString())
-                            }
                             builder.setItems(arr.toTypedArray()) {_, i ->
                                 callback?.call(LuaValue.valueOf(i))
                             }
@@ -315,8 +337,8 @@ class MainActivity2 : AppCompatActivity() {
                     return NONE
                 }
 
-            })
-            library.set("DisplayMultiChoiceListDialog", object : ThreeArgFunction() {
+            }
+            library["DisplayMultiChoiceListDialog"] = object : ThreeArgFunction() {
                 override fun call(arg1: LuaValue?, list: LuaValue?, callback: LuaValue?): LuaValue {
                     if (Build.VERSION.SDK_INT >= 31) {
                         val builder = MaterialAlertDialogBuilder(activity2)
@@ -366,29 +388,20 @@ class MainActivity2 : AppCompatActivity() {
                     }
                     return NONE
                 }
-
-            })
-            library.set("OpenURL", object : OneArgFunction() {
+            }
+            library["OpenURL"] = object : OneArgFunction() {
                 override fun call(uri: LuaValue?): LuaValue {
                     activity2.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri?.toString())))
                     return NONE
                 }
-
-            })
-            library.set("PLATFORM_ANDROID", 0)
-            library.set("PLATFORM_JAVA", 1)
-            library.set("PLATFORM_UNITY", 2)
-            library.set("DIALOG_BUTTON_OK", 0)
-            library.set("DIALOG_BUTTON_CANCEL", 1)
+            }
+            library["PLATFORM_ANDROID"] = 0
+            library["PLATFORM_JAVA"] = 1
+            library["PLATFORM_UNITY"] = 2
+            library["DIALOG_BUTTON_OK"] = 0
+            library["DIALOG_BUTTON_CANCEL"] = 1
             env?.set("SaveEditor", library)
             return library
-        }
-
-        class getVersion() : ZeroArgFunction() {
-            lateinit var globalVars : GlobalVars
-            override fun call(): LuaValue {
-                return LuaValue.valueOf(globalVars.version)
-            }
         }
 
     }
@@ -417,9 +430,7 @@ class MainActivity2 : AppCompatActivity() {
             )
             val bm = BitmapFactory.decodeStream(resolver.openInputStream(uri))
             val baos = ByteArrayOutputStream()
-            Thread {
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            }.apply {
+            Thread { bm.compress(Bitmap.CompressFormat.JPEG, 100, baos) }.apply {
                 start()
                 join()
             }
@@ -717,7 +728,8 @@ class MainActivity2 : AppCompatActivity() {
                     |Get beta builds at the Actions tab at the GitHub repository.
                     |Report any issues at the Issues tab at the GitHub repository.
                     |This app is licensed with GPLv3.0.
-                    |""".trimMargin(), {_,_->}, null
+                    |This project is neither associated, affiliated, nor endorsed by Intel or AMD. 
+                    |""".trimMargin(), {_,_->}, null // This way we won't get into trouble
             )
             R.id.help -> {
                 System.gc()
@@ -1160,8 +1172,9 @@ class WriteOrReadThread : Runnable{
             doOnThread(functions)
             clazz.saveString = functions.Output
             clazz.saveTheFile.launch("Save.txt")
-        } }
+        }
     }
+}
 
 class AfterReadThread : Runnable{
     lateinit var afterData : Uri
@@ -1170,13 +1183,13 @@ class AfterReadThread : Runnable{
 
     override fun run() {
         try {
-                resolver.openFileDescriptor(afterData, "w")?.use { it ->
-                    val outputstream = FileOutputStream(it.fileDescriptor)
-                    outputstream.use { it.write(text.toByteArray()) }
-                    outputstream.close()
-                }
+            resolver.openFileDescriptor(afterData, "w")?.use { it ->
+                val outputstream = FileOutputStream(it.fileDescriptor)
+                outputstream.use { it.write(text.toByteArray()) }
+                outputstream.close()
+            }
         } catch (e: Exception) {
-                e.printStackTrace()
+            e.printStackTrace()
         }
     }
 }
