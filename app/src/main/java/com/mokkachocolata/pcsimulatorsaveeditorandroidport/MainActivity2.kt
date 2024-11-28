@@ -64,7 +64,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
 import org.json.JSONArray
 import org.json.JSONObject
-import org.luaj.vm2.Globals
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.ThreeArgFunction
@@ -110,7 +109,7 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var menus : Menu
     private lateinit var globalVars : GlobalVars
     var text = ""
-    var saveString = "" // This way, we dont have to change the edittext, which reduces memory.
+    var saveString = "" // This way, we don't have to change the edittext, which reduces memory.
     private var decrypt_after_opening = true
     private var encrypt_after_saving = true
     private lateinit var version : String
@@ -129,11 +128,11 @@ class MainActivity2 : AppCompatActivity() {
     )
     var lua_openFile_dat : Uri? = null
     var lua_openFile_picked = false
-    lateinit var lua_global : Globals
+    // lateinit var lua_global : Globals
 
-    val result = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
-        if (data != null) {
-            lua_openFile_dat = data
+    val result = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
+        if (it != null) {
+            lua_openFile_dat = it
             lua_openFile_picked = true
         } else {
             lua_openFile_picked = false
@@ -170,12 +169,12 @@ class MainActivity2 : AppCompatActivity() {
             val library = tableOf()
             library["Version"] = LuaValue.valueOf(globalVars.version)
             library["Platform"] = valueOf(0)
-            library.set("Print", object : OneArgFunction() {
+            library["Print"] = object : OneArgFunction() {
                 override fun call(arg: LuaValue?): LuaValue {
                     arg?.toString()?.let { Log.i("Script", it) }
                     return NONE
                 }
-            })
+            }
             library["DisplayDialog"] = object : TwoArgFunction() {
                 override fun call(arg1: LuaValue?, arg2: LuaValue?): LuaValue {
                     if (Build.VERSION.SDK_INT >= 31) {
@@ -195,9 +194,8 @@ class MainActivity2 : AppCompatActivity() {
                 }
             }
             library["DecryptString"] = object : OneArgFunction() {
-                override fun call(arg1: LuaValue?): LuaValue {
-                    return LuaValue.valueOf(MainFunctions().Decrypt(arg1?.toString()))
-                }
+                override fun call(arg1: LuaValue?): LuaValue =
+                    LuaValue.valueOf(MainFunctions().Decrypt(arg1?.toString()))
             }
             library["SetSaveContents"] = object : OneArgFunction() {
                 override fun call(contents: LuaValue?): LuaValue {
@@ -206,9 +204,8 @@ class MainActivity2 : AppCompatActivity() {
                 }
             }
             library["GetSaveContents"] = object : ZeroArgFunction() {
-                override fun call(): LuaValue {
-                    return LuaValue.valueOf(edittext.text.toString())
-                }
+                override fun call(): LuaValue =
+                    LuaValue.valueOf(edittext.text.toString())
             }
             library["AddMenuItem"] = object : TwoArgFunction() {
                 override fun call(name: LuaValue?, callback: LuaValue?): LuaValue {
@@ -727,7 +724,7 @@ class MainActivity2 : AppCompatActivity() {
                     |Free, and open source.
                     |Get beta builds at the Actions tab at the GitHub repository.
                     |Report any issues at the Issues tab at the GitHub repository.
-                    |This app is licensed with GPLv3.0.
+                    |This app is licensed with GPLv3.0 or later.
                     |This project is neither associated, affiliated, nor endorsed by Intel or AMD. 
                     |""".trimMargin(), {_,_->}, null // This way we won't get into trouble
             )
@@ -838,25 +835,24 @@ class MainActivity2 : AppCompatActivity() {
                             var password : String
                             val edittext = EditText(this)
                             val dialogDriveName : String
-                            val size : Array<String>
-                            when (driveType) {
+                            val size = when (driveType) {
                                 "usb" -> {
                                     dialogDriveName = "USB"
-                                    size = emptyArray()
+                                    emptyArray()
                                 }
                                 "ssd" -> {
                                     dialogDriveName = "SATA SSD"
-                                    size = arrayOf("128GB", "256GB", "512GB", "1TB", "2TB")
+                                    arrayOf("128GB", "256GB", "512GB", "1TB", "2TB")
                                 }
                                 "nvme" -> {
                                     dialogDriveName = "M.2 NVMe SSD"
-                                    size = arrayOf("128GB", "256GB", "512GB", "1TB")
+                                    arrayOf("128GB", "256GB", "512GB", "1TB")
                                 }
                                 "hdd" -> {
                                     dialogDriveName = "HDD"
-                                    size = arrayOf("500GB", "1TB", "2TB", "5TB")
+                                    arrayOf("500GB", "1TB", "2TB", "5TB")
                                 }
-                                else -> throw UnsupportedOperationException("Thats not a supported type!")
+                                else -> throw UnsupportedOperationException("That's not a supported type!")
                             }
                             dialog("$dialogDriveName Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
                                 driveName = edittext.text.toString()
@@ -917,14 +913,15 @@ class MainActivity2 : AppCompatActivity() {
             }
             R.id.license -> {
                 dialog("Open Source Licenses", """
-                    This app is licensed with GPLv3.0.
+                    This app is licensed with GPLv3.0 or later.
                     AndroidX (Apache License 2.0)
                     Android (Apache License 2.0)
                     JSONJava (Public Domain)
                 """.trimIndent(), {_,_->}, null)
             }
             R.id.saveoptions -> {
-                val optionList = arrayOf("AC Temperature",
+                val optionList = arrayOf(
+                    "AC Temperature",
                     "AC Power",
                     "Version",
                     "Money",
@@ -934,7 +931,8 @@ class MainActivity2 : AppCompatActivity() {
                     "Playtime",
                     "Light",
                     "Sign",
-                    "Save name")
+                    "Save name"
+                )
                 val text = input.text.toString()
                 lateinit var jsonObject : JSONObject
                 val lines = text.lines()
