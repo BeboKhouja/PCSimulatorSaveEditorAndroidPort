@@ -35,6 +35,11 @@
             android:label="@string/help"
             android:theme="@style/Theme.PCSimulatorSaveEditor" />
         <activity
+            android:name=".BrowserActivity"
+            android:exported="false"
+            android:label="@string/help"
+            android:theme="@style/Theme.PCSimulatorSaveEditor" />
+        <activity
             android:name=".MainActivity2"
             android:exported="true"
             android:theme="@style/Theme.PCSimulatorSaveEditor.Splash" >

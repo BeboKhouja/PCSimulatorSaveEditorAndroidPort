@@ -32,7 +32,7 @@
         android:title="@string/options" />
     <item
         android:id="@+id/explorer"
-        android:title="Object Browser" />
+        android:title="@string/object_explorer" />
     <item
         android:id="@+id/dump"
         android:title="@string/dumper" />
@@ -44,7 +44,7 @@
         android:title="Keyboard Shortcuts"
         android:titleCondensed="Shortcuts" />
     <item
-        android:id="@+id/license"
+        android:id="@+id/rotation"
         android:title="Open Source Licenses"
         android:titleCondensed="Licenses" />
     <item

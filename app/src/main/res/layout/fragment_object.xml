@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Example"
+        android:text="X: 0, Y: 0, Z: 0"
         app:layout_constraintStart_toStartOf="@+id/title"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -18,37 +19,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="License"
+        android:text="RX: 0, RY: 0, RZ: 0"
         app:layout_constraintStart_toStartOf="@+id/pos"
         app:layout_constraintTop_toBottomOf="@+id/pos" />
 
     <TextView
-        android:id="@+id/repo"
+        android:id="@+id/smasnug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="24dp"
-        android:text="Visit the repository"
-        android:textColor="#0027FF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rotation" />
-
-    <TextView
-        android:id="@+id/creator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Author: "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/repo" />
-
-    <TextView
-        android:id="@+id/version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="v1.0.0"
-        app:layout_constraintStart_toStartOf="@+id/creator"
-        app:layout_constraintTop_toBottomOf="@+id/creator" />
+        android:layout_marginStart="88dp"
+        android:text="ID: 69420"
+        app:layout_constraintStart_toEndOf="@+id/pos"
+        app:layout_constraintTop_toTopOf="@+id/pos" />
 
     <TextView
         android:id="@+id/title"
@@ -65,10 +47,10 @@
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="24dp"
         android:text="Delete"
-        app:layout_constraintStart_toStartOf="@+id/version"
-        app:layout_constraintTop_toBottomOf="@+id/version" />
+        app:layout_constraintStart_toStartOf="@+id/rotation"
+        app:layout_constraintTop_toBottomOf="@+id/rotation" />
 
     <View
         android:id="@+id/view2"
@@ -78,4 +60,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/setSpawnID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Set spawn ID"
+        app:layout_constraintStart_toEndOf="@+id/delete"
+        app:layout_constraintTop_toTopOf="@+id/delete" />
+
+    <Button
+        android:id="@+id/setPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Set position"
+        app:layout_constraintStart_toEndOf="@+id/setSpawnID"
+        app:layout_constraintTop_toTopOf="@+id/setSpawnID" />
+
+    <Button
+        android:id="@+id/setRotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Set rotation"
+        app:layout_constraintStart_toStartOf="@+id/delete"
+        app:layout_constraintTop_toBottomOf="@+id/delete" />
+
+    <Button
+        android:id="@+id/setID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Set ID"
+        app:layout_constraintStart_toEndOf="@+id/setRotation"
+        app:layout_constraintTop_toTopOf="@+id/setRotation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

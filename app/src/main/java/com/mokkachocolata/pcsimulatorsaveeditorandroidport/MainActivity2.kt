@@ -660,9 +660,8 @@ class MainActivity2 : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.explorer -> {
-                val text = input.text.toString()
-                if (text.lines().size < 2) return false
-                val jsonObject = JSONObject(text.lines()[1])
+                if (input.text.lines().size < 2) return false
+                val jsonObject = JSONObject(input.text.lines()[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
                 val lists = arrayListOf<String>()
                 for (i in 0 until itemArray.length()) {
@@ -670,8 +669,9 @@ class MainActivity2 : AppCompatActivity() {
                     val spawnId = item.getString("spawnId")
                     lists.add(spawnId)
                 }
-                dialog("Object Browser", null, null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
-
+                dialog(resources.getString(R.string.object_explorer), null, null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
+                    val dialog = ObjectFragment(itemArray.getJSONObject(i), input, i)
+                    dialog.show(supportFragmentManager, "objectFragment")
                 }
             }
             R.id.mods -> {
@@ -713,8 +713,7 @@ class MainActivity2 : AppCompatActivity() {
                 dialog("Mods", null, {_, _ ->
                     pickMod.launch(arrayOf("application/octet-stream"))
                 }, {_,_->}, "Add Mod", "Close", strArray.toTypedArray()) {_, i ->
-                    val dialog = ModFragment()
-                    dialog.mod = mods[i]
+                    val dialog = ModFragment(mods[i])
                     dialog.show(supportFragmentManager, "modFragment")
                     dialog.deleteListener = {
                         files[i].delete()
@@ -741,11 +740,16 @@ class MainActivity2 : AppCompatActivity() {
             R.id.clear -> {
                 // Clear all cardboard boxes
                 val text = input.text.toString()
+                
                 val lines = text.lines()
                 val jsonObject = JSONObject(lines[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
-                for (i in 0 until itemArray.length()) if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "LongCardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox 2")) itemArray.remove(i)
-                for (i in 0 until itemArray.length()) if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId").contains("Part_") || itemArray.getJSONObject(i).getString("spawnId") == "Part")) itemArray.remove(i)
+                for (i in 0 until itemArray.length())
+                    if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "LongCardboardBox" || itemArray.getJSONObject(i).getString("spawnId") == "CardboardBox 2"))
+                        itemArray.remove(i)
+                for (i in 0 until itemArray.length())
+                    if (i < itemArray.length() && (itemArray.getJSONObject(i).getString("spawnId").contains("Part_") || itemArray.getJSONObject(i).getString("spawnId") == "Part"))
+                        itemArray.remove(i)
                 input.setText(lines[0] + "\n" + jsonObject.toString())
             }
             R.id.dump -> {
@@ -913,7 +917,7 @@ class MainActivity2 : AppCompatActivity() {
                     handleClickJson(i)
                 }
             }
-            R.id.license -> {
+            R.id.rotation -> {
                 dialog("Open Source Licenses", """
                     This app is licensed with GPLv3.0 or later.
                     AndroidX (Apache License 2.0)

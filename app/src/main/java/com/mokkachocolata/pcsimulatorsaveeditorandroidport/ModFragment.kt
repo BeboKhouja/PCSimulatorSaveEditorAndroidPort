@@ -10,8 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 
-class ModFragment : DialogFragment() {
-    lateinit var mod : MainActivity2.Mod
+class ModFragment(val mod: MainActivity2.Mod) : DialogFragment() {
     var deleteListener: () -> Unit = {}
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,8 +25,8 @@ class ModFragment : DialogFragment() {
         if (mod.repositoryUrl?.isEmpty() == true) flate.findViewById<TextView>(R.id.repo).visibility = View.GONE
         flate.findViewById<TextView>(R.id.creator).text = mod.creator
         flate.findViewById<TextView>(R.id.title).text = mod.name
-        flate.findViewById<TextView>(R.id.description).text = mod.description
-        flate.findViewById<TextView>(R.id.license).text = mod.license
+        flate.findViewById<TextView>(R.id.pos).text = mod.description
+        flate.findViewById<TextView>(R.id.rotation).text = mod.license
         flate.findViewById<TextView>(R.id.version).text = mod.version
         flate.findViewById<Button>(R.id.delete).setOnClickListener { deleteListener() }
         return flate

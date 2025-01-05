@@ -29,4 +29,5 @@
     <string name="dailymarket">Daily Market (tidak perlu Bitcoin)</string>
     <string name="m2">NVMe SSD M.2</string>
     <string name="password">Kata Sandi</string>
+    <string name="object_explorer">Browser Objek</string>
 </resources>
