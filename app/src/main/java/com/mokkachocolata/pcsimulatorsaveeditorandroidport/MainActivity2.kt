@@ -610,26 +610,19 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_ENTER -> {
-                if (event?.isCtrlPressed == true) {
+            KeyEvent.KEYCODE_ENTER ->
+                if (event?.isCtrlPressed == true)
                     findViewById<Button>(R.id.decryptencrypt).performClick()
-                }
-            }
-            KeyEvent.KEYCODE_F1 -> {
+            KeyEvent.KEYCODE_F1 ->
                 startActivity(Intent(applicationContext, HelpActivity::class.java))
-            }
-            KeyEvent.KEYCODE_INSERT -> {
+            KeyEvent.KEYCODE_INSERT ->
                 menus.performIdentifierAction(R.id.insert, 0)
-            }
-            KeyEvent.KEYCODE_F2 -> {
+            KeyEvent.KEYCODE_F2 ->
                 menus.performIdentifierAction(R.id.saveoptions, 0)
-            }
-            KeyEvent.KEYCODE_F3 -> {
+            KeyEvent.KEYCODE_F3 ->
                 menus.performIdentifierAction(R.id.dump, 0)
-            }
-            KeyEvent.KEYCODE_F4 -> {
+            KeyEvent.KEYCODE_F4 ->
                 menus.performIdentifierAction(R.id.clear, 0)
-            }
         }
         return super.onKeyUp(keyCode, event)
     }
@@ -666,6 +659,21 @@ class MainActivity2 : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.explorer -> {
+                val text = input.text.toString()
+                if (text.lines().size < 2) return false
+                val jsonObject = JSONObject(text.lines()[1])
+                val itemArray = jsonObject.getJSONArray("itemData")
+                val lists = arrayListOf<String>()
+                for (i in 0 until itemArray.length()) {
+                    val item = itemArray.getJSONObject(i)
+                    val spawnId = item.getString("spawnId")
+                    lists.add(spawnId)
+                }
+                dialog("Object Browser", null, null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
+
+                }
+            }
             R.id.mods -> {
                 val globals = JsePlatform.standardGlobals()
                 val utilClass = PCSimulatorSaveEditorUtilClass()
@@ -679,7 +687,7 @@ class MainActivity2 : AppCompatActivity() {
                 val mods = arrayListOf<Mod>()
                 val files = arrayListOf<File>()
                 if (directoryList != null) {
-                    for (fil in directoryList) {
+                    for (fil in directoryList)
                         if (!fil.isDirectory && fil.extension ==  "pcssemod") {
                             val contents = JSONObject(readTextFromUri(fil.toUri()))
                             val mod = Mod(
@@ -697,7 +705,6 @@ class MainActivity2 : AppCompatActivity() {
                             mods.add(mod)
                             files.add(fil)
                         }
-                    }
                 }
                 val strArray = arrayListOf<String>()
                 for (mod in mods.toTypedArray()) {
@@ -728,10 +735,7 @@ class MainActivity2 : AppCompatActivity() {
                     |This project is neither associated, affiliated, nor endorsed by Intel or AMD. 
                     |""".trimMargin(), {_,_->}, null // This way we won't get into trouble
             )
-            R.id.help -> {
-                System.gc()
-                startActivity(Intent(applicationContext, HelpActivity::class.java))
-            }
+            R.id.help -> startActivity(Intent(applicationContext, HelpActivity::class.java))
             R.id.repo -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort")))
             R.id.discord -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
             R.id.clear -> {
@@ -769,7 +773,6 @@ class MainActivity2 : AppCompatActivity() {
             }
             R.id.insert -> {
                 val text = input.text.toString()
-                if (text.lines().size < 2) return false
                 val jsonObject = JSONObject(text.lines()[1])
                 val lines = text.lines()
                 val itemArray = jsonObject.getJSONArray("itemData")
@@ -904,9 +907,8 @@ class MainActivity2 : AppCompatActivity() {
                         }
                     }
                 }
-                for (i in 0 until json.length()) {
+                for (i in 0 until json.length())
                     addObjectFromJson(json.getJSONObject(i))
-                }
                 dialog(resources.getString(R.string.insert), null, null, null, itemListJson.toTypedArray()) { _, i ->
                     handleClickJson(i)
                 }
@@ -1086,9 +1088,7 @@ class MainActivity2 : AppCompatActivity() {
                         return@setOnDragListener true
                     }
 
-                    else -> {
-                        return@setOnDragListener false
-                    }
+                    else -> return@setOnDragListener false
                 }
             }
         }

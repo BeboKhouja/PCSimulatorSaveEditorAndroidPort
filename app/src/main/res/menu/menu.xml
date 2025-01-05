@@ -31,6 +31,9 @@
         android:id="@+id/saveoptions"
         android:title="@string/options" />
     <item
+        android:id="@+id/explorer"
+        android:title="Object Browser" />
+    <item
         android:id="@+id/dump"
         android:title="@string/dumper" />
     <item
