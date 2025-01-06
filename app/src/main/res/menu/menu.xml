@@ -25,6 +25,9 @@
         android:id="@+id/discord"
         android:title="Discord" />
     <item
+        android:id="@+id/newSave"
+        android:title="New Save" />
+    <item
         android:id="@+id/insert"
         android:title="@string/insert" />
     <item

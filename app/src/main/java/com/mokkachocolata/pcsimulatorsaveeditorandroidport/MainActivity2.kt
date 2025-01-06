@@ -585,7 +585,7 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
-    private fun dialog(title: String,
+    internal fun dialog(title: String,
                        message: String?,
                        okListener: OnClickListener?,
                        cancelListener: OnClickListener?,
@@ -659,14 +659,16 @@ class MainActivity2 : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.newSave ->
+                input.setText("{\"version\":\"1.8.0\",\"roomName\":\"New Scene\",\"coin\":2000,\"room\":3,\"gravity\":true,\"hardcore\":false,\"playtime\":0.0,\"temperature\":20.0,\"ac\":false,\"light\":true,\"sign\":\"\"}\n{\"playerData\":{\"x\":-4.90798426,\"y\":-2.70895219,\"z\":-10.656539,\"ry\":0.0,\"rx\":0.0}, \"itemData\":[], \"scene\":{}}")
             R.id.explorer -> {
                 if (input.text.lines().size < 2) return false
                 val jsonObject = JSONObject(input.text.lines()[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
                 val lists = arrayListOf<String>()
                 for (i in 0 until itemArray.length()) {
-                    val item = itemArray.getJSONObject(i)
-                    val spawnId = item.getString("spawnId")
+                    val thisitem = itemArray.getJSONObject(i)
+                    val spawnId = thisitem.getString("spawnId")
                     lists.add(spawnId)
                 }
                 dialog(resources.getString(R.string.object_explorer), null, null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
@@ -721,26 +723,42 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 }
             }
-            R.id.shortcuts -> if (Build.VERSION.SDK_INT >= 24) requestShowKeyboardShortcuts()
-            R.id.decrypt_after_opening -> decrypt_after_opening = decrypt_after_opening.not()
-            R.id.encrypt_after_saving -> encrypt_after_saving = encrypt_after_saving.not()
-            R.id.changelog -> dialog("Changelog (version $version)", globalVars.ChangelogText, {_,_->}, null)
-            R.id.about -> dialog("PC Simulator Save Editor Android Port (version $version)", """
-                    |Created by Mokka Chocolata.
-                    |Free, and open source.
-                    |Get beta builds at the Actions tab at the GitHub repository.
-                    |Report any issues at the Issues tab at the GitHub repository.
-                    |This app is licensed with GPLv3.0 or later.
-                    |This project is neither associated, affiliated, nor endorsed by Intel or AMD. 
-                    |""".trimMargin(), {_,_->}, null // This way we won't get into trouble
-            )
-            R.id.help -> startActivity(Intent(applicationContext, HelpActivity::class.java))
-            R.id.repo -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort")))
-            R.id.discord -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
+            R.id.shortcuts -> {
+                if (Build.VERSION.SDK_INT >= 24) requestShowKeyboardShortcuts()
+            }
+            R.id.decrypt_after_opening -> {
+                decrypt_after_opening = decrypt_after_opening.not()
+            }
+            R.id.encrypt_after_saving -> {
+                encrypt_after_saving = encrypt_after_saving.not()
+            }
+            R.id.changelog -> {
+                dialog("Changelog (version $version)", globalVars.ChangelogText, {_,_->}, null)
+            }
+            R.id.about -> {
+                dialog("PC Simulator Save Editor Android Port (version $version)", """
+                                |Created by Mokka Chocolata.
+                                |Free, and open source.
+                                |Get beta builds at the Actions tab at the GitHub repository.
+                                |Report any issues at the Issues tab at the GitHub repository.
+                                |This app is licensed with GPLv3.0 or later.
+                                |This project is neither associated, affiliated, nor endorsed by Intel or AMD. 
+                                |""".trimMargin(), {_,_->}, null // This way we won't get into trouble
+                )
+            }
+            R.id.help -> {
+                startActivity(Intent(applicationContext, HelpActivity::class.java))
+            }
+            R.id.repo -> {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort")))
+            }
+            R.id.discord -> {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
+            }
             R.id.clear -> {
                 // Clear all cardboard boxes
                 val text = input.text.toString()
-                
+                if (input.text.lines().size < 2) return false
                 val lines = text.lines()
                 val jsonObject = JSONObject(lines[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
@@ -753,6 +771,7 @@ class MainActivity2 : AppCompatActivity() {
                 input.setText(lines[0] + "\n" + jsonObject.toString())
             }
             R.id.dump -> {
+                if (input.text.lines().size < 2) return false
                 val text = input.text.toString()
                 val jsonObject = JSONObject(text.lines()[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
@@ -776,6 +795,7 @@ class MainActivity2 : AppCompatActivity() {
                 dialog("Result", pwd, {_,_->}, null)
             }
             R.id.insert -> {
+                if (input.text.lines().size < 2) return false
                 val text = input.text.toString()
                 val jsonObject = JSONObject(text.lines()[1])
                 val lines = text.lines()
@@ -804,8 +824,8 @@ class MainActivity2 : AppCompatActivity() {
                 fun handleClickJson(index : Int) {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
-                            17 -> array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0))
-                            else -> array.put(FileObjectJson(fileList[i].path, "", false, 0, 0))
+                            17 -> array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0).toJson())
+                            else -> array.put(FileObjectJson(fileList[i].path, "", false, 0, 0).toJson())
                         }
                     }
 
@@ -1136,6 +1156,7 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 }
+
 
 
 class WriteOrReadThread : Runnable{
