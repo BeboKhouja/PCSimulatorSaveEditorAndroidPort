@@ -44,7 +44,7 @@ class ObjectFragment(val obj: JSONObject, val textBox: EditText, val index: Int)
         val pos = obj.getJSONObject("pos")
         val rot = obj.getJSONObject("rot")
         flate.findViewById<TextView>(R.id.pos).text = "${pos.getDouble("x")}, ${pos.getDouble("y")}, ${pos.getDouble("z")}"
-        flate.findViewById<TextView>(R.id.rotation).text = "${rot.getDouble("x")}, ${rot.getDouble("y")}, ${rot.getDouble("z")}, ${rot.getDouble("w")}"
+        flate.findViewById<TextView>(R.id.rot).text = "${rot.getDouble("x")}, ${rot.getDouble("y")}, ${rot.getDouble("z")}, ${rot.getDouble("w")}"
         flate.findViewById<TextView>(R.id.smasnug).text = "ID: ${obj.getInt("id")}"
         flate.findViewById<TextView>(R.id.title).text = obj.getString("spawnId")
         flate.findViewById<Button>(R.id.delete).setOnClickListener {
@@ -59,7 +59,7 @@ class ObjectFragment(val obj: JSONObject, val textBox: EditText, val index: Int)
         flate.findViewById<Button>(R.id.setSpawnID).setOnClickListener {
             doItEdittext("Set spawn ID", "", "spawnId", false)
         }
-        flate.findViewById<Button>(R.id.setID).setOnClickListener {
+        flate.findViewById<Button>(R.id.setId).setOnClickListener {
             doItEdittext("Set ID", "", "id", true)
         }
         if (!(obj.getString("spawnId").contains("SSD") or obj.getString("spawnId").contains("HDD") or obj.getString("spawnId").contains("SSD_M.2") or obj.getString("spawnId").contains("FlashDrive")))
@@ -69,8 +69,9 @@ class ObjectFragment(val obj: JSONObject, val textBox: EditText, val index: Int)
             val data = obj.getJSONObject("data")
             for (file in data.getJSONArray("files"))
                 lists.add(file.getString("path"))
-            aktivity.dialog("File Explorer", "", null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
-
+            aktivity.dialog("File Explorer", null, null, {_,_->}, null, "Close", lists.toTypedArray()) {_, i ->
+                val fragment = FileFragment(obj, textBox, index, i)
+                fragment.show(aktivity.supportFragmentManager, "fileFragment")
             }
         }
         return flate

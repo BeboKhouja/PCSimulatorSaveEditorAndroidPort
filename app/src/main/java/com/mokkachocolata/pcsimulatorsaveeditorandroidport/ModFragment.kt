@@ -25,8 +25,8 @@ class ModFragment(val mod: MainActivity2.Mod) : DialogFragment() {
         if (mod.repositoryUrl?.isEmpty() == true) flate.findViewById<TextView>(R.id.repo).visibility = View.GONE
         flate.findViewById<TextView>(R.id.creator).text = mod.creator
         flate.findViewById<TextView>(R.id.title).text = mod.name
-        flate.findViewById<TextView>(R.id.pos).text = mod.description
-        flate.findViewById<TextView>(R.id.rotation).text = mod.license
+        flate.findViewById<TextView>(R.id.size).text = mod.description
+        flate.findViewById<TextView>(R.id.hidden).text = mod.license
         flate.findViewById<TextView>(R.id.version).text = mod.version
         flate.findViewById<Button>(R.id.delete).setOnClickListener { deleteListener() }
         return flate

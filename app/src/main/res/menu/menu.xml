@@ -47,7 +47,7 @@
         android:title="Keyboard Shortcuts"
         android:titleCondensed="Shortcuts" />
     <item
-        android:id="@+id/rotation"
+        android:id="@+id/hidden"
         android:title="Open Source Licenses"
         android:titleCondensed="Licenses" />
     <item

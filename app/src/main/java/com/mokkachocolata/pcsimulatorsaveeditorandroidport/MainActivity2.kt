@@ -937,7 +937,7 @@ class MainActivity2 : AppCompatActivity() {
                     handleClickJson(i)
                 }
             }
-            R.id.rotation -> {
+            R.id.hidden -> {
                 dialog("Open Source Licenses", """
                     This app is licensed with GPLv3.0 or later.
                     AndroidX (Apache License 2.0)
