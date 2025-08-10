@@ -68,23 +68,7 @@ An anti-cheat mechanism to prevent getting a suspicious amount of BTC (or infini
 		<code>public static void OnCheatDetected() { }</code><br><br>
 		A method which executes a code when a cheat is detected.</li>
 		<li><span class="caret"></span><h3><img src='..\assets\Event.svg' alt='Event' style='height:3%;'/> CheatDetected</h3>
-		<pre>
-public static event Action CheatDetected
-{
-	[Token(Token = "0x6000827")]
-	[Address(RVA = "0x895DD8", Offset = "0x895DD8", VA = "0x895DD8")]
-	[CompilerGenerated]
-	add
-	{
-	}
-	[Token(Token = "0x6000828")]
-	[Address(RVA = "0x895E90", Offset = "0x895E90", VA = "0x895E90")]
-	[CompilerGenerated]
-	remove
-	{
-	}
-}
-		</pre><br><br>
+		<pre>public static event Action CheatDetected</pre><br><br>
 		An event which notifies clients of this event when a cheat is detected.
 		<ul class="nested">
 			<li><h4><img src='..\assets\Method.svg' alt='Method' style='height:3%;'/>add</h4></li>

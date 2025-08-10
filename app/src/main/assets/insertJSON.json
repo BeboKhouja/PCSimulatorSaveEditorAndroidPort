@@ -20,6 +20,15 @@
     }
   },
   {
+    "name": "RTX4080",
+    "type": "nothing",
+    "additional": {},
+    "action": {
+      "property": "RTX4080",
+      "long": false
+    }
+  },
+  {
     "name": "@pillow",
     "type": "nothing",
     "additional": {},
