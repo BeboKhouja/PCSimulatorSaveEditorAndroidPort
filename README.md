@@ -14,6 +14,8 @@ We welcome any contributions! For example, you can change the code, the document
 
 When commiting, open a pull request, saying what you added, a short description of it, and how to execute it.
 
+Also, disassociate your Discord account from your GitHub account if you don't want to get banned from PC Simulator for developing a cheat.
+
 # Installing
 You can get PC Simulator Save Editor via two methods:
 

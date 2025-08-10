@@ -13,4 +13,4 @@ So if you are at PCSim hecking community, or any server of PC Simulator hacking 
 
 If we find out that a User is in PCSim Hacking community Discord or some sort, then we'll ban that User's account from the project immediately.
 
-No more PCSim Save Editor!
+Also, N204's save editor (Verdix) got leaked, heres the download (could be malware): https://mega.nz/file/QABBkICD#Tjgjkwzn0S_5QDmJRDPhnzmczdWZ86W79ZzvWwn1M6U
