@@ -188,6 +188,6 @@ jobs:
       - name: Send APK to builds channel
         uses: sinshutu/upload-to-discord@master
         env:
-            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-            args: ./out/apk/app-dev.apk ./out/apk/app-dev.md5
+          args: ./out/apk/app-dev.apk ./out/apk/app-dev.md5
