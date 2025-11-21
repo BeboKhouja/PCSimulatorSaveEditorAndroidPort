@@ -137,7 +137,14 @@ class MainActivity2 : AppCompatActivity() {
         if (lines.size != 2) return false
         try {
             JSONObject(lines[0])
-            JSONObject(lines[1])
+            val sec_line = JSONObject(lines[1])
+            sec_line.getJSONArray("itemData")
+            val plrdata = sec_line.getJSONObject("playerData")
+            plrdata.getDouble("x")
+            plrdata.getDouble("y")
+            plrdata.getDouble("z")
+            plrdata.getDouble("ry")
+            plrdata.getDouble("rx")
         } catch (_: Exception) {
             return false
         }
@@ -425,10 +432,10 @@ class MainActivity2 : AppCompatActivity() {
         input.setText(lines[0] + "\n" + jsonObject.toString())
     }
     private val pickBannerMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        spawnPicture(uri!!, "BannerStand")
+        spawnPicture(uri ?: return@registerForActivityResult, "BannerStand")
     }
     private val pickPaperMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        spawnPicture(uri!!, "Paper")
+        spawnPicture(uri ?: return@registerForActivityResult, "Paper")
     }
 
     private val pickFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
