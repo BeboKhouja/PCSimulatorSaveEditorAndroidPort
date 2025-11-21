@@ -55,5 +55,10 @@
         android:title="GitHub Repository" />
     <item
         android:id="@+id/mods"
-        android:title="Mods" />
+        android:enabled="false"
+        android:title="Mods"
+        android:visible="false" />
+    <item
+        android:id="@+id/dumpsysids"
+        android:title="@string/dumpsysids" />
 </menu>

@@ -1,6 +1,6 @@
 /**
  * PC Simulator Save Editor is a free and open source save editor for PC Simulator.
- *     Copyright (C) 2024  Mokka Chocolata
+ *     Copyright (C) 2025  Mokka Chocolata
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
-import com.mokkachocolata.library.pcsimsaveeditor.MainFunctions
+import com.mokkachocolata.library.pcsimsaveeditor.PCSimSave
 import org.json.JSONArray
 import org.json.JSONObject
 import org.luaj.vm2.LuaValue
@@ -77,33 +77,6 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
-import kotlin.properties.Delegates
-
-class ReadTextFromUriThread : Runnable {
-    lateinit var uri : Uri
-    var output = ""
-    lateinit var resolver : ContentResolver
-
-    override fun run() {
-        System.gc()
-        val stringBuilder = StringBuilder()
-        val inputStream = resolver.openInputStream(uri)
-
-        inputStream?.use { stream ->
-            BufferedReader(InputStreamReader(stream)).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    stringBuilder.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        inputStream?.close()
-        output = stringBuilder.toString()
-        stringBuilder.clear()
-        System.gc()
-    }
-}
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var menus : Menu
@@ -149,7 +122,6 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Disk Management","Disk Management.exe"),
         Apps("System Info","System Info.exe"),
         Apps("Frequency Settings","Frequency Settings.exe"),
-        Apps("Frequency Settings","Frequency Settings.exe"),
         Apps("RGB Controller","RGB Controller.exe"),
         Apps("Terminal","Terminal.exe"),
         Apps("Text Editor","Text Editor.exe"),
@@ -160,6 +132,36 @@ class MainActivity2 : AppCompatActivity() {
         Apps("Boot File", "System/boot.bin"),
         Apps("Virus", "Launcher.exe")
     )
+    private fun checkSaveStringValidJson(): Boolean {
+        val lines = input.text.lines()
+        if (lines.size != 2) return false
+        try {
+            JSONObject(lines[0])
+            JSONObject(lines[1])
+        } catch (_: Exception) {
+            return false
+        }
+        return true
+    }
+    private fun readTextFromUri(uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        val inputStream = resolver.openInputStream(uri)
+
+        inputStream?.use { stream ->
+            BufferedReader(InputStreamReader(stream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        inputStream?.close()
+        return stringBuilder.toString()
+    }
+    private fun generateRandomItemId(): Int {
+        return (-2147483648..2147483647).random()
+    }
     private class PCSimulatorSaveEditorUtilClass : TwoArgFunction() {
         lateinit var globalVars : GlobalVars
         lateinit var activity2: MainActivity2
@@ -195,7 +197,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             library["DecryptString"] = object : OneArgFunction() {
                 override fun call(arg1: LuaValue?): LuaValue =
-                    LuaValue.valueOf(MainFunctions().Decrypt(arg1?.toString()))
+                    LuaValue.valueOf(PCSimSave.Decrypt(arg1?.toString()))
             }
             library["SetSaveContents"] = object : OneArgFunction() {
                 override fun call(contents: LuaValue?): LuaValue {
@@ -388,7 +390,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             library["OpenURL"] = object : OneArgFunction() {
                 override fun call(uri: LuaValue?): LuaValue {
-                    activity2.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri?.toString())))
+                    activity2.startActivity(Intent(Intent.ACTION_VIEW, uri?.toString()?.toUri()))
                     return NONE
                 }
             }
@@ -402,64 +404,38 @@ class MainActivity2 : AppCompatActivity() {
         }
 
     }
-    private fun doOnThread(obj: Runnable, wait: Boolean) {
-        val actualThread = Thread(obj)
-        actualThread.start()
-        if (wait) actualThread.join()
-    }
-    private fun readTextFromUri(uri: Uri): String {
-        val uriThread = ReadTextFromUriThread()
-        uriThread.resolver = contentResolver
-        uriThread.uri = uri
-        doOnThread(uriThread, true)
-        return uriThread.output
-    }
     @SuppressLint("SetTextI18n")
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val text = input.text.toString()
-            val jsonObject = JSONObject(text.lines()[1])
-            val itemArray = jsonObject.getJSONArray("itemData")
-            val position = Position(
-                (jsonObject.get("playerData") as JSONObject).getDouble("x"),
-                (jsonObject.get("playerData") as JSONObject).getDouble("y"),
-                (jsonObject.get("playerData") as JSONObject).getDouble("z")
-            )
-            val bm = BitmapFactory.decodeStream(resolver.openInputStream(uri))
-            val baos = ByteArrayOutputStream()
-            Thread { bm.compress(Bitmap.CompressFormat.JPEG, 100, baos) }.apply {
-                start()
-                join()
-            }
-            val b = baos.toByteArray()
-            lateinit var obj : BannerObjectJson
-            Thread {
-                obj = BannerObjectJson("BannerStand", (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), Base64.encodeToString(b, Base64.DEFAULT))
-            }.apply {
-                start()
-                join()
-            }
-            itemArray.put(obj.toJson())
-            val lines = text.lines()
-            input.setText(lines[0] + "\n" + jsonObject.toString())
-        }
+    private fun spawnPicture(uri: Uri, spawnId: String) {
+        if (!checkSaveStringValidJson()) return
+        val text = input.text.toString()
+        val jsonObject = JSONObject(text.lines()[1])
+        val itemArray = jsonObject.getJSONArray("itemData")
+        val position = Position(
+            (jsonObject.get("playerData") as JSONObject).getDouble("x"),
+            (jsonObject.get("playerData") as JSONObject).getDouble("y"),
+            (jsonObject.get("playerData") as JSONObject).getDouble("z")
+        )
+        val bm = BitmapFactory.decodeStream(resolver.openInputStream(uri))
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val b = baos.toByteArray()
+        val obj = PictureObjectJson(spawnId, position, Rotation(0.0,0.0,0.0,0.0), Base64.encodeToString(b, Base64.DEFAULT))
+        itemArray.put(obj.toJson())
+        val lines = text.lines()
+        input.setText(lines[0] + "\n" + jsonObject.toString())
     }
-
-    private val writeorread = WriteOrReadThread()
-    private val afterread = AfterReadThread()
+    private val pickBannerMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        spawnPicture(uri!!, "BannerStand")
+    }
+    private val pickPaperMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        spawnPicture(uri!!, "Paper")
+    }
 
     private val pickFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
-        if (data != null) {
-            writeorread.clazz = this
-            writeorread.resolver = contentResolver
-            writeorread.data = data
-            writeorread.input = input
-            writeorread.decrypt_after_opening = decrypt_after_opening
-            writeorread.encrypt_after_saving = encrypt_after_saving
-            writeorread.WriteOrRead = false
-            doOnThread(writeorread, true)
-            System.gc()
-        }
+        if (data != null)
+            if (decrypt_after_opening)
+               input.setText(PCSimSave.Decrypt(readTextFromUri(data)))
+            else input.setText(readTextFromUri(data))
     }
     private val pickMod = registerForActivityResult(ActivityResultContracts.OpenDocument()) {data ->
         if (data != null) {
@@ -470,27 +446,22 @@ class MainActivity2 : AppCompatActivity() {
     }
     val saveTheFile = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) {uri ->
         if (uri != null) {
-            afterread.resolver = contentResolver
-            afterread.afterData = uri
-            afterread.text = saveString
-            doOnThread(afterread, false)
-            System.gc()
+            try {
+                contentResolver.openFileDescriptor(uri, "w")?.use { it ->
+                    val outputstream = FileOutputStream(it.fileDescriptor)
+                    outputstream.use { it.write(saveString.toByteArray()) }
+                    outputstream.close()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     private val openandSavetotxt = registerForActivityResult(ActivityResultContracts.OpenDocument()) {uri ->
         if (uri != null) {
-            writeorread.clazz = this
-            writeorread.resolver = contentResolver
-            writeorread.data = uri
-            writeorread.input = input
-            writeorread.decrypt_after_opening = decrypt_after_opening
-            writeorread.encrypt_after_saving = encrypt_after_saving
-            writeorread.WriteOrRead = true
-            writeorread.saveToTxt = true
-            writeorread.doClazz = afterread
-            doOnThread(writeorread, true)
-            System.gc()
+            saveString = if (encrypt_after_saving) PCSimSave.Decrypt(readTextFromUri(uri)) else readTextFromUri(uri)
+            saveTheFile.launch("Save.txt")
         }
     }
 
@@ -662,7 +633,7 @@ class MainActivity2 : AppCompatActivity() {
             R.id.newSave ->
                 input.setText("{\"version\":\"1.8.0\",\"roomName\":\"New Scene\",\"coin\":2000,\"room\":3,\"gravity\":true,\"hardcore\":false,\"playtime\":0.0,\"temperature\":20.0,\"ac\":false,\"light\":true,\"sign\":\"\"}\n{\"playerData\":{\"x\":-4.90798426,\"y\":-2.70895219,\"z\":-10.656539,\"ry\":0.0,\"rx\":0.0}, \"itemData\":[], \"scene\":{}}")
             R.id.explorer -> {
-                if (input.text.lines().size < 2) return false
+                if (!checkSaveStringValidJson()) return false
                 val jsonObject = JSONObject(input.text.lines()[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
                 val lists = arrayListOf<String>()
@@ -750,15 +721,16 @@ class MainActivity2 : AppCompatActivity() {
                 startActivity(Intent(applicationContext, HelpActivity::class.java))
             }
             R.id.repo -> {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort")))
+                startActivity(Intent(Intent.ACTION_VIEW,
+                    "https://github.com/BeboKhouja/PCSimulatorSaveEditorAndroidPort".toUri()))
             }
             R.id.discord -> {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/GXRECJjhVr")))
+                startActivity(Intent(Intent.ACTION_VIEW, "https://discord.gg/GXRECJjhVr".toUri()))
             }
             R.id.clear -> {
                 // Clear all cardboard boxes
+                if (!checkSaveStringValidJson()) return false
                 val text = input.text.toString()
-                if (input.text.lines().size < 2) return false
                 val lines = text.lines()
                 val jsonObject = JSONObject(lines[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
@@ -771,7 +743,7 @@ class MainActivity2 : AppCompatActivity() {
                 input.setText(lines[0] + "\n" + jsonObject.toString())
             }
             R.id.dump -> {
-                if (input.text.lines().size < 2) return false
+                if (!checkSaveStringValidJson()) return false
                 val text = input.text.toString()
                 val jsonObject = JSONObject(text.lines()[1])
                 val itemArray = jsonObject.getJSONArray("itemData")
@@ -794,8 +766,22 @@ class MainActivity2 : AppCompatActivity() {
                 }
                 dialog("Result", pwd, {_,_->}, null)
             }
+            R.id.dumpsysids -> {
+                if (!checkSaveStringValidJson()) return false
+                val text = input.text.toString()
+                val jsonObject = JSONObject(text.lines()[1])
+                val itemArray = jsonObject.getJSONArray("itemData")
+                var ids = ""
+                for (i in 0 until itemArray.length()) {
+                    val mobo = itemArray.getJSONObject(i)
+                    val spawnId = mobo.getString("spawnId")
+                    if (spawnId.contains("ATX") or spawnId.contains("ITX"))
+                        ids += "$spawnId : ${mobo.getInt("id").toHexString(HexFormat.UpperCase)}\n"
+                }
+                dialog("Result", ids, {_,_->}, null)
+            }
             R.id.insert -> {
-                if (input.text.lines().size < 2) return false
+                if (!checkSaveStringValidJson()) return false
                 val text = input.text.toString()
                 val jsonObject = JSONObject(text.lines()[1])
                 val lines = text.lines()
@@ -824,8 +810,8 @@ class MainActivity2 : AppCompatActivity() {
                 fun handleClickJson(index : Int) {
                     fun putFile(i: Int, array: JSONArray) {
                         when(i) {
-                            17 -> array.put(FileObjectJson(fileList[i].path, "pcos", true, 0, 0).toJson())
-                            else -> array.put(FileObjectJson(fileList[i].path, "", false, 0, 0).toJson())
+                            17 -> array.put(FileObjectJson(fileList[i].path, "pcos", true, 0).toJson())
+                            else -> array.put(FileObjectJson(fileList[i].path, "", false, 0).toJson())
                         }
                     }
 
@@ -834,10 +820,11 @@ class MainActivity2 : AppCompatActivity() {
                     val additionals = obj.getJSONObject("additional")
                     val action = obj.getJSONObject("action")
                     when (obj.getString("type")) {
-                        "dialogEditText" -> {
+                        "customSpawnId" -> {
                             val edittext = EditText(this)
                             dialog(itemListJson[index], additionals.optString("message"), {_, _ ->
-                                jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), null)
+                                jsonObj = ObjectJson(if (!action.isNull("property")) action.optString("property") else edittext.text.toString(), generateRandomItemId(), position, Rotation(0.0,0.0,0.0,0.0),
+                                    JSONObject())
                                 insertObject(jsonObj.toJson())
                             }, {_,_->}, edittext)
                         }
@@ -851,16 +838,18 @@ class MainActivity2 : AppCompatActivity() {
                             var name = obj.getString("name")
                             if (name.startsWith("@")) name = getKeyFromString(name)
                             dialog(name, null, null, null, marketJson.toTypedArray()) {_, i ->
-                                val random = (0..2147483647).random()
-                                insertObject(ObjectJson(if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"), random, position, Rotation(0.0, 0.0, 0.0, 0.0), if (action.getJSONArray("list").getJSONObject(i).has("customData")) action.getJSONArray("list").getJSONObject(i).getJSONObject("customData") else null).toJson())
+                                val random = generateRandomItemId()
+                                insertObject(ObjectJson(
+                                    if (action.has("prefix")) action.getString("prefix") + action.getJSONArray("list").getJSONObject(i).getString("spawnId") else action.getJSONArray("list").getJSONObject(i).getString("spawnId"),
+                                    random,
+                                    position,
+                                    Rotation(0.0, 0.0, 0.0, 0.0),
+                                    if (action.getJSONArray("list").getJSONObject(i).has("customData")) action.getJSONArray("list").getJSONObject(i).getJSONObject("customData") else JSONObject()).toJson())
                             }
                         }
                         "drive" -> {
-                            var driveName : String
                             val driveType = additionals.getString("driveType")
                             val boolArray = BooleanArray(fileList.size)
-                            var password : String
-                            val edittext = EditText(this)
                             val dialogDriveName : String
                             val size = when (driveType) {
                                 "usb" -> {
@@ -881,51 +870,44 @@ class MainActivity2 : AppCompatActivity() {
                                 }
                                 else -> throw UnsupportedOperationException("That's not a supported type!")
                             }
-                            dialog("$dialogDriveName Drive Name", "Set the storage name that appears in Disk Management and when you hold it.", { _, _ ->
-                                driveName = edittext.text.toString()
-                                val edittextUSB = EditText(this)
-                                edittextUSB.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                                dialog("Password", "Set the password of this drive.", { _, _ ->
-                                    password = edittextUSB.text.toString()
-                                    // Null the message out because the items wont appear
-                                    if (size.isEmpty()) {
-                                        dialogMultiChoice("Files", null, {_, _ ->
-                                            val array = JSONArray()
-                                            for (checked in boolArray.indices) if (boolArray[checked]) putFile(checked, array)
-                                            val drive = USBObjectJson((0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array)
-                                            insertObject(drive.toJson())
-                                        }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
-                                            boolArray[which] = isChecked
-                                        }, boolArray)
-                                    } else {
-                                        dialog("$dialogDriveName Size", null, null,  null, size) {_, i ->
-                                            val driveSize = size[i]
-                                            dialogMultiChoice("Files", null, {_, _ ->
-                                                val array = JSONArray()
-                                                for (checked in boolArray.indices) {
-                                                    if (boolArray[checked]) {
-                                                        putFile(checked, array)
-                                                    }
-                                                }
-                                                val thisdrive : String = when (driveType) {
-                                                    "ssd" -> "SSD"
-                                                    "nvme" -> "SSD_M.2"
-                                                    "hdd" -> "HDD"
-                                                    else -> throw UnsupportedOperationException("Not a valid DriveType")
-                                                }
-                                                val drive = DriveObjectJson(thisdrive, driveSize, (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), driveName, password, 0.0, 100.0, array, "User")
-                                                insertObject(drive.toJson())
-                                            }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
-                                                boolArray[which] = isChecked
-                                            }, boolArray)
+                            // Null the message out because the items wont appear
+                            if (size.isEmpty()) {
+                                dialogMultiChoice("Files", null, {_, _ ->
+                                    val array = JSONArray()
+                                    for (checked in boolArray.indices) if (boolArray[checked]) putFile(checked, array)
+                                    val drive = USBObjectJson(generateRandomItemId(), position, Rotation(0.0,0.0,0.0,0.0), 0.0, 100.0, array)
+                                    insertObject(drive.toJson())
+                                }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
+                                    boolArray[which] = isChecked
+                                }, boolArray)
+                            } else {
+                                dialog("$dialogDriveName Size", null, null,  null, size) {_, i ->
+                                    val driveSize = size[i]
+                                    dialogMultiChoice("Files", null, {_, _ ->
+                                        val array = JSONArray()
+                                        for (checked in boolArray.indices) {
+                                            if (boolArray[checked]) {
+                                                putFile(checked, array)
+                                            }
                                         }
-                                    }
-                                }, {_,_->}, edittextUSB)
-                            }, {_,_->}, edittext)
+                                        val thisdrive : String = when (driveType) {
+                                            "ssd" -> "SSD"
+                                            "nvme" -> "SSD_M.2"
+                                            "hdd" -> "HDD"
+                                            else -> throw UnsupportedOperationException("Not a valid DriveType")
+                                        }
+                                        val drive = DriveObjectJson(thisdrive, driveSize, generateRandomItemId(), position, Rotation(0.0,0.0,0.0,0.0), 0.0, 100.0, array)
+                                        insertObject(drive.toJson())
+                                    }, null, fileList.map {it.name}.toTypedArray(), {_, which, isChecked ->
+                                        boolArray[which] = isChecked
+                                    }, boolArray)
+                                }
+                            }
                         }
-                        "banner" -> pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                        "nothing" -> {
-                            jsonObj = ObjectJson(action.getString("property"), (0..2147483647).random(), position, Rotation(0.0,0.0,0.0,0.0), null)
+                        "banner" -> pickBannerMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        "paper" -> pickPaperMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        "item" -> {
+                            jsonObj = ObjectJson(action.getString("property"), generateRandomItemId(), position, Rotation(0.0,0.0,0.0,0.0), JSONObject())
                             itemArray.put(jsonObj.toJson())
                             input.setText(lines[0] + "\n" + jsonObject.toString())
                         }
@@ -1001,7 +983,7 @@ class MainActivity2 : AppCompatActivity() {
                     }
 
                     when (i) {
-                        0 -> doItEdittext("AC Temperature", "Set the temperature of the AC. Max 2147483647 and min -2147483648", "temperature",  true, false)
+                        0 -> doItEdittext("AC Temperature", "Set the temperature of the AC. Max Infinity and min -Infinity", "temperature",  true, false)
                         1 -> doItSwitch("AC Power", "Switch on or off the AC", "ac",  "Power")
                         2 -> doItEdittext("Version", "Set the version of the save.", "version",  false, false)
                         3 -> doItEdittext("Money", "Set the money of the save. Max 2147483647 and min -2147483647", "coin",  true, false)
@@ -1025,7 +1007,9 @@ class MainActivity2 : AppCompatActivity() {
         System.gc()
     }
 
+    @Suppress("UNREACHABLE_CODE")
     private fun loadScripts() {
+        return
         val globals = JsePlatform.standardGlobals()
         val utilClass = PCSimulatorSaveEditorUtilClass()
         utilClass.globalVars = globalVars
@@ -1086,8 +1070,6 @@ class MainActivity2 : AppCompatActivity() {
         input = findViewById(R.id.inputText)
         val decrypt = findViewById<Button>(R.id.decryptencrypt)
 
-        val functions = MainFunctions()
-
         if (Build.VERSION.SDK_INT > 24) {
             input.setOnDragListener{view, event ->
                 when (event.action) {
@@ -1119,7 +1101,7 @@ class MainActivity2 : AppCompatActivity() {
 
 
         decrypt.setOnClickListener { _ ->
-            if (input.text.isNotEmpty()) input.setText(functions.Decrypt(input.text.toString()))
+            if (input.text.isNotEmpty()) input.setText(PCSimSave.Decrypt(input.text.toString()))
         }
 
         val open = findViewById<Button>(R.id.open)
@@ -1129,9 +1111,8 @@ class MainActivity2 : AppCompatActivity() {
         open.setOnClickListener { _ -> pickFile.launch(arrayOf("application/octet-stream")) }
 
         save.setOnClickListener {_ ->
-            System.gc()
             if (input.text.isNotEmpty()) {
-                saveString = if (encrypt_after_saving) functions.Decrypt(input.text.toString()) else input.text.toString()
+                saveString = if (encrypt_after_saving) PCSimSave.Decrypt(input.text.toString()) else input.text.toString()
                 saveTheFile.launch("Save.pc")
             }
         }
@@ -1139,80 +1120,28 @@ class MainActivity2 : AppCompatActivity() {
         val decryptToTxt = findViewById<Button>(R.id.decryptToTxt)
 
         decryptToTxt.setOnClickListener { _ ->
-            System.gc()
             openandSavetotxt.launch(arrayOf("application/octet-stream"))
         }
 
-        copy.setOnClickListener{_ ->
-            System.gc()
+        copy.setOnClickListener {_ ->
             if (input.text.isNotEmpty()) getSystemService(this, ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("PC Simulator Save", input.text.toString()))
+        }
+
+        val goToFirst = findViewById<Button>(R.id.gotofirst)
+        val goToLast = findViewById<Button>(R.id.gotolast)
+
+        goToFirst.setOnClickListener { _ ->
+            input.setSelection(0)
+        }
+        goToLast.setOnClickListener { _ ->
+            input.setSelection(input.text.length)
         }
 
         val appLinkIntent: Intent = intent
         val appLinkAction: String? = appLinkIntent.action
         val appLinkData: Uri? = appLinkIntent.data
         if (Intent.ACTION_VIEW == appLinkAction) appLinkData?.lastPathSegment?.also { _ ->
-            if (decrypt_after_opening) input.setText(functions.Decrypt(readTextFromUri(appLinkData))) else input.setText(readTextFromUri(appLinkData))
-        }
-    }
-}
-
-
-
-class WriteOrReadThread : Runnable{
-    var WriteOrRead by Delegates.notNull<Boolean>()
-    lateinit var input : EditText
-    lateinit var data : Uri
-    lateinit var resolver : ContentResolver
-    var saveToTxt by Delegates.notNull<Boolean>()
-    private var functions = MainFunctions()
-    var decrypt_after_opening by Delegates.notNull<Boolean>()
-    var encrypt_after_saving by Delegates.notNull<Boolean>()
-    lateinit var clazz : MainActivity2
-    lateinit var doClazz : AfterReadThread
-
-    private fun doOnThread(obj: Runnable) {
-        val actualThread = Thread(obj)
-        actualThread.start()
-        actualThread.join()
-    }
-
-    private fun readTextFromUri(uri: Uri): String {
-        val uriThread = ReadTextFromUriThread()
-        uriThread.resolver = resolver
-        uriThread.uri = uri
-        doOnThread(uriThread)
-        return uriThread.output
-    }
-
-    override fun run() {
-        if (!WriteOrRead) {
-            functions.input = readTextFromUri(data)
-            doOnThread(functions)
-            if (decrypt_after_opening) input.setText(functions.Output) else input.setText(readTextFromUri(data))
-        } else if (saveToTxt) {
-            functions.input = readTextFromUri(data)
-            doOnThread(functions)
-            clazz.saveString = functions.Output
-            clazz.saveTheFile.launch("Save.txt")
-        }
-    }
-}
-
-class AfterReadThread : Runnable{
-    lateinit var afterData : Uri
-    lateinit var resolver : ContentResolver
-    lateinit var text: String
-
-    override fun run() {
-        try {
-            resolver.openFileDescriptor(afterData, "w")?.use { it ->
-                val outputstream = FileOutputStream(it.fileDescriptor)
-                outputstream.use { it.write(text.toByteArray()) }
-                outputstream.close()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            if (decrypt_after_opening) input.setText(PCSimSave.Decrypt(readTextFromUri(appLinkData))) else input.setText(readTextFromUri(appLinkData))
         }
     }
 }

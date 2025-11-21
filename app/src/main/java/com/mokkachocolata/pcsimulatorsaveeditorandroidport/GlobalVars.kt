@@ -1,6 +1,6 @@
 /**
  * PC Simulator Save Editor is a free and open source save editor for PC Simulator.
- *     Copyright (C) 2024  Mokka Chocolata
+ *     Copyright (C) 2025  Mokka Chocolata
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -33,11 +33,9 @@ class GlobalVars(resources: Resources){
         Url(resources.getString(R.string.term), 1, "file:///android_asset/Terminologies.htm"),
         Url(resources.getString(R.string.save_file_help), 2, "file:///android_asset/PC Simulator Save Files.htm"),
         Url(resources.getString(R.string.websites), 3, "file:///android_asset/PC Simulator Websites.htm"),
-        Url(resources.getString(R.string.sourceintro), 4, "file:///android_asset/Source/PC Simulator source code introduction.htm"),
-        Url("Yiming.AntiCheat", 5, "file:///android_asset/Source/Yiming.AntiCheat.htm"),
-        Url(resources.getString(R.string.howtouse), 6, "file:///android_asset/How to use Android port.htm"),
-        Url(resources.getString(R.string.illegalitems), 7, "file:///android_asset/Illegal items.htm"),
-        Url(resources.getString(R.string.howtoedit), 8, "file:///android_asset/How to edit PC Simulator Save Files.htm")
+        Url(resources.getString(R.string.howtouse), 4, "file:///android_asset/How to use Android port.htm"),
+        Url(resources.getString(R.string.illegalitems), 5, "file:///android_asset/Illegal items.htm"),
+        Url(resources.getString(R.string.howtoedit), 6, "file:///android_asset/How to edit PC Simulator Save Files.htm")
     )
     val urlArrayArray = ArrayList<Url>()
     init {

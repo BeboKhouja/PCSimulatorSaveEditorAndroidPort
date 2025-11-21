@@ -30,4 +30,7 @@
     <string name="m2">M.2 NVMe SSD</string>
     <string name="password">Password</string>
     <string name="object_explorer">Object Browser</string>
+    <string name="gotofirst">Go to first</string>
+    <string name="gotolast">Go to last</string>
+    <string name="dumpsysids">Dump system IDs</string>
 </resources>

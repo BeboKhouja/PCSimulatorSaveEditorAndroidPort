@@ -8,6 +8,26 @@
     tools:context=".MainActivity2">
 
     <Button
+        android:id="@+id/gotofirst"
+        android:layout_width="200dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="4dp"
+        android:text="@string/gotofirst"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decryptencrypt" />
+
+    <Button
+        android:id="@+id/gotolast"
+        android:layout_width="200dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/gotolast"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decryptencrypt" />
+
+    <Button
         android:id="@+id/decryptencrypt"
         android:layout_width="402dp"
         android:layout_height="70dp"
@@ -50,7 +70,7 @@
         android:gravity="start|top"
         android:hint="@string/hint"
         android:importantForAutofill="no"
-        android:inputType="textMultiLine"
+        android:inputType="text|textMultiLine|textNoSuggestions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

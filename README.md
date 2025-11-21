@@ -46,7 +46,6 @@ Library is [here](https://github.com/BeboKhouja/PC-Simulator-Save-Editor).
 ```
 
 # Current status
-- [ ] Service to decrypt/encrypt very huge files
 - [ ] Convert PC Simulator 1.6.0 and below save files to newer versions
 
 # Known issues

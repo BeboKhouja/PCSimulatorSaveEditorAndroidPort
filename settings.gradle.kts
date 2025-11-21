@@ -44,4 +44,4 @@ dependencyResolutionManagement {
 rootProject.name = "PC Simulator Save Editor Android Port"
 include(":app")
 include(":library")
-project(":library").projectDir = File("./PC-Simulator-Save-Editor/AndroidLibrary")
+project(":library").projectDir = File("./PC-Simulator-Save-Editor/pcsimulatorsaveeditorlibrary")

@@ -1,7 +1,7 @@
 [
   {
     "name": "Custom Spawn ID",
-    "type": "dialogEditText",
+    "type": "customSpawnId",
     "additional": {
       "message": "Spawn a custom SpawnId."
     },
@@ -12,7 +12,7 @@
   },
   {
     "name": "RTX4080Ti",
-    "type": "nothing",
+    "type": "item",
     "additional": {},
     "action": {
       "property": "RTX4080Ti",
@@ -21,7 +21,7 @@
   },
   {
     "name": "RTX4080",
-    "type": "nothing",
+    "type": "item",
     "additional": {},
     "action": {
       "property": "RTX4080",
@@ -30,7 +30,7 @@
   },
   {
     "name": "@pillow",
-    "type": "nothing",
+    "type": "item",
     "additional": {},
     "action": {
       "property": "Pillow",
@@ -39,7 +39,7 @@
   },
   {
     "name": "Cube",
-    "type": "nothing",
+    "type": "item",
     "additional": {},
     "action": {
       "property": "Cube",
@@ -48,7 +48,7 @@
   },
   {
     "name": "Projector",
-    "type": "nothing",
+    "type": "item",
     "additional": {},
     "action": {
       "property": "Projector",
@@ -58,6 +58,12 @@
   {
     "name": "Banner",
     "type": "banner",
+    "additional": {},
+    "action": {}
+  },
+  {
+    "name": "Paper",
+    "type": "paper",
     "additional": {},
     "action": {}
   },

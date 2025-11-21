@@ -1,6 +1,6 @@
 /**
  * PC Simulator Save Editor is a free and open source save editor for PC Simulator.
- *     Copyright (C) 2024  Mokka Chocolata
+ *     Copyright (C) 2025  Mokka Chocolata
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -33,10 +33,10 @@ data class Rotation(val w : Double, val x : Double, val y : Double, val z : Doub
 // RTX4080Ti
 // Projector
 
-data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val data: JSONObject?) {
+open class ObjectJson(val spawnId : String, val id : Int = 1 /* In PC Simulator ID is only used for display */, val pos : Position, val rot : Rotation, val data: JSONObject = JSONObject().also { it.put("glue", false) /* Every item has one even if its not a PC component */ }) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
-        jsonObject.put("spawnId", SpawnId)
+        jsonObject.put("spawnId", spawnId)
         jsonObject.put("id", id)
         jsonObject.put("pos", JSONObject().apply {
             put("x", pos.x)
@@ -49,8 +49,7 @@ data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, va
             put("z", rot.z)
             put("w", rot.w)
         })
-        // Data not needed here so leave it empty
-        if (data != null) jsonObject.put("data", data) else jsonObject.put("data", JSONObject())
+        jsonObject.put("data", data)
         return jsonObject
     }
 
@@ -59,64 +58,26 @@ data class ObjectJson(val SpawnId : String, val id : Int, val pos : Position, va
     }
 }
 
-data class BannerObjectJson(val SpawnId : String, val id : Int, val pos : Position, val rot : Rotation, val bannerData : String) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("spawnId", "BannerStand")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        // Data not needed here so leave it empty
-        val data = JSONObject()
-        data.put("glue", false)
+class PictureObjectJson(spawnId : String, pos : Position, rot : Rotation, bannerData : String):
+    ObjectJson(spawnId, 1, pos, rot) {
+    init {
         data.put("dat", bannerData)
-        jsonObject.put("data", data)
-        return jsonObject
     }
 }
 
-data class USBObjectJson(
-    val id : Int,
-    val pos : Position,
-    val rot : Rotation,
-    val storageName : String,
-    val password: String,
-    val uptime : Double,
-    val health : Double,
-    val files : JSONArray) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("spawnId", "FlashDrive")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        // Data not needed here so leave it empty
-        val data = JSONObject()
-        data.put("storageName", storageName)
-        data.put("password", password)
+class USBObjectJson(
+    id : Int,
+    pos : Position,
+    rot : Rotation,
+    uptime : Double,
+    health : Double,
+    val files : JSONArray): ObjectJson("FlashDrive", id, pos, rot) {
+    init {
+        data.put("storageName", "Local Disk")
+        data.put("password", "")
         data.put("files", files)
         data.put("uptime", uptime)
         data.put("health", health)
-        jsonObject.put("data", data)
-        return jsonObject
     }
 }
 
@@ -126,58 +87,33 @@ data class FileObjectJson(
     val content : String,
     val hidden : Boolean,
     val size : Long,
-    val StorageSize : Long) {
+) {
     fun toJson(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("path", path)
         jsonObject.put("content", content)
         jsonObject.put("hidden", hidden)
         jsonObject.put("size", size)
-        jsonObject.put("StorageSize", StorageSize)
         return jsonObject
     }
 }
 
-data class DriveObjectJson(
-    val driveType : String,
-    val storageSize : String,
-val id : Int,
-val pos : Position,
-val rot : Rotation,
-val storageName : String,
-val password: String,
-val uptime : Double,
-val health : Double,
-val files : JSONArray,
-val username : String) {
-    fun toJson(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("spawnId", "$driveType $storageSize")
-        jsonObject.put("id", id)
-        jsonObject.put("pos", JSONObject().apply {
-            put("x", pos.x)
-            put("y", pos.y)
-            put("z", pos.z)
-        })
-        jsonObject.put("rot", JSONObject().apply {
-            put("x", rot.x)
-            put("y", rot.y)
-            put("z", rot.z)
-            put("w", rot.w)
-        })
-        val data = JSONObject()
-        val storageData = JSONObject()
-        storageData.put("storageName", storageName)
-        storageData.put("userPassword", password)
-        storageData.put("userPicturePath", "")
-        storageData.put("userName", username)
-        storageData.put("background", 0)
-        storageData.put("files", files)
-        data.put("storageData", storageData)
+class DriveObjectJson(
+    driveType : String,
+    storageSize : String,
+    id : Int,
+    pos : Position,
+    rot : Rotation,
+    uptime : Double,
+    health : Double,
+    val files : JSONArray,
+): ObjectJson("$driveType $storageSize", id, pos, rot) {
+    init {
+        data.put("storageName", "Local Disk")
+        data.put("password", "")
+        data.put("files", files)
         data.put("uptime", uptime)
         data.put("health", health)
         data.put("damaged", false)
-        jsonObject.put("data", data)
-        return jsonObject
     }
 }
